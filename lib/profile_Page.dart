@@ -1,4 +1,5 @@
 
+import 'package:car_hub/main.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -10,6 +11,7 @@ class ProfilePage extends StatefulWidget {
 List gridImages = ["lib/assets/rev_match_cover_0.jpeg","lib/assets/wallpaper_folder_.jpeg"];
 List gridtitles = ["Rev Match","Add Collection"];
 bool addopen = false;
+bool darkmode = false;
 class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
@@ -24,7 +26,19 @@ class _ProfilePageState extends State<ProfilePage> {
       appBar: AppBar(
        // title:const ("Profile",style: TextStyle(fontWeight: FontWeight.bold,),),
         actions: [
-          IconButton(onPressed: (){}, icon:const Icon(Icons.sunny))
+          StatefulBuilder(
+            builder: (context,modestate) {
+              return IconButton(onPressed: (){
+                if (darkmode)
+                    {MyApp.of(context)!.changeTheme(ThemeMode.dark);}
+                  else
+                    {MyApp.of(context)!.changeTheme(ThemeMode.light);}
+                    modestate(() {
+                      darkmode = !darkmode;
+                    });
+              }, icon: Icon(darkmode?Icons.dark_mode: Icons.sunny));
+            }
+          )
         ],
       ),
       body: SingleChildScrollView(

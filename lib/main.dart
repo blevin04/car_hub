@@ -5,14 +5,29 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+    static _MyAppState? of(BuildContext context) =>
+      context.findAncestorStateOfType<_MyAppState>();
+}
+
+class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
+    ThemeMode _themeMode = ThemeMode.light;
+void changeTheme(ThemeMode themeMode) {
+  // print("ppppppppppppppppppppp");
+    setState(() {
+      _themeMode = themeMode;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      themeMode: _themeMode,
       theme: ThemeData(
         // This is the theme of your application.
         //
