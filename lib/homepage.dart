@@ -10,6 +10,21 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(toolbarHeight: 20,),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            ListTile(
+              leading: CircleAvatar(
+                radius: 40,
+              ),
+              title: Text("Hello User Name ",style: TextStyle(fontWeight: FontWeight.bold),),
+              subtitle: Text("Lets Rev up"),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }
