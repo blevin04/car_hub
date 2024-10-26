@@ -1,8 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gif_view/gif_view.dart';
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
-
   @override
   State<Homepage> createState() => _HomepageState();
 }
@@ -15,6 +15,21 @@ class _HomepageState extends State<Homepage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            StreamBuilder(
+              stream: FirebaseAuth.instance.authStateChanges(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                return Container(
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      backgroundImage: AssetImage("lib/assets/default_profile.webp"),
+                      radius: 40,
+                    ),
+                    title: Text("Log In 🖐 ",style: TextStyle(fontWeight: FontWeight.bold),),
+                    subtitle: Text("Lets Rev up"),
+                  ),
+                );
+              },
+            ),
             ListTile(
               leading: CircleAvatar(
                 backgroundImage: AssetImage("lib/assets/default_profile.webp"),

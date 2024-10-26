@@ -94,7 +94,7 @@ class _MobileLayoutState extends State<MobileLayout> {
               child: Column(
                 children: [
                   Icon(Icons.music_note_outlined,color: currentPage==2?const Color.fromARGB(255, 248, 74, 0):null,),
-                  Text("Tunes",style: TextStyle(fontSize: 14,color: currentPage==2?const Color.fromARGB(255, 248, 74, 0):null),),
+                  Text("Revs",style: TextStyle(fontSize: 14,color: currentPage==2?const Color.fromARGB(255, 248, 74, 0):null),),
                 ]
                 ),
               onEnd: (){

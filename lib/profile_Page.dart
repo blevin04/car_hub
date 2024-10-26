@@ -1,12 +1,22 @@
 
 import 'package:car_hub/main.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
+}
+void themechange(BuildContext context) async {
+  await Hive.box("theme").clear();
+  if (darkmode) {
+    await Hive.box("theme").put("theme", 1);
+  } else {
+    await Hive.box("theme").put("theme", 0);
+  }
+  print("lllllllllllllllll");
 }
 List gridImages = ["lib/assets/rev_match_cover_0.jpeg","lib/assets/wallpaper_folder_.jpeg"];
 List gridtitles = ["Rev Match","Add Collection"];
@@ -29,10 +39,11 @@ class _ProfilePageState extends State<ProfilePage> {
           StatefulBuilder(
             builder: (context,modestate) {
               return IconButton(onPressed: (){
+                  themechange(context);
                 if (darkmode)
-                    {MyApp.of(context)!.changeTheme(ThemeMode.dark);}
-                  else
                     {MyApp.of(context)!.changeTheme(ThemeMode.light);}
+                  else
+                    {MyApp.of(context)!.changeTheme(ThemeMode.dark);}
                     modestate(() {
                       darkmode = !darkmode;
                     });

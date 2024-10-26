@@ -1,7 +1,17 @@
+import 'package:car_hub/firebase_options.dart';
 import 'package:car_hub/mobile_layout.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
 
-void main() {
+void main()async {
+    WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  await Hive.openBox("theme");
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+);
   runApp(const MyApp());
 }
 
@@ -10,13 +20,19 @@ class MyApp extends StatefulWidget {
 
   @override
   State<MyApp> createState() => _MyAppState();
-    static _MyAppState? of(BuildContext context) =>
-      context.findAncestorStateOfType<_MyAppState>();
+    static _MyAppState? of(BuildContext context) => context.findAncestorStateOfType<_MyAppState>();
 }
 
 class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
-    ThemeMode _themeMode = ThemeMode.light;
+  
+  
+    ThemeMode _themeMode = Hive.box("theme").isEmpty
+      ? ThemeMode.light
+      : Hive.box("theme").get("theme") == 0
+          ? ThemeMode.dark
+          : ThemeMode.light;
+      
 void changeTheme(ThemeMode themeMode) {
   // print("ppppppppppppppppppppp");
     setState(() {
@@ -28,6 +44,7 @@ void changeTheme(ThemeMode themeMode) {
     return MaterialApp(
       title: 'Flutter Demo',
       themeMode: _themeMode,
+      darkTheme: ThemeData.dark(),
       theme: ThemeData(
         // This is the theme of your application.
         //

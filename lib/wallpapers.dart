@@ -26,7 +26,10 @@ class _WallpapersState extends State<Wallpapers> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Trending Wallpapers",style: TextStyle(fontWeight: FontWeight.bold),),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text("Trending Wallpapers",style: TextStyle(fontWeight: FontWeight.bold),),
+                ),
                 Card(
                   child: 
                   CarouselSlider(
@@ -39,7 +42,10 @@ class _WallpapersState extends State<Wallpapers> {
 
                      ),
                 ),
-                Text("Collections",style: TextStyle(fontWeight: FontWeight.bold)),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text("Collections",style: TextStyle(fontWeight: FontWeight.bold)),
+                ),
                 GridView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
