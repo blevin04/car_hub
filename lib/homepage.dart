@@ -1,3 +1,4 @@
+import 'package:car_hub/authPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gif_view/gif_view.dart';
@@ -18,26 +19,35 @@ class _HomepageState extends State<Homepage> {
             StreamBuilder(
               stream: FirebaseAuth.instance.authStateChanges(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
-                return Container(
-                  child: ListTile(
+                
+                if (snapshot.hasData) {
+                  return ListTile(
                     leading: CircleAvatar(
                       backgroundImage: AssetImage("lib/assets/default_profile.webp"),
                       radius: 40,
                     ),
-                    title: Text("Log In 🖐 ",style: TextStyle(fontWeight: FontWeight.bold),),
+                    title: Text("Hello User Name ",style: TextStyle(fontWeight: FontWeight.bold),),
                     subtitle: Text("Lets Rev up"),
+                  );
+                }
+                return InkWell(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>const Authpage()));
+                  },
+                  child: Container(
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: AssetImage("lib/assets/default_profile.webp"),
+                        radius: 40,
+                      ),
+                      title: Text("Log In 🖐 ",style: TextStyle(fontWeight: FontWeight.bold),),
+                      subtitle: Text("Lets Rev up"),
+                    ),
                   ),
                 );
               },
             ),
-            ListTile(
-              leading: CircleAvatar(
-                backgroundImage: AssetImage("lib/assets/default_profile.webp"),
-                radius: 40,
-              ),
-              title: Text("Hello User Name ",style: TextStyle(fontWeight: FontWeight.bold),),
-              subtitle: Text("Lets Rev up"),
-            ),
+            
             Card(
               elevation: 10,
               margin:const EdgeInsets.all(8),
