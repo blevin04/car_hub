@@ -1,5 +1,6 @@
 import 'package:car_hub/authPage.dart';
 import 'package:car_hub/backendFxns.dart';
+import 'package:car_hub/revMatch.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gif_view/gif_view.dart';
@@ -74,15 +75,13 @@ class _HomepageState extends State<Homepage> {
                   onTap: (){
                     Navigator.push(context, MaterialPageRoute(builder: (context)=>const Authpage()));
                   },
-                  child: Container(
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage: AssetImage("lib/assets/default_profile.webp"),
-                        radius: 40,
-                      ),
-                      title: Text("Log In 🖐 ",style: TextStyle(fontWeight: FontWeight.bold),),
-                      subtitle: Text("Lets Rev up"),
+                  child:const ListTile(
+                    leading: CircleAvatar(
+                      backgroundImage: AssetImage("lib/assets/default_profile.webp"),
+                      radius: 40,
                     ),
+                    title: Text("Log In 🖐 ",style: TextStyle(fontWeight: FontWeight.bold),),
+                    subtitle: Text("Lets Rev up"),
                   ),
                 );
               },
@@ -117,16 +116,19 @@ class _HomepageState extends State<Homepage> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Image(
+                             const Image(
                                 fit: BoxFit.fill,
                                 image: AssetImage("lib/assets/rev_match0.png")),
-                                Text("High Score:",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,color: Colors.yellow),),
-                                Text("200",style: TextStyle(color: const Color.fromARGB(255, 255, 98, 0),fontWeight: FontWeight.bold,fontSize: 18),),
-                                TextButton(onPressed: (){}, 
-                                child: Card(
+                               const Text("High Score:",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,color: Colors.yellow),),
+                               const Text("200",style: TextStyle(color:  Color.fromARGB(255, 255, 98, 0),fontWeight: FontWeight.bold,fontSize: 18),),
+                                TextButton(onPressed: ()async{
+                                  await Navigator.push(context, MaterialPageRoute(builder: (context)=>const Revmatch()));
+                                }, 
+                                child: const Card(
+                                  margin: EdgeInsets.all(0),
                                   color: Colors.blue,
                                   child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
+                                    padding: EdgeInsets.all(8.0),
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                                       children: [

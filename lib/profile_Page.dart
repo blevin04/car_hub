@@ -42,9 +42,7 @@ class _ProfilePageState extends State<ProfilePage> {
         if (!snapshot.hasData) {
           return Stack(
             children: [
-              
               Scaffold(
-                    
                 appBar: AppBar(
                   // title:const ("Profile",style: TextStyle(fontWeight: FontWeight.bold,),),
                       actions: [
@@ -107,7 +105,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       left: 100,
                       top: 200,
                       child: Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Text("User Name",style: TextStyle(fontWeight: FontWeight.bold),),
                           ),
                       ),
@@ -121,7 +119,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                 ),
-                Padding(
+               const Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Card(
                     child: Column(
@@ -175,19 +173,17 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: InkWell(
                       child: Column(
                         children: [
-                          Container(
-                            child: Text("Collection Name.....",
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            ),
+                          const Text("Collection Name.....",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           ),
-                          Image(image: AssetImage("lib/assets/default_profile.webp")),
+                         const Image(image: AssetImage("lib/assets/default_profile.webp")),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Container(
-                                padding: EdgeInsets.all(3),
-                                child: Row(
+                                padding:const EdgeInsets.all(3),
+                                child:const Row(
                                   children: [
                                     Icon(Icons.person),
                                     Icon(Icons.person),
@@ -197,15 +193,13 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
               
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(3.0),
-                                child: Container(
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.download),
-                                      Text("20"),
-                                    ],
-                                  ),
+                             const Padding(
+                                padding:  EdgeInsets.all(3.0),
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.download),
+                                    Text("20"),
+                                  ],
                                 ),
                               )
                             ],
@@ -411,7 +405,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
             ),
-            Padding(
+           const Padding(
               padding: const EdgeInsets.all(8.0),
               child: Card(
                 child: Column(
@@ -465,19 +459,17 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: InkWell(
                   child: Column(
                     children: [
-                      Container(
-                        child: Text("Collection Name.....",
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        ),
+                     const Text("Collection Name.....",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       ),
-                      Image(image: AssetImage("lib/assets/default_profile.webp")),
+                     const Image(image: AssetImage("lib/assets/default_profile.webp")),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
-                            padding: EdgeInsets.all(3),
-                            child: Row(
+                            padding:const EdgeInsets.all(3),
+                            child:const Row(
                               children: [
                                 Icon(Icons.person),
                                 Icon(Icons.person),
@@ -487,15 +479,13 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
 
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(3.0),
-                            child: Container(
-                              child: Row(
-                                children: [
-                                  Icon(Icons.download),
-                                  Text("20"),
-                                ],
-                              ),
+                          const Padding(
+                            padding: EdgeInsets.all(3.0),
+                            child: Row(
+                              children: [
+                                Icon(Icons.download),
+                                Text("20"),
+                              ],
                             ),
                           )
                         ],
