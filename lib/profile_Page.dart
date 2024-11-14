@@ -1,13 +1,10 @@
 
 import 'dart:ui';
-
 import 'package:car_hub/authPage.dart';
 import 'package:car_hub/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
@@ -21,7 +18,7 @@ void themechange(BuildContext context) async {
   } else {
     await Hive.box("theme").put("theme", 0);
   }
-  print("lllllllllllllllll");
+ // print("lllllllllllllllll");
 }
 List gridImages = ["lib/assets/rev_match_cover_0.jpeg","lib/assets/wallpaper_folder_.jpeg"];
 List gridtitles = ["Rev Match","Add Collection"];
@@ -275,11 +272,14 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: Center(
                       child: Card(
                        child: InkWell(
-                      child: SizedBox(
+                        onTap: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>const Authpage()));
+                        },
+                      child:const SizedBox(
                        // height: 200,
                         //width: 200,
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: EdgeInsets.all(8.0),
                           child: Text("LOG In",style: TextStyle(fontWeight: FontWeight.bold),),
                         ),
                       ),
