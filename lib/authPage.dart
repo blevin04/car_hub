@@ -1,4 +1,6 @@
 
+import 'package:car_hub/firebasemethods.dart';
+import 'package:car_hub/utils.dart';
 import 'package:flutter/material.dart';
 class Authpage extends StatefulWidget {
   const Authpage({super.key});
@@ -37,6 +39,9 @@ signUpPasswordconfirm = TextEditingController();
     signupEmail.dispose();
     super.dispose();
   }
+  bool passwordMatch = true;
+  bool hidePassword = true;
+  bool hideConfirmPassword = true;
 Widget screen0(){
   switch (currentScreen) {
     case 1:
@@ -58,7 +63,7 @@ Widget screen0(){
               Padding(
                 padding:const EdgeInsets.all(20),
                 child: TextField(
-                  //controller: name,
+                  controller: name,
                   decoration: InputDecoration(
                     labelText: "Name",
                     border: OutlineInputBorder(
@@ -71,7 +76,7 @@ Widget screen0(){
               Padding(
                 padding:const EdgeInsets.all(20),
                 child: TextField(
-                  //controller: name,
+                  controller: signupEmail,
                   decoration: InputDecoration(
                     labelText: "Email",
                     border: OutlineInputBorder(
@@ -84,8 +89,14 @@ Widget screen0(){
               Padding(
                 padding:const EdgeInsets.all(20),
                 child: TextField(
-                  //controller: name,
+                  obscureText: hidePassword,
+                  controller: signUpPassword,
                   decoration: InputDecoration(
+                    suffixIcon: IconButton(onPressed: (){
+                      setState(() {
+                        hidePassword = !hidePassword;
+                      });
+                    }, icon: Icon( hidePassword? Icons.visibility:Icons.visibility_off)),
                     labelText: "Password",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(25),
@@ -97,18 +108,84 @@ Widget screen0(){
               Padding(
                 padding:const EdgeInsets.all(20),
                 child: TextField(
-                  //controller: name,
+                  onChanged: (value){
+                    if (value != signUpPassword.text) {
+                      setState(() {
+                        passwordMatch = false;
+                      });
+                    }else{
+                      setState(() {
+                        passwordMatch = true;
+                      });
+                    }
+                  },
+                  controller: signUpPasswordconfirm,
+                  obscureText: hideConfirmPassword,
                   decoration: InputDecoration(
+                    
+                    suffixIcon: IconButton(onPressed: (){
+                      setState(() {
+                        hideConfirmPassword = !hideConfirmPassword;
+                      });
+                    }, icon: Icon(
+                      hideConfirmPassword? Icons.visibility:
+                      Icons.visibility_off,
+                      color: passwordMatch?null:Colors.red,
+                      )),
                     labelText: "Confirm Password",
+                    labelStyle: TextStyle(
+                      color: passwordMatch?null:Colors.red
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25),
+                      borderSide: BorderSide(
+                        color:passwordMatch? Colors.black:Colors.red,width: 3)
+                    ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(25),
-                      borderSide:const BorderSide(color: Colors.black,width: 3)
+                      borderSide: BorderSide(color:passwordMatch? Colors.black:Colors.red,width: 3)
                     )
                   ),
                 ),
               ),
               InkWell(
-                onTap: (){},
+                onTap: ()async{
+                  if (name.text.isEmpty) {
+                    showsnackbar(context, "Enter name");
+                  }
+                  if (signupEmail.text.isEmpty||!signupEmail.text.contains("@")) {
+                    showsnackbar(context, "Enter valid email");
+                  }
+                  if (signUpPassword.text.isEmpty) {
+                    showsnackbar(context, "enter password");
+                  }
+                  if(
+                    signUpPassword.text.isNotEmpty&&
+                    signupEmail.text.isNotEmpty &&
+                    name.text.isNotEmpty
+                  ){
+                    String state ="";
+                  while (state.isEmpty) {
+                    showDialog(context: context, builder: (context){
+                      return const Dialog(
+                        backgroundColor: Colors.transparent,
+                        child:  CircularProgressIndicator(),
+                      );
+                    });
+                    state = await AuthMethods().createAccount(
+                      email: signupEmail.text, password: signUpPassword.text, fullName: name.text);
+                  }
+                  Navigator.pop(context);
+                  if (state == "Success") {
+                    showsnackbar(context, "Welcome ${name.text}");
+                    Navigator.pop(context);
+                  }else{
+                    showsnackbar(context, state);
+                  }
+                  }
+                  
+                },
+                
                 borderRadius: BorderRadius.circular(25),
                 child: Container(
                   height: 50,
