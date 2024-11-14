@@ -1,4 +1,5 @@
 import 'package:car_hub/authPage.dart';
+import 'package:car_hub/backendFxns.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gif_view/gif_view.dart';
@@ -19,15 +20,54 @@ class _HomepageState extends State<Homepage> {
             StreamBuilder(
               stream: FirebaseAuth.instance.authStateChanges(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
-                
                 if (snapshot.hasData) {
-                  return ListTile(
+                  return FutureBuilder(
+                    future: getUserData(),
+                    //initialData: InitialData,
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return  ListTile(
+                            leading:const CircleAvatar(
+                              //backgroundImage: AssetImage("lib/assets/default_profile.webp"),
+                              radius: 40,
+                            ),
+                            title: Container(
+                              height: 20,
+                              width: 60,
+                              decoration: BoxDecoration(
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.circular(10)
+                              ),
+                              child:const Text(""),
+                            ),
+                            subtitle:Container(
+                              height: 20,
+                              width: 40,
+                              decoration: BoxDecoration(
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.circular(10)
+                              ),
+                              child:const Text(""),
+                            )
+                          );
+                      }
+                      String userName = snapshot.data!["fullName"];
+                      bool hasDp = snapshot.data!.containsKey("Dp");
+                      var dpData ;
+                      if (hasDp) {
+                        dpData = snapshot.data!["Dp"];
+                      }
+                      return ListTile(
                     leading: CircleAvatar(
-                      backgroundImage: AssetImage("lib/assets/default_profile.webp"),
+                      backgroundImage:hasDp?
+                      MemoryImage(dpData):
+                      const AssetImage("lib/assets/default_profile.webp"),
                       radius: 40,
                     ),
-                    title: Text("Hello User Name ",style: TextStyle(fontWeight: FontWeight.bold),),
-                    subtitle: Text("Lets Rev up"),
+                    title: Text("Hello $userName ",style:const TextStyle(fontWeight: FontWeight.bold),),
+                    subtitle:const Text("Lets Rev up"),
+                  );
+                    },
                   );
                 }
                 return InkWell(

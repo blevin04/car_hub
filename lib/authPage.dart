@@ -169,7 +169,7 @@ Widget screen0(){
                     showDialog(context: context, builder: (context){
                       return const Dialog(
                         backgroundColor: Colors.transparent,
-                        child:  CircularProgressIndicator(),
+                        child:  Center(child: CircularProgressIndicator()),
                       );
                     });
                     state = await AuthMethods().createAccount(

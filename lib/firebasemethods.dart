@@ -37,7 +37,7 @@ class AuthMethods {
         //send data to cloud firestore
         await _firestore.collection("users").doc(userId).set(user.toJson());
       
-        res = "success";
+        res = "Success";
       }
     } catch (e) {
       res = e.toString();
@@ -55,7 +55,7 @@ class AuthMethods {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
 
-      res = "success";
+      res = "Success";
     } catch (e) {
       res = e.toString();
     }

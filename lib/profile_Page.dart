@@ -35,32 +35,22 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: FirebaseAuth.instance.authStateChanges(),
-      
       builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator(),);
+        }
         if (!snapshot.hasData) {
           return Stack(
             children: [
               
               Scaffold(
-                    drawer: Drawer(
-                      child: Column(
-              children: [
-                ListTile(
-                  leading: Text("Datassss"),
-                  
-                ),
-                ListTile(
-                  onTap: ()async{
-                   await FirebaseAuth.instance.signOut();
-                  },
-                  leading:const Text("LogOut"),
-                )
-              ],
-                      ),
-                    ),
-                    appBar: AppBar(
-                     // title:const ("Profile",style: TextStyle(fontWeight: FontWeight.bold,),),
+                    
+                appBar: AppBar(
+                  // title:const ("Profile",style: TextStyle(fontWeight: FontWeight.bold,),),
                       actions: [
+                        TextButton(onPressed: ()async{
+                         await FirebaseAuth.instance.signOut();
+                        }, child:const Text("Log out")),
               StatefulBuilder(
                 builder: (context,modestate) {
                   return IconButton(onPressed: (){
@@ -314,26 +304,43 @@ class _ProfilePageState extends State<ProfilePage> {
           );
         }
         return Scaffold(
-      drawer: Drawer(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ListTile(
-              leading: Text("Datassss"),
-              
-            ),
-            ListTile(
-              onTap: ()async{
-               await FirebaseAuth.instance.signOut();
-              },
-              leading:const Text("LogOut"),
-            )
-          ],
-        ),
-      ),
+      
       appBar: AppBar(
+        leadingWidth: 100,
+        leading: TextButton(onPressed: (){
+            showDialog(context: context, 
+            builder: (context){
+              return Dialog(
+                child: Container(
+                  height: 100,
+                  width: 200,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20)
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                    const  Text("Log out",style: TextStyle(fontWeight: FontWeight.bold),),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          TextButton(onPressed: ()async{
+                           await FirebaseAuth.instance.signOut();
+                          }, child:const Text("yes")),
+                          TextButton(onPressed: (){
+                            Navigator.pop(context);
+                          }, child:const Text("Cancel"))
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              );
+            });
+          }, child:const Text("Log out")),
        // title:const ("Profile",style: TextStyle(fontWeight: FontWeight.bold,),),
         actions: [
+          
           StatefulBuilder(
             builder: (context,modestate) {
               return IconButton(onPressed: (){
