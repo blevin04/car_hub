@@ -42,7 +42,7 @@ class AuthMethods {
     } catch (e) {
       res = e.toString();
     }
-    print("okokokoko $res");
+    //print("okokokoko $res");
     return res;
   }
 

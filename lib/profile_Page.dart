@@ -275,12 +275,35 @@ class _ProfilePageState extends State<ProfilePage> {
                         onTap: (){
                           Navigator.push(context, MaterialPageRoute(builder: (context)=>const Authpage()));
                         },
-                      child:const SizedBox(
-                       // height: 200,
-                        //width: 200,
+                      child: Container(
+                       height: 200,
+                        width: 200,
+                        alignment: Alignment.center,
                         child: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text("LOG In",style: TextStyle(fontWeight: FontWeight.bold),),
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                             const Padding(
+                                padding: EdgeInsets.all(10.0),
+                                child: Text("LOG In",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+                              ),
+                             const Text("Log in to you account or create an account "),
+                             // const SizedBox(height: 20,),
+                              Container(
+                                height: 40,
+                                width: 150,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  borderRadius: BorderRadius.circular(15),
+                                  
+                                ),
+                                child:const Text("Sign Up/Sign In",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                              )
+                          
+                            ],
+                          ),
                         ),
                       ),
                                       ),
