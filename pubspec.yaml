@@ -77,6 +77,7 @@ flutter:
     - lib/assets/rev_match0.png
     - lib/assets/user_default.png
     - lib/assets/CAR_HUB.png
+    - lib/assets/carTrivia.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 

@@ -91,12 +91,14 @@ class _HomepageState extends State<Homepage> {
               elevation: 10,
               margin:const EdgeInsets.all(8),
               child: InkWell(
+                borderRadius: BorderRadius.circular(15),
                 child: Container(
                   //margin: EdgeInsets.all(2),
                  // padding: EdgeInsets.all(5),
                   height: 250,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10)
+                    
+                    borderRadius: BorderRadius.circular(15)
                     ),
                   child: Stack(
                     alignment: Alignment.topRight,

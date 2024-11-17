@@ -26,11 +26,9 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
-  
-  
     ThemeMode _themeMode = Hive.box("theme").isEmpty
       ? ThemeMode.light
-      : Hive.box("theme").get("theme") == 0
+      : Hive.box("theme").get("theme") == 1
           ? ThemeMode.dark
           : ThemeMode.light;
       
@@ -42,6 +40,7 @@ void changeTheme(ThemeMode themeMode) {
   }
   @override
   Widget build(BuildContext context) {
+   // print(Hive.box("theme").toMap());
     return MaterialApp(
       title: 'Flutter Demo',
       themeMode: _themeMode,

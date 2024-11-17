@@ -18,7 +18,7 @@ void themechange(BuildContext context) async {
   } else {
     await Hive.box("theme").put("theme", 0);
   }
- // print("lllllllllllllllll");
+  print(Hive.box("theme").get("theme"));
 }
 List gridImages = ["lib/assets/rev_match_cover_0.jpeg","lib/assets/wallpaper_folder_.jpeg"];
 List gridtitles = ["Rev Match","Add Collection"];
