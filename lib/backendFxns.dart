@@ -27,7 +27,8 @@ Future<Map<dynamic,dynamic>> getUserData()async{
 Future<String> getFact()async{
 String fact = "";
   await Hive.openBox("Facts");
-  if(Hive.box("Facts").isEmpty||DateTime.now().difference(Hive.box("Facts").get("Data").first)>=const Duration(days: 1)){
+  if(Hive.box("Facts").isEmpty||DateTime.now().difference(Hive.box("Facts").get("Data").first)>=const Duration(days: 1))
+  {
     await gemini.text("random car fact").then((onValue){
       fact = onValue!.output!;
     });
@@ -38,6 +39,5 @@ String fact = "";
   }else{
     fact = Hive.box("Facts").get("Data").last;
   }
-
 return fact;
 }
