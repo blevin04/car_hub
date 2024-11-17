@@ -1,6 +1,7 @@
 
 import 'dart:ui';
 import 'package:car_hub/authPage.dart';
+import 'package:car_hub/backendFxns.dart';
 import 'package:car_hub/main.dart';
 import 'package:car_hub/revMatch.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -441,20 +442,30 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
             ),
-           const Padding(
-              padding: const EdgeInsets.all(8.0),
+            Padding(
+              padding:const EdgeInsets.all(8.0),
               child: Card(
                 child: Column(
                   children: [
-                    Text("🏎 Today's Random Fact  🏎",style: TextStyle(fontWeight: FontWeight.bold),),
+                    const Text("🏎 Today's Random Fact  🏎",style: TextStyle(fontWeight: FontWeight.bold),),
                     Padding(
-                      padding:  EdgeInsets.all(8.0),
-                      child: Text("The Ford Mustang was originally going to be called the ""Cougar"" before Ford decided on its now-iconic name. The Mustang emblem even started as a stylized cat before it was changed to the galloping horse!"),
+                      padding:const EdgeInsets.all(8.0),
+                      child: FutureBuilder(
+                        future: getFact(),
+                        
+                        builder: (BuildContext context, AsyncSnapshot snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const Center(child: CircularProgressIndicator(),);
+                          }
+                          return Text(snapshot.data);
+                        },
+                      ),
                     )
                   ],
                 ),
               ),
             ),
+            
            GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),

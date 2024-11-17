@@ -1,12 +1,15 @@
 import 'package:car_hub/firebase_options.dart';
 import 'package:car_hub/mobile_layout.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 
 void main()async {
     WidgetsFlutterBinding.ensureInitialized();
+    Gemini.init(apiKey: 'AIzaSyBOoqJyIEK1oAqVtKjT28CzPfSekpFlZew');
   await Hive.initFlutter();
   await Hive.openBox("theme");
   await Hive.openBox("UserData");
@@ -15,7 +18,6 @@ void main()async {
 );
   runApp(const MyApp());
 }
-
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
@@ -23,7 +25,6 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
     static _MyAppState? of(BuildContext context) => context.findAncestorStateOfType<_MyAppState>();
 }
-
 class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
     ThemeMode _themeMode = Hive.box("theme").isEmpty

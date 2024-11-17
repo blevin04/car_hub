@@ -2,8 +2,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:hive/hive.dart';
 
+
+final gemini = Gemini.instance;
 final firestore = FirebaseFirestore.instance;
 final storage = FirebaseStorage.instance.ref();
 User? user = FirebaseAuth.instance.currentUser;
@@ -19,4 +22,22 @@ Future<Map<dynamic,dynamic>> getUserData()async{
   });
   userbox.putAll(data);
   return data;
+}
+
+Future<String> getFact()async{
+String fact = "";
+  await Hive.openBox("Facts");
+  if(Hive.box("Facts").isEmpty||DateTime.now().difference(Hive.box("Facts").get("Data").first)>=const Duration(days: 1)){
+    await gemini.text("random car fact").then((onValue){
+      fact = onValue!.output!;
+    });
+    final factdata = {
+      "Data":[DateTime.now(),fact]
+    };
+    Hive.box("Facts").putAll(factdata);
+  }else{
+    fact = Hive.box("Facts").get("Data").last;
+  }
+
+return fact;
 }

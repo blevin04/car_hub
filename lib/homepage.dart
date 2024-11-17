@@ -1,15 +1,22 @@
 import 'package:car_hub/authPage.dart';
 import 'package:car_hub/backendFxns.dart';
 import 'package:car_hub/revMatch.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:gif_view/gif_view.dart';
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
   @override
   State<Homepage> createState() => _HomepageState();
 }
-
+final gemini = Gemini.instance;
+void openShit()async{
+  gemini.text("random car fact").then((onValue){
+    print(onValue?.output);
+  });
+}
 class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
@@ -158,6 +165,9 @@ class _HomepageState extends State<Homepage> {
                 return Card();
               },
             ),
+            TextButton(onPressed: (){
+              openShit();
+            }, child: Text("openshit"))
           ],
         ),
       ),
