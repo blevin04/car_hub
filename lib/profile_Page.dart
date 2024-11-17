@@ -2,6 +2,7 @@
 import 'dart:ui';
 import 'package:car_hub/authPage.dart';
 import 'package:car_hub/main.dart';
+import 'package:car_hub/revMatch.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -298,11 +299,35 @@ class _ProfilePageState extends State<ProfilePage> {
           );
         }
         return Scaffold(
-      
-      appBar: AppBar(
-        leadingWidth: 100,
-        leading: TextButton(onPressed: (){
-            showDialog(context: context, 
+      drawer: Drawer(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircleAvatar(
+              minRadius: MediaQuery.of(context).size.width/4,
+              backgroundImage:const AssetImage("lib/assets/CAR_HUB.png"),
+              
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text("Settings"),
+            ),
+            ListTile(
+              leading: Icon(Icons.circle),
+              title: Text("Send feedback "),
+            ),
+            ListTile(
+              leading: Icon(Icons.circle),
+              title: Text("Contact Development team"),
+            ),
+            ListTile(
+              leading: Icon(Icons.circle),
+              title: Text("About App"),
+            ),
+            
+            ListTile(
+              onTap: ()async{
+                showDialog(context: context, 
             builder: (context){
               return Dialog(
                 child: Container(
@@ -331,8 +356,19 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               );
             });
-          }, child:const Text("Log out")),
-       // title:const ("Profile",style: TextStyle(fontWeight: FontWeight.bold,),),
+              },
+              title:const Text("Log Out"),
+              leading:const Icon(Icons.exit_to_app_sharp),
+            ),
+          ],
+        ),
+      ),
+      appBar: AppBar(
+       //leadingWidth: 100,
+        // leading: TextButton(onPressed: (){
+            
+        //   }, child:const Text("Log out")),
+       title:const Text ("Profile",style: TextStyle(fontWeight: FontWeight.bold,),),
         actions: [
           
           StatefulBuilder(
@@ -428,17 +464,52 @@ class _ProfilePageState extends State<ProfilePage> {
              itemCount: 2,
              itemBuilder: (BuildContext context, int index) {
                return  Card(
-                child:Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(gridtitles[index],style:const TextStyle(fontWeight: FontWeight.bold),),
-                    Container(
-                     // padding: EdgeInsets.all(8.0),
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-                      child: Image(
-                        image: AssetImage(gridImages[index]))),
-                     const Text("High Score: 200",style: TextStyle(fontWeight: FontWeight.bold),)
-                  ],
+                child:InkWell(
+                  onTap: () {
+                    index==0?
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>const Revmatch())):
+                    showDialog(context: context, builder: (context){
+                      return Dialog(
+                        child: Container(
+                          height: 200,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                             const Text("Add Collection",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+                              TextButton(onPressed: (){}, 
+                              child:const Text("New wellpaper collection"),
+
+                              
+                              ),
+                              TextButton(onPressed: (){}, 
+                              child:const Text("New tunes collection")
+                              ),
+                              TextButton(onPressed: (){
+                                Navigator.pop(context);
+                              }, child:const Text("Cancel")
+                              )
+                            ],
+                          ),
+                        ),
+                      );
+                    });
+                  },
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(gridtitles[index],style:const TextStyle(fontWeight: FontWeight.bold),),
+                      Container(
+                       // padding: EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                        child: Image(
+                          image: AssetImage(gridImages[index]))),
+                       const Text("High Score: 200",style: TextStyle(fontWeight: FontWeight.bold),)
+                    ],
+                  ),
                 ) ,
                );
              },

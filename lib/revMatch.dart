@@ -56,9 +56,9 @@ class _RevmatchState extends State<Revmatch> {
                       decoration: BoxDecoration(
                         color: Colors.blue,
                         borderRadius: BorderRadius.circular(15),
-                
+                        
                       ),
-                      child:const Text("Start",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 17),),
+                      child:const Text("Start",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 17),),
                     ))
                   ],
                 ),
