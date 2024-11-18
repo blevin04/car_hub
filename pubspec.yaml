@@ -45,6 +45,7 @@ dependencies:
   cloud_firestore: ^5.4.4
   firebase_storage: ^12.3.4
   flutter_gemini: ^2.0.5
+  loading_animation_widget: ^1.3.0
   
 
 dev_dependencies:

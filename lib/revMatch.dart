@@ -1,3 +1,5 @@
+import 'package:car_hub/backendFxns.dart';
+import 'package:car_hub/gamePages/triviaPage.dart';
 import 'package:flutter/material.dart';
 
 class Revmatch extends StatefulWidget {
@@ -100,7 +102,10 @@ class _RevmatchState extends State<Revmatch> {
                     ),
                   ),
                   TextButton(
-                    onPressed: (){},
+                    onPressed: ()async{
+                      // await triviaStart();
+                      Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Triviapage())));
+                    },
                    child:Container(
                     height: 40,
                     width: 120,
