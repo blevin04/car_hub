@@ -26,6 +26,7 @@ Future<Map<dynamic,dynamic>> getUserData()async{
 Future<String> getFact()async{
 String fact = "";
   await Hive.openBox("Facts");
+  print(DateTime.now().difference(Hive.box("Facts").get("Data").first).inDays);
   if(Hive.box("Facts").isEmpty||DateTime.now().difference(Hive.box("Facts").
   get("Data").first)>=const Duration(days: 1))
   {
@@ -55,4 +56,17 @@ Future<Map<dynamic,dynamic>> triviaStart()async{
     print(triviaQuiz);
   });
   return triviaQuiz;
+}
+
+Future<String>UpdateHighScore(double score)async{
+  String state = "";
+  try {
+     await firestore.collection("users").doc(user!.uid).update({"Score":score});
+     await Hive.openBox("Score");
+     Hive.box("Score").put("Score", score);
+     state = "Success";
+  } catch (e) {
+    state = e.toString();
+  }
+  return state;
 }

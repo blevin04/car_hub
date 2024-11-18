@@ -1,6 +1,6 @@
-import 'package:car_hub/backendFxns.dart';
 import 'package:car_hub/gamePages/triviaPage.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
 class Revmatch extends StatefulWidget {
   const Revmatch({super.key});
@@ -99,6 +99,24 @@ class _RevmatchState extends State<Revmatch> {
                     decoration: BoxDecoration(
                       color: Colors.blue,
                       borderRadius: BorderRadius.circular(15)
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        const Text("High Score",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+                        FutureBuilder(
+                          future: Hive.openBox("Score"),
+                          builder: (BuildContext context, AsyncSnapshot snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return const CircularProgressIndicator();
+                            }
+                            if (snapshot.data.isEmpty) {
+                              return const Text("00",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),);
+                            }
+                            return Text(snapshot.data.get("Score").toString());
+                          },
+                        ),
+                      ],
                     ),
                   ),
                   TextButton(
