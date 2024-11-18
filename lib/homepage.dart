@@ -165,9 +165,9 @@ class _HomepageState extends State<Homepage> {
                 return Card();
               },
             ),
-            TextButton(onPressed: (){
-              openShit();
-            }, child: Text("openshit"))
+            // TextButton(onPressed: (){
+            //   openShit();
+            // }, child: Text("openshit"))
           ],
         ),
       ),
