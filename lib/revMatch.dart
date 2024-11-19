@@ -1,6 +1,8 @@
 import 'package:car_hub/gamePages/triviaPage.dart';
+import 'package:car_hub/main.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
 
 class Revmatch extends StatefulWidget {
   const Revmatch({super.key});
@@ -45,10 +47,39 @@ class _RevmatchState extends State<Revmatch> {
               width: MediaQuery.of(context).size.width-20,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                   const Text("Match revs to their specific cars"),
+                   Column(
+                    children: [
+                     const Text("High Score",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+                      FutureBuilder(
+                        future: Hive.openBox("Score"),
+                        
+                        builder: (BuildContext context, AsyncSnapshot snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const Center(child: CircularProgressIndicator(),);
+                          }
+                          double score = 0;
+                          print(Hive.box("Score").values);
+                          
+                          
+                          return ListenableBuilder(
+                            listenable: Hive.box("Score").listenable(),
+                            builder: (context,child) {
+                              if (!Hive.box("Score").containsKey("RevMatch")) {
+                            return const Text("00",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),);
+                            }else{
+                              score = Hive.box("Score").get("RevMatch");
+                            }
+                              return Text(score.toString(),style:const TextStyle(fontWeight: FontWeight.bold,fontSize: 20),);
+                            }
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                     TextButton(onPressed: (){}, 
                     child: Container(
                       width: 100,
@@ -82,7 +113,7 @@ class _RevmatchState extends State<Revmatch> {
                 ),
                 const Tooltip(
                   triggerMode: TooltipTriggerMode.tap,
-                  message: "Answer a few trivia questions to test you knowledge on cars",
+                  message: "Answer a few trivia questions to test you knowledge on cars the faster you answer all the questions the better your score",
                   child: Icon(Icons.info),
                 )
               ],
@@ -94,10 +125,11 @@ class _RevmatchState extends State<Revmatch> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Container(
-                    height: 150,
+                    //height: 150,
+                    padding:const EdgeInsets.all(10),
                     width: 200,
                     decoration: BoxDecoration(
-                      color: Colors.blue,
+                      //color: Colors.blue,
                       borderRadius: BorderRadius.circular(15)
                     ),
                     child: Column(
@@ -113,7 +145,7 @@ class _RevmatchState extends State<Revmatch> {
                             if (snapshot.data.isEmpty) {
                               return const Text("00",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),);
                             }
-                            return Text(snapshot.data.get("Score").toString());
+                            return Text(snapshot.data.get("CarTrivia").toString());
                           },
                         ),
                       ],

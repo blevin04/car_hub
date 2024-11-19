@@ -26,17 +26,22 @@ Future<Map<dynamic,dynamic>> getUserData()async{
 Future<String> getFact()async{
 String fact = "";
   await Hive.openBox("Facts");
-  print(DateTime.now().difference(Hive.box("Facts").get("Data").first).inDays);
+  print(DateTime.now().difference(Hive.box("Facts").get("Data").first));
   if(Hive.box("Facts").isEmpty||DateTime.now().difference(Hive.box("Facts").
   get("Data").first)>=const Duration(days: 1))
   {
-    await gemini.text("random car fact").then((onValue){
+    try{
+      await gemini.text("random car fact").then((onValue){
       fact = onValue!.output!;
     });
     final factdata = {
       "Data":[DateTime.now(),fact]
     };
     Hive.box("Facts").putAll(factdata);
+    }catch(e){
+      fact = "";
+    }
+    
   }else{
     fact = Hive.box("Facts").get("Data").last;
   }
@@ -60,13 +65,29 @@ Future<Map<dynamic,dynamic>> triviaStart()async{
 
 Future<String>UpdateHighScore(double score)async{
   String state = "";
+await Hive.openBox("Score");
+if (Hive.box("Score").containsKey("CarTrivia")) {
+  if (Hive.box("Score").get("CarTrivia")<score) {
   try {
      await firestore.collection("users").doc(user!.uid).update({"Score":score});
-     await Hive.openBox("Score");
-     Hive.box("Score").put("Score", score);
+     
+     Hive.box("Score").put("CarTrivia", score);
      state = "Success";
   } catch (e) {
     state = e.toString();
   }
+}
+}else{
+  try {
+     await firestore.collection("users").doc(user!.uid).update({"Score":score});
+     
+     Hive.box("Score").put("CarTrivia", score);
+     state = "Success";
+  } catch (e) {
+    state = e.toString();
+  }
+}
+
+  
   return state;
 }
