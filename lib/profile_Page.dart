@@ -13,6 +13,10 @@ class ProfilePage extends StatefulWidget {
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
+List saved = [
+  "lib/assets/m1.png",
+  "lib/assets/img.jpg",
+];
 void themechange(BuildContext context) async {
   await Hive.box("theme").clear();
   if (darkmode) {
@@ -525,9 +529,42 @@ class _ProfilePageState extends State<ProfilePage> {
                );
              },
            ),
+           const SizedBox(height: 10,),
+
          const Padding(
             padding:  EdgeInsets.all(4.0),
             child:  Text("Collections",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18,decoration: TextDecoration.underline),),
+          ),
+          const SizedBox(height: 10,),
+          GridView.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+            ),
+            shrinkWrap: true,
+            physics:const NeverScrollableScrollPhysics(),
+            itemCount: 2,
+            itemBuilder: (BuildContext context, int index) {
+              String img = index==0?"lib/assets/m1.png":"lib/assests/img.jpg";
+              String title = index == 1?"Wallpaper":"Tunes";
+              return Card(
+                child: InkWell(
+                  onTap: (){},
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child:  Text("Saved $title"),
+                      ),
+                      Expanded(
+                        child: Image(
+                          fit: BoxFit.cover,
+                          image: AssetImage(img)),
+                      )
+                    ],
+                  ),
+                ),
+              );
+            },
           ),
            Visibility(
             child: GridView.builder(
