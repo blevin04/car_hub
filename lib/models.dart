@@ -1,4 +1,5 @@
 import 'package:car_hub/backendFxns.dart';
+import 'package:chatview/chatview.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserModel {
@@ -39,6 +40,7 @@ class roomModel{
     "lastMessageTime":lastMessageTime,
     "Admins":admins,
     "creationTime":creationTime,
+    "members":[],
   };
 }
 
@@ -46,7 +48,7 @@ class messageModel{
   final String message;
   final FieldValue time;
   final bool seen;
-  final String media;
+  final MessageType media;
   messageModel({
     required this.message,
     required this.time,

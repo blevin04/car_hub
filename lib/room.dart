@@ -1,12 +1,15 @@
 import 'package:car_hub/backendFxns.dart';
-import 'package:chat_bubbles/bubbles/bubble_normal.dart';
+import 'package:car_hub/utils.dart';
+import 'package:chatview/chatview.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
 class MyWidget extends StatelessWidget {
-  final roomId;
-  final roomName;
-  const MyWidget({super.key,required this.roomId,required this.roomName});
-
+  final String roomId;
+  final String roomName;
+  final Map<String,dynamic> info;
+  const MyWidget({super.key,required this.roomId,required this.roomName,required this.info});
+  static String uName = Hive.box("UserData").get("fullName");
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
@@ -21,19 +24,42 @@ class MyWidget extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator(),);
           }
-          return ListView.builder(
-            itemCount: 10,
-            itemBuilder: (BuildContext context, int index) {
-              String type = snapshot.data[index]["type"];
-              String textM = snapshot.data[index]["message"];
-              String sender = snapshot.data[index]["sender"];
-              bool seen = snapshot.data[index]["seen"];
-              if (type == "text") {
-                return  Container();
-              }
-              return Container();
-            },
-          );
+          if (snapshot.data.isEmpty) {
+            return const Center(child: Text("Be first to send a message"),);
+          }
+          List members = info["members"];
+          return 
+               ChatView(
+                loadingWidget:const CircularProgressIndicator(),
+                onSendTap: (message, replyMessage, messageType) {
+                  sendMessage(message, roomId, messageType);
+                },
+                chatViewState: ChatViewState.hasMessages,
+                chatController: ChatController(
+                  initialMessageList: List.generate(30, (index){
+                    MessageType type = snapshot.data[index]["type"];
+                    String textM = snapshot.data[index]["message"];
+                    String sender = snapshot.data[index]["sender"];
+                    bool seen = snapshot.data[index]["seen"];
+                    DateTime time = snapshot.data[index]["time"].toDate();
+                    
+                    return Message(
+                      messageType: type,
+                      message: textM, 
+                      createdAt: time, 
+                      sentBy: sender
+                      );
+                  }), 
+                  scrollController: ScrollController(), 
+                  otherUsers: List.generate(members.length, (index){
+                    return ChatUser(
+                      id: members[index], 
+                      name:"user",
+
+                      );
+                  }), 
+                  currentUser: ChatUser(id: user!.uid, name: uName)),);
+           
         },
       ),
     );

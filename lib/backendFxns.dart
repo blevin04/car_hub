@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:car_hub/models.dart';
+import 'package:chatview/chatview.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -96,12 +97,12 @@ Future<List<String>> getrooms()async{
   List<String>rooms =List.empty(growable: true);
   await Hive.openBox("Rooms");
   if (Hive.box("Rooms").isEmpty) {
-    await firestore.collection("users").doc(user!.uid).get().then((onValue){
-      if (onValue.data()!.containsKey("Rooms")) {
-        rooms = onValue.data()!["Rooms"];
-        Hive.box("Rooms").put("Rooms", rooms);
+    await firestore.collection("rooms").where("members",arrayContains: user!.uid).get().then((onValue){
+      for(var doc in onValue.docs){
+        rooms.add(doc.id);
       }
     });
+    await Hive.box("Rooms").put("Rooms", rooms);
   }else{
     rooms = Hive.box("Rooms").get("Rooms");
   }
@@ -111,17 +112,17 @@ Future<List<String>> getrooms()async{
 
 Future<String> joinroom(String room)async{
   String state ="";
+  await Hive.openBox("Rooms");
   try {
-     List rooms = List.empty(growable: true);
-    await firestore.collection("users").doc(user!.uid).get().then((onValue){
-      List rooms = List.empty(growable: true);
-      if (onValue.data()!.containsKey("Rooms")) {
-         rooms = onValue.data()!["Rooms"];
-      }
+     await firestore.collection("rooms").doc(room).get().then((onValue)async{
+      List members = onValue.data()!["members"];
+      members.add(user!.uid);
+      await firestore.collection("rooms").doc(room).update({"members":members});
+      List rooms = Hive.box("Rooms").get("Rooms");
       rooms.add(room);
-    });
-    await firestore.collection("users").doc(user!.uid).update({"Rooms":rooms});
-    state = "Success";
+      await Hive.box("Rooms").put("Rooms", rooms);
+     });
+     state = "Success";
   } catch (e) {
     state = e.toString();
   }
@@ -143,14 +144,14 @@ Future<String> createRoom(String roomName,bool public,String description,)async{
     await firestore.collection("rooms").doc(roomId).set(roomD.toJson());
     List room0 = Hive.box("Rooms").get("Rooms");
     room0.add(roomId);
-    Hive.box("Rooms").put("Rooms", room0);
+    await Hive.box("Rooms").put("Rooms", room0);
     state = "Success";
   } catch (e) {
     state = e.toString();
   }
   return state;
 }
-Future<String>sendMessage(String messagetext,String roomId,String media)async{
+Future<String>sendMessage(String messagetext,String roomId,MessageType media)async{
   String state = "";
   String messageId = Uuid().v1();
   try {
@@ -159,7 +160,7 @@ Future<String>sendMessage(String messagetext,String roomId,String media)async{
       time: FieldValue.serverTimestamp(), 
       seen: false, 
       media: media,
-      
+
       );
     await firestore.collection("rooms").doc(roomId).collection("messages").doc(messageId).set(message.toJson());
     state = "Success";
@@ -177,13 +178,7 @@ Future<Map<dynamic,dynamic>> getroominFo(String roomId)async{
       await firestore.collection("rooms").doc(roomId).get().then((onValue){
         info = onValue.data()!;
       });
-      // await firestore.collection("rooms").doc(roomId).collection("messeges").orderBy("time",descending: true).limit(25).get().then((onValue){
-      //   for(var value in onValue.docs){
-      //     final message = {value.id:value.data()};
-      //     info.a
-      //   }
-      // });
-
+      await Hive.box(roomId).putAll(info);
           }else{
             info = Hive.box(roomId).toMap();
           }
