@@ -166,3 +166,29 @@ Future<String>sendMessage(String messagetext,String roomId,String media)async{
   }
   return state;
 }
+
+Future<Map<dynamic,dynamic>> getroominFo(String roomId)async{
+  Map<dynamic,dynamic>info = {};
+  await Hive.openBox(roomId);
+  try {
+    if (Hive.box(roomId).isEmpty) {
+      await firestore.collection("rooms").doc(roomId).get().then((onValue){
+        info = onValue.data()!;
+      });
+      // await firestore.collection("rooms").doc(roomId).collection("messeges").orderBy("time",descending: true).limit(25).get().then((onValue){
+      //   for(var value in onValue.docs){
+      //     final message = {value.id:value.data()};
+      //     info.a
+      //   }
+      // });
+
+          }else{
+            info = Hive.box(roomId).toMap();
+          }
+          
+  } catch (e) {
+    throw e.toString();
+  }
+
+  return info;
+}
