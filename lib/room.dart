@@ -1,5 +1,4 @@
 import 'package:car_hub/backendFxns.dart';
-import 'package:car_hub/utils.dart';
 import 'package:chatview/chatview.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -27,9 +26,9 @@ class Room extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator(),);
           }
-          print(snapshot.data.docs);
+          
           if (snapshot.data.docs.isEmpty) {
-            print("Emptyyy");
+            
             return ChatView(
               messageConfig: MessageConfiguration(
               ),
@@ -67,7 +66,7 @@ class Room extends StatelessWidget {
           return 
                ChatView(
                 chatBubbleConfig: ChatBubbleConfiguration(
-                  
+
                 ),
                 loadingWidget:const CircularProgressIndicator(),
                 onSendTap: (message, replyMessage, messageType) {
@@ -106,7 +105,7 @@ class Room extends StatelessWidget {
                     String type = snapshot.data.docs[index]["type"];
                     String textM = snapshot.data.docs[index]["message"];
                     String sender = snapshot.data.docs[index]["sender"];
-                    var seen = snapshot.data.docs[index]["Seen"];
+                    //var seen = snapshot.data.docs[index]["Seen"];
                     DateTime time = snapshot.data.docs[index]["Time"].toDate();
                     MessageType type0 = MessageType.text;
                     if (type == "text") {
@@ -122,7 +121,8 @@ class Room extends StatelessWidget {
                       messageType: type0,
                       message: textM, 
                       createdAt: time, 
-                      sentBy: sender
+                      sentBy: sender,
+                      status: MessageStatus.delivered
                       );
                   }), 
                   scrollController: ScrollController(), 

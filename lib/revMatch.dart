@@ -1,5 +1,4 @@
 import 'package:car_hub/gamePages/triviaPage.dart';
-import 'package:car_hub/main.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
