@@ -1,5 +1,6 @@
 import 'package:car_hub/authPage.dart';
 import 'package:car_hub/backendFxns.dart';
+import 'package:car_hub/gamePages/chatrooms.dart';
 import 'package:car_hub/revMatch.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -171,13 +172,30 @@ class _HomepageState extends State<Homepage> {
           ],
         ),
       ),
-      floatingActionButton: Container(
-        //padding:const EdgeInsets.all(6),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Colors.green
-        ),
-        child:TextButton(onPressed: (){}, child: const Text("Chatrooms",style: TextStyle(color: Colors.white),)),
+      floatingActionButton: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.userChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting){
+            return Container();
+          }
+          if (snapshot.hasData) {
+            return Container(
+            //padding:const EdgeInsets.all(6),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: Colors.green
+            ),
+            child:TextButton(
+              onPressed: ()async{
+                await Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Chatrooms())));
+              }, 
+            child: const Text("Chatrooms",style: TextStyle(color: Colors.white),)),
+          );
+          }else{
+            return Container();
+          }
+          
+        }
       ),
     );
   }

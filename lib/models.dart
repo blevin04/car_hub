@@ -26,13 +26,14 @@ class roomModel{
   final DateTime lastMessageTime;
   final DateTime creationTime;
   final List admins;
-  
+  final String description;
   roomModel({
     required this.roomName,
     required this.lastMessage,
     required this.admins,
     required this.creationTime,
     required this.lastMessageTime,
+    required this.description,
   });
   Map<String,dynamic> toJson() =>{
     "Name":roomName,
@@ -40,7 +41,8 @@ class roomModel{
     "lastMessageTime":lastMessageTime,
     "Admins":admins,
     "creationTime":creationTime,
-    "members":[],
+    "members":[user!.uid],
+    "description":description,
   };
 }
 
@@ -48,7 +50,7 @@ class messageModel{
   final String message;
   final FieldValue time;
   final bool seen;
-  final MessageType media;
+  final String media;
   messageModel({
     required this.message,
     required this.time,

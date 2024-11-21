@@ -573,6 +573,7 @@ class _ProfilePageState extends State<ProfilePage> {
                crossAxisCount: 2,
              ),
              itemCount: 2,
+             physics: const NeverScrollableScrollPhysics(),
              itemBuilder: (BuildContext context, int index) {
                return Card(
                 child: InkWell(

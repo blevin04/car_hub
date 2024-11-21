@@ -7,15 +7,28 @@ showsnackbar(BuildContext context, String content) {
 
 String duration(DateTime time){
   String timeS = "";
-  if (time.difference(DateTime.now()).inDays>0) {
-    timeS = time.difference(DateTime.now()).inDays.toString();
-  }else if(time.difference(DateTime.now()).inHours>0){
-    timeS = time.difference(DateTime.now()).inHours.toString();
-  }else if(time.difference(DateTime.now()).inMinutes>1){
-    timeS = time.difference(DateTime.now()).inMinutes.toString();
-  }else if(time.difference(DateTime.now()).inSeconds>1){
-    timeS = time.difference(DateTime.now()).inSeconds.toString();
+  print(DateTime.now().difference(time).inMinutes);
+  print(DateTime.now());
+  if (DateTime.now().difference(time).inDays>0) {
+    timeS = DateTime.now().difference(time).inDays.toString();
+    timeS+=" days ago";
   }
+  if(DateTime.now().difference(time).inHours>0&&DateTime.now().difference(time).inDays<=0){
+  
+    timeS = DateTime.now().difference(time).inHours.toString();
+    timeS+=" hrs ago";
+  }
+   if(DateTime.now().difference(time).inMinutes>1&&DateTime.now().difference(time).inHours<=0){
+    
+    timeS = DateTime.now().difference(time).inMinutes.toString();
+    timeS +=" min ago";
+  }
+  if(DateTime.now().difference(time).inSeconds>1&& DateTime.now().difference(time).inMinutes<=0){
+    
+    timeS = DateTime.now().difference(time).inSeconds.toString();
+    timeS+=" sec ago";
+  }
+  
   return timeS;
 }
 Future<String> getUserName(String userId)async{

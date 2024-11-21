@@ -137,6 +137,7 @@ Future<String> createRoom(String roomName,bool public,String description,)async{
   try {
     roomModel roomD = roomModel(
       roomName: roomName, 
+      description: description,
       lastMessage: "$name created $roomName",
        admins: [user!.uid], 
        creationTime: DateTime.now(), 
@@ -151,7 +152,7 @@ Future<String> createRoom(String roomName,bool public,String description,)async{
   }
   return state;
 }
-Future<String>sendMessage(String messagetext,String roomId,MessageType media)async{
+Future<String>sendMessage(String messagetext,String roomId,String media)async{
   String state = "";
   String messageId = Uuid().v1();
   try {
@@ -160,13 +161,14 @@ Future<String>sendMessage(String messagetext,String roomId,MessageType media)asy
       time: FieldValue.serverTimestamp(), 
       seen: false, 
       media: media,
-
       );
+      print(message);
     await firestore.collection("rooms").doc(roomId).collection("messages").doc(messageId).set(message.toJson());
     state = "Success";
   } catch (e) {
     state = e.toString();
   }
+  print(state);
   return state;
 }
 
@@ -176,12 +178,14 @@ Future<Map<dynamic,dynamic>> getroominFo(String roomId)async{
   try {
     if (Hive.box(roomId).isEmpty) {
       await firestore.collection("rooms").doc(roomId).get().then((onValue){
+        
         info = onValue.data()!;
+        print(info);
       });
-      await Hive.box(roomId).putAll(info);
-          }else{
-            info = Hive.box(roomId).toMap();
-          }
+       Hive.box(roomId).putAll(info);
+      }else{
+        info = Hive.box(roomId).toMap();
+      }
           
   } catch (e) {
     throw e.toString();
