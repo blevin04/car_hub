@@ -171,6 +171,14 @@ class _HomepageState extends State<Homepage> {
           ],
         ),
       ),
+      floatingActionButton: Container(
+        //padding:const EdgeInsets.all(6),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.green
+        ),
+        child:TextButton(onPressed: (){}, child: const Text("Chatrooms",style: TextStyle(color: Colors.white),)),
+      ),
     );
   }
 }

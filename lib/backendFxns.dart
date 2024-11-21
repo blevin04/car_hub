@@ -1,10 +1,12 @@
 import 'dart:convert';
 
+import 'package:car_hub/models.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:hive/hive.dart';
+import 'package:uuid/uuid.dart';
 
 final gemini = Gemini.instance;
 final firestore = FirebaseFirestore.instance;
@@ -87,7 +89,80 @@ if (Hive.box("Score").containsKey("CarTrivia")) {
     state = e.toString();
   }
 }
+  return state;
+}
 
-  
+Future<List<String>> getrooms()async{
+  List<String>rooms =List.empty(growable: true);
+  await Hive.openBox("Rooms");
+  if (Hive.box("Rooms").isEmpty) {
+    await firestore.collection("users").doc(user!.uid).get().then((onValue){
+      if (onValue.data()!.containsKey("Rooms")) {
+        rooms = onValue.data()!["Rooms"];
+        Hive.box("Rooms").put("Rooms", rooms);
+      }
+    });
+  }else{
+    rooms = Hive.box("Rooms").get("Rooms");
+  }
+
+  return rooms;
+}
+
+Future<String> joinroom(String room)async{
+  String state ="";
+  try {
+     List rooms = List.empty(growable: true);
+    await firestore.collection("users").doc(user!.uid).get().then((onValue){
+      List rooms = List.empty(growable: true);
+      if (onValue.data()!.containsKey("Rooms")) {
+         rooms = onValue.data()!["Rooms"];
+      }
+      rooms.add(room);
+    });
+    await firestore.collection("users").doc(user!.uid).update({"Rooms":rooms});
+    state = "Success";
+  } catch (e) {
+    state = e.toString();
+  }
+  return state;
+}
+
+Future<String> createRoom(String roomName,bool public,String description,)async{
+  String state = "";
+  String roomId = Uuid().v1();
+  String name =Hive.box("UserData").get("fullName");
+  await Hive.openBox("Rooms");
+  try {
+    roomModel roomD = roomModel(
+      roomName: roomName, 
+      lastMessage: "$name created $roomName",
+       admins: [user!.uid], 
+       creationTime: DateTime.now(), 
+       lastMessageTime: DateTime.now());
+    await firestore.collection("rooms").doc(roomId).set(roomD.toJson());
+    List room0 = Hive.box("Rooms").get("Rooms");
+    room0.add(roomId);
+    Hive.box("Rooms").put("Rooms", room0);
+    state = "Success";
+  } catch (e) {
+    state = e.toString();
+  }
+  return state;
+}
+Future<String>sendMessage(String messagetext,String roomId,String media)async{
+  String state = "";
+  String messageId = Uuid().v1();
+  try {
+    messageModel message = messageModel(
+      message: messagetext, 
+      time: FieldValue.serverTimestamp(), 
+      seen: false, 
+      media: media);
+    await firestore.collection("rooms").doc(roomId).collection("messages").doc(messageId).set(message.toJson());
+    state = "Success";
+  } catch (e) {
+    state = e.toString();
+  }
   return state;
 }

@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class UserModel {
   final String fullName;
   final String email;
@@ -15,4 +17,46 @@ class UserModel {
         "email": email,
         "uid": uid,
       };
+}
+class roomModel{
+  final String roomName;
+  final String lastMessage;
+  final DateTime lastMessageTime;
+  final DateTime creationTime;
+  final List admins;
+  
+  roomModel({
+    required this.roomName,
+    required this.lastMessage,
+    required this.admins,
+    required this.creationTime,
+    required this.lastMessageTime,
+  });
+  Map<String,dynamic> toJson() =>{
+    "Name":roomName,
+    "lastMessage":lastMessage,
+    "lastMessageTime":lastMessageTime,
+    "Admins":admins,
+    "creationTime":creationTime,
+  };
+}
+
+class messageModel{
+  final String message;
+  final FieldValue time;
+  final bool seen;
+  final String media;
+  messageModel({
+    required this.message,
+    required this.time,
+    required this.seen,
+    required this.media
+  });
+
+  Map<String,dynamic> toJson()=>{
+    "message": message,
+    "Time":time,
+    "Seen":seen,
+    "type":media,
+  };
 }
