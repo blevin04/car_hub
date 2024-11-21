@@ -158,7 +158,9 @@ Future<String>sendMessage(String messagetext,String roomId,String media)async{
       message: messagetext, 
       time: FieldValue.serverTimestamp(), 
       seen: false, 
-      media: media);
+      media: media,
+      
+      );
     await firestore.collection("rooms").doc(roomId).collection("messages").doc(messageId).set(message.toJson());
     state = "Success";
   } catch (e) {
@@ -192,3 +194,16 @@ Future<Map<dynamic,dynamic>> getroominFo(String roomId)async{
 
   return info;
 }
+
+
+// Future<Map<String,dynamic>> getChat(String roomId)async{
+//   Map<String,dynamic> chatData = {};
+
+//   await firestore.collection("rooms").doc(roomId).collection("messeges").orderBy("time",descending: false).limit(30).get().then((onValue){
+//     for(var doc in onValue.docs){
+//       final data = {doc.id:doc.data()};
+//       chatData.addAll(data);
+//     }
+//   });
+//   return chatData;
+// }

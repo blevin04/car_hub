@@ -1,3 +1,4 @@
+import 'package:car_hub/backendFxns.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserModel {
@@ -50,7 +51,8 @@ class messageModel{
     required this.message,
     required this.time,
     required this.seen,
-    required this.media
+    required this.media,
+    
   });
 
   Map<String,dynamic> toJson()=>{
@@ -58,5 +60,6 @@ class messageModel{
     "Time":time,
     "Seen":seen,
     "type":media,
+    "sender":user!.uid,
   };
 }
