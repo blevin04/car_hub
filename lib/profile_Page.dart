@@ -655,6 +655,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 children: [
                                   TextButton(onPressed: ()async{
                                     String imagePath = await getContent(context,FileType.image);
+                                    Navigator.pop(context);
                                     Navigator.push(context, (MaterialPageRoute(builder: (context)=>Preview(assetPath: imagePath, isImage: true))));
                                   }, child:const Text("Upload")),
                                   TextButton(onPressed: (){
@@ -691,6 +692,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 children: [
                                   TextButton(onPressed: ()async{
                                     String contentPath = await getContent(context, FileType.audio);
+                                    Navigator.pop(context);
                                      Navigator.push(context, (MaterialPageRoute(builder: (context)=>Preview(assetPath: contentPath, isImage: false))));
                                   }, child:const Text("Upload")),
                                   TextButton(onPressed: (){

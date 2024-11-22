@@ -223,6 +223,7 @@ Future<Map<dynamic,dynamic>> getroominFo(String roomId)async{
 // }
 
 Future<String>uploadWallpaper(String path,String name)async{
+  final store0 = FirebaseStorage.instance.ref();
 String state = "";
   try {
     String imageId = Uuid().v1();
@@ -230,14 +231,17 @@ String state = "";
     "owner":user!.uid,
     "downloads":0,
     "Likes":[],
-    "name":name
+    "name":name,
+    "categories":[]
   });
-  await storage.child("/wallpapers/$imageId").putFile(File(path));
+  // await storage.child("/wallpapers/$imageId/wallpaper")
+  await store0.child("/wallpapers/$imageId/wallpaper").putFile(File(path));
   state = "Success";
   } catch (e) {
     state = e.toString();
   }
-  
+  print(".................................");
+  print(state);
   return state;
 }
 Future<Uint8List> getWallpaper(String id)async{
@@ -273,6 +277,7 @@ Future<String>UplaodAudio(String audioPath,String name)async{
       "name":name,
       "downloads":0,
       "likes":[],
+      "categories":[],
 
     });
     await storage.child("/tunes/$tuneId/$name").putFile(File(audioPath));

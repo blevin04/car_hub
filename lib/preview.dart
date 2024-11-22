@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:car_hub/backendFxns.dart';
 import 'package:car_hub/categories.dart';
+import 'package:car_hub/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 class Preview extends StatefulWidget {
@@ -19,7 +21,7 @@ class _PreviewState extends State<Preview> {
   bool showSlider = false;
   Duration length =Duration();
   double initial = 0.5;
-double rotationAngle = pi;
+double rotationAngle = 0;
 Future<String> initAudio()async{
   String state ="";
   await player.setSource(DeviceFileSource(widget.assetPath));
@@ -82,91 +84,143 @@ return state;
                     children: [
                       IconButton(onPressed: ()async{
                         showDialog(context: context, builder: (context){
-                          TextEditingController controller = TextEditingController();
                           return Dialog(
-                            child: Container(
-                              padding:const EdgeInsets.all(10),
-                              child: SingleChildScrollView(
-                                child: Column(
-                                  children: [
-                                    TextField(
-                                      controller: controller,
-                                      decoration: InputDecoration(
-                                        hintText: "Choose categories the vehicle is in",
-                                        border: OutlineInputBorder(
-                                          borderSide:const BorderSide(
-                                            color: Colors.grey
-                                          ),
-                                          borderRadius: BorderRadius.circular(20)
-                                        )
+                            child: Column(
+                              children: [
+                                TextField(
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                      borderSide:const BorderSide(
+                                        color: Colors.grey
                                       ),
+                                      borderRadius: BorderRadius.circular(20),
                                     ),
-                                    const Center(child: Text("Engine ",style: TextStyle(fontWeight: FontWeight.bold),)),
-                                    GridView.builder(
-                                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 2,
-                                        childAspectRatio: 2.5
-                                      ),
-                                      itemCount: engine_Size.length,
-                                      shrinkWrap: true,
-                                      physics: const NeverScrollableScrollPhysics(),
-                                      itemBuilder: (BuildContext context, int index) {
-                                        bool picked = false;
-                                        return StatefulBuilder(
-                                          builder: (context,enginestate) {
-                                            return Row(
-                                              children: [
-                                                 Text(engine_Size[index]),
-                                                IconButton(onPressed: (){
-                                                  enginestate((){
-                                                    picked = !picked;
-                                                  });
-                                                }, icon: Icon(
-                                                  picked?
-                                                  Icons.check_box:
-                                                  Icons.check_box_outline_blank))
-                                              ],
-                                            );
-                                          }
-                                        );
-                                      },
-                                    ),
-                                    const Center(child: Text("Brand",style: TextStyle(fontWeight: FontWeight.bold),),),
-                                    GridView.builder(
-                                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 2,
-                                        childAspectRatio: 2.5
-                                      ),
-                                      itemCount: brands.length,
-                                      shrinkWrap: true,
-                                      physics: const NeverScrollableScrollPhysics(),
-                                      itemBuilder: (BuildContext context, int index) {
-                                        bool picked = false;
-                                          return StatefulBuilder(
-                                            builder: (context,enginestate) {
-                                              return Row(
-                                                children: [
-                                                   Text(brands[index]),
-                                                  IconButton(onPressed: (){
-                                                    enginestate((){
-                                                      picked = !picked;
-                                                    });
-                                                  }, icon: Icon(
-                                                    picked?
-                                                    Icons.check_box:
-                                                    Icons.check_box_outline_blank))
-                                                ],
-                                              );
-                                            }
-                                          );
-                                      },
-                                    )
-                                  ],
+                                    hintText: "Add name/ description",
+                                  ),
                                 ),
-                              ),
+                                TextButton(onPressed: ()async{
+                                  Navigator.pop(context);
+                                  String state = "";
+                                  while (state.isEmpty){
+                                    showDialog(context: context, builder: (context){
+                                      return const Dialog(
+                                        backgroundColor: Colors.transparent,
+                                        child: Center(child: CircularProgressIndicator(),),
+                                      );
+                                    });
+                                    state = await uploadWallpaper(widget.assetPath, "name");
+                                  }
+                                  Navigator.pop(context);
+                                  if (state == "Success") {
+                                    showsnackbar(context, "Uploaded");
+                                    Navigator.pop(context);
+                                  }
+                                }, child:const Text("Continue"))
+                              ],
                             ),
                           );
                         });
+                        // String state = "";
+                        // while (state.isEmpty){
+                        //   showDialog(context: context, builder: (context){
+                        //     return const Dialog(
+                        //       backgroundColor: Colors.transparent,
+                        //       child: Center(child: CircularProgressIndicator(),),
+                        //     );
+                        //   });
+                        //   state = await uploadWallpaper(widget.assetPath, "name");
+                        // }
+                        // Navigator.pop(context);
+                        // if (state == "Success") {
+                        //   showsnackbar(context, "Uploaded");
+                        //   Navigator.pop(context);
+                        // }
+                        // showDialog(context: context, builder: (context){
+                        //   TextEditingController controller = TextEditingController();
+                        //   return Dialog(
+                        //     child: Container(
+                        //       padding:const EdgeInsets.all(10),
+                        //       child: SingleChildScrollView(
+                        //         child: Column(
+                        //           children: [
+                        //             TextField(
+                        //               controller: controller,
+                        //               decoration: InputDecoration(
+                        //                 hintText: "Choose categories the vehicle is in",
+                        //                 border: OutlineInputBorder(
+                        //                   borderSide:const BorderSide(
+                        //                     color: Colors.grey
+                        //                   ),
+                        //                   borderRadius: BorderRadius.circular(20)
+                        //                 )
+                        //               ),
+                        //             ),
+                        //             const Center(child: Text("Engine ",style: TextStyle(fontWeight: FontWeight.bold),)),
+                        //             GridView.builder(
+                        //               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        //                 crossAxisCount: 2,
+                        //                 childAspectRatio: 2.5
+                        //               ),
+                        //               itemCount: engine_Size.length,
+                        //               shrinkWrap: true,
+                        //               physics: const NeverScrollableScrollPhysics(),
+                        //               itemBuilder: (BuildContext context, int index) {
+                        //                 bool picked = false;
+                        //                 return StatefulBuilder(
+                        //                   builder: (context,enginestate) {
+                        //                     return Row(
+                        //                       children: [
+                        //                          Text(engine_Size[index]),
+                        //                         IconButton(onPressed: (){
+                        //                           enginestate((){
+                        //                             picked = !picked;
+                        //                           });
+                        //                         }, icon: Icon(
+                        //                           picked?
+                        //                           Icons.check_box:
+                        //                           Icons.check_box_outline_blank))
+                        //                       ],
+                        //                     );
+                        //                   }
+                        //                 );
+                        //               },
+                        //             ),
+                        //             const Center(child: Text("Brand",style: TextStyle(fontWeight: FontWeight.bold),),),
+                        //             GridView.builder(
+                        //               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        //                 crossAxisCount: 2,
+                        //                 childAspectRatio: 2.5
+                        //               ),
+                        //               itemCount: brands.length,
+                        //               shrinkWrap: true,
+                        //               physics: const NeverScrollableScrollPhysics(),
+                        //               itemBuilder: (BuildContext context, int index) {
+                        //                 bool picked = false;
+                        //                   return StatefulBuilder(
+                        //                     builder: (context,enginestate) {
+                        //                       return Row(
+                        //                         children: [
+                        //                            Text(brands[index]),
+                        //                           IconButton(onPressed: (){
+                        //                             enginestate((){
+                        //                               picked = !picked;
+                        //                             });
+                        //                           }, icon: Icon(
+                        //                             picked?
+                        //                             Icons.check_box:
+                        //                             Icons.check_box_outline_blank))
+                        //                         ],
+                        //                       );
+                        //                     }
+                        //                   );
+                        //               },
+                        //             )
+                        //           ],
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   );
+                        // });
                       }, icon:const Icon(Icons.check,color: Colors.white,)),
                       InkWell(
                         onTap: (){

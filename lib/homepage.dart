@@ -103,7 +103,7 @@ class _HomepageState extends State<Homepage> {
                 child: Container(
                   //margin: EdgeInsets.all(2),
                  // padding: EdgeInsets.all(5),
-                  height: 250,
+                  //height: 250,
                   decoration: BoxDecoration(
                     
                     borderRadius: BorderRadius.circular(15)
