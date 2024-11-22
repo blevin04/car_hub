@@ -544,7 +544,7 @@ class _ProfilePageState extends State<ProfilePage> {
             physics:const NeverScrollableScrollPhysics(),
             itemCount: 2,
             itemBuilder: (BuildContext context, int index) {
-              String img = index==0?"lib/assets/m1.png":"lib/assests/img.jpg";
+              String img = index==0?"lib/assets/m1.png":"lib/assets/img.jpg";
               String title = index == 1?"Wallpaper":"Tunes";
               return Card(
                 child: InkWell(

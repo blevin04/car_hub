@@ -127,12 +127,11 @@ class Room extends StatelessWidget {
                   }), 
                   scrollController: ScrollController(), 
                   otherUsers: List.generate(members.length, (index){
-                    return ChatUser(
+                    return ChatUser(          
                       id: members[index], 
                       name:"user",
-
                       );
-                  }), 
+                  }),
                   currentUser: ChatUser(id: user!.uid, name: uName)),);
            
         },
