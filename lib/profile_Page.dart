@@ -1,9 +1,13 @@
 
+import 'dart:io';
 import 'dart:ui';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:car_hub/authPage.dart';
 import 'package:car_hub/backendFxns.dart';
 import 'package:car_hub/main.dart';
 import 'package:car_hub/revMatch.dart';
+import 'package:car_hub/utils.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -633,11 +637,120 @@ class _ProfilePageState extends State<ProfilePage> {
                   children: [
                     Padding(
                   padding: const EdgeInsets.all(4.0),
-                  child: CircleAvatar(child: IconButton(onPressed: (){}, icon: Icon(Icons.image))),
+                  child: CircleAvatar(child: IconButton(onPressed: ()async{
+                    showDialog(context: context, builder: (context){
+                      return Dialog(
+                        child: Container(
+                          height: 130,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20)
+                          ),
+                          child: Column(
+                            children: [
+                              const Text("Upload Image"),
+                             const Padding(
+                                padding:  EdgeInsets.all(8.0),
+                                child:  Text("Once you have uploaded the image you can share it via link "),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  TextButton(onPressed: ()async{
+                                    String imagePath = await getContent(context,FileType.image);
+                                    if (imagePath.isNotEmpty) {
+                                      showDialog(context: context, builder: (context){
+                                        return Dialog(
+                                          child: Stack(
+                                            children: [
+                                              Image(image: FileImage(File(imagePath)),),
+                                              Column(children: [
+                                                IconButton(onPressed: (){}, icon: const Icon(Icons.check,)),
+                                                IconButton(onPressed: (){
+                                                  imagePath = "";
+                                                  Navigator.pop(context);
+                                                }, icon: const Icon(Icons.cancel))
+                                              ],)
+                                            ],
+                                          ),
+                                        );
+                                      });
+                                    } 
+                                  }, child:const Text("Upload")),
+                                  TextButton(onPressed: (){
+                                    Navigator.pop(context);
+                                  }, child: const Text("cancel")),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      );
+                    });
+                  }, icon:const Icon(Icons.image))),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(4.0),
-                  child: CircleAvatar(child: IconButton(onPressed: (){}, icon: Icon(Icons.music_note_rounded))),
+                  child: CircleAvatar(child: IconButton(onPressed: (){
+                    showDialog(context: context, builder: (context){
+                      return Dialog(
+                        child: Container(
+                          height: 130,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20)
+                          ),
+                          child: Column(
+                            children: [
+                              const Text("Upload audio"),
+                             const Padding(
+                                padding:  EdgeInsets.all(8.0),
+                                child:  Text("Once you have uploaded the sound you can share it via link "),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  TextButton(onPressed: ()async{
+                                     String audioPath = await getContent(context,FileType.audio);
+                                     if (audioPath.isNotEmpty) {
+                                      final player = AudioPlayer();
+                                      await player.setSource(DeviceFileSource(audioPath));
+                                      Duration _duration = Duration();
+                                      Duration _position = Duration();
+                                      player.getDuration().then((onvalue){_duration=onvalue!;});
+                                      player.getCurrentPosition().then((value){_position = _position;});
+                                       showDialog(context: context, builder: (context){
+                                        return Dialog(
+                                          child: Center(
+                                            child:Column(
+                                              children: [
+                                                Slider(
+                                                  value: player.state == PlayerState.stopped?0:
+                                                  _position.inMilliseconds/_duration.inMilliseconds, 
+                                                  onChanged: (value){
+                                                    final position = value*_duration.inMilliseconds;
+                                                    player.seek(Duration(milliseconds: position.round()));
+                                                  }
+                                                  ),
+                                                  IconButton(onPressed: (){
+                                                    player.resume();
+                                                  }, icon:const Icon(Icons.play_arrow))
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                       });
+                                     }
+                                  }, child:const Text("Upload")),
+                                  TextButton(onPressed: (){
+
+                                  }, child: const Text("cancel")),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      );
+                    });
+                  }, icon:const Icon(Icons.music_note_rounded))),
                 ),
                   ],
                 )),

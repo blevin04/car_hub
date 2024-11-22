@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
 import 'package:car_hub/models.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -204,3 +206,34 @@ Future<Map<dynamic,dynamic>> getroominFo(String roomId)async{
 //   });
 //   return chatData;
 // }
+
+Future<String> addWallpaper(String path)async{
+String state = "";
+  try {
+    String imageId = Uuid().v1();
+  await firestore.collection("wallpapers").doc(imageId).set({
+    "owner":user!.uid,
+    "downloads":0,
+    "Likes":[],
+  });
+  await storage.child("/wallpapers/$imageId").putFile(File(path));
+  state = "Success";
+  } catch (e) {
+    state = e.toString();
+  }
+  
+  return state;
+}
+Future<Uint8List> getWallpaper(String id)async{
+  String state = "";
+  Uint8List wallpaper = Uint8List(100);
+  try {
+    await storage.child("/wallpapers/$id").getData().then((onValue){
+      wallpaper = onValue!;
+    });
+    state = "Success";
+  } catch (e) {
+    state = e.toString();
+  }
+  return wallpaper;
+}
