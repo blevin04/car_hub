@@ -459,7 +459,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       padding:const EdgeInsets.all(8.0),
                       child: FutureBuilder(
                         future: getFact(),
-                        
                         builder: (BuildContext context, AsyncSnapshot snapshot) {
                           if (snapshot.connectionState == ConnectionState.waiting) {
                             return const Center(child: CircularProgressIndicator(),);
@@ -646,7 +645,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           child: Column(
                             children: [
-                              const Text("Upload Image"),
+                              const Text("Upload Image",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16)),
                              const Padding(
                                 padding:  EdgeInsets.all(8.0),
                                 child:  Text("Once you have uploaded the image you can share it via link "),
@@ -682,7 +681,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           child: Column(
                             children: [
-                              const Text("Upload audio"),
+                               const Text("Upload audio",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),),
                              const Padding(
                                 padding:  EdgeInsets.all(8.0),
                                 child:  Text("Once you have uploaded the sound you can share it via link "),

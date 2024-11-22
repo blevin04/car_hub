@@ -29,9 +29,8 @@ Future<Map<dynamic,dynamic>> getUserData()async{
 Future<String> getFact()async{
 String fact = "";
   await Hive.openBox("Facts");
-  print(DateTime.now().difference(Hive.box("Facts").get("Data").first));
-  if(Hive.box("Facts").isEmpty||DateTime.now().difference(Hive.box("Facts").
-  get("Data").first)>=const Duration(days: 1))
+  //print(DateTime.now().difference(Hive.box("Facts").get("Data").first));
+  if(Hive.box("Facts").isEmpty)
   {
     try{
       await gemini.text("random car fact").then((onValue){
@@ -46,7 +45,23 @@ String fact = "";
     }
     
   }else{
-    fact = Hive.box("Facts").get("Data").last;
+    if (DateTime.now().difference(Hive.box("Facts").
+  get("Data").first)>=const Duration(days: 1)) {
+      try{
+      await gemini.text("random car fact").then((onValue){
+      fact = onValue!.output!;
+    });
+    final factdata = {
+      "Data":[DateTime.now(),fact]
+    };
+    Hive.box("Facts").putAll(factdata);
+    }catch(e){
+      fact = "";
+    }
+    }else{
+      fact = Hive.box("Facts").get("Data").last;
+    }
+    
   }
 return fact;
 }
@@ -207,7 +222,7 @@ Future<Map<dynamic,dynamic>> getroominFo(String roomId)async{
 //   return chatData;
 // }
 
-Future<String> addWallpaper(String path)async{
+Future<String>uploadWallpaper(String path,String name)async{
 String state = "";
   try {
     String imageId = Uuid().v1();
@@ -215,6 +230,7 @@ String state = "";
     "owner":user!.uid,
     "downloads":0,
     "Likes":[],
+    "name":name
   });
   await storage.child("/wallpapers/$imageId").putFile(File(path));
   state = "Success";
@@ -236,4 +252,33 @@ Future<Uint8List> getWallpaper(String id)async{
     state = e.toString();
   }
   return wallpaper;
+}
+
+Future<String> setDp(String imagePath)async{
+  String state = "";
+  try {
+    await storage.child("/users/${user!.uid}/dp").putFile(File(imagePath));
+    state = "Success";
+  } catch (e) {
+    state = e.toString();
+  }
+  return state;
+}
+
+Future<String>UplaodAudio(String audioPath,String name)async{
+  String state = "";
+  try {
+    String tuneId = Uuid().v1();
+    await firestore.collection("tunes").doc(tuneId).set({
+      "name":name,
+      "downloads":0,
+      "likes":[],
+
+    });
+    await storage.child("/tunes/$tuneId/$name").putFile(File(audioPath));
+    state = "Success";
+  } catch (e) {
+    state = e.toString();
+  }
+  return state;
 }

@@ -278,6 +278,7 @@ Widget screen0(){
                 padding:const EdgeInsets.all(20),
                 child: TextField(
                   //controller: name,
+                  controller: loginEmail,
                   decoration: InputDecoration(
                     labelText: "email",
                     border: OutlineInputBorder(
@@ -291,6 +292,7 @@ Widget screen0(){
                 padding:const EdgeInsets.all(20),
                 child: TextField(
                   //controller: name,
+                  controller: loginPassword,
                   decoration: InputDecoration(
                     labelText: "Password",
                     border: OutlineInputBorder(
@@ -302,7 +304,25 @@ Widget screen0(){
               ),
               const SizedBox(height: 20,),
               InkWell(
-                onTap: (){},
+                onTap: ()async{
+                  if (loginEmail.text.isNotEmpty && loginPassword.text.isNotEmpty) {
+                    String state = "";
+                    while (state.isEmpty) {
+                      showDialog(context: context, builder: (context){
+                        return const Dialog(
+                          backgroundColor: Colors.transparent,
+                          child: Center(child: CircularProgressIndicator(),),
+                        );
+                      });
+                      state = await AuthMethods().signIn(email: loginEmail.text, password: loginPassword.text);
+                    }
+                    Navigator.pop(context);
+                    if (state == "Success") {
+                      showsnackbar(context, "Welcome back");
+                      Navigator.pop(context);
+                    }
+                  }
+                },
                 borderRadius: BorderRadius.circular(25),
                 child: Container(
                   height: 50,
