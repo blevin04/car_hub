@@ -60,7 +60,7 @@ if (result != null) {
  // setState(() {});
 }
 if (result == null) {
-  showsnackbar(context, 'no image chossen');
+  showsnackbar(context, 'no file chossen');
 }
 return image;
 }

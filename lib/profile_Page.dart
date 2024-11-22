@@ -1,10 +1,9 @@
 
-import 'dart:io';
 import 'dart:ui';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:car_hub/authPage.dart';
 import 'package:car_hub/backendFxns.dart';
 import 'package:car_hub/main.dart';
+import 'package:car_hub/preview.dart';
 import 'package:car_hub/revMatch.dart';
 import 'package:car_hub/utils.dart';
 import 'package:file_picker/file_picker.dart';
@@ -657,24 +656,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 children: [
                                   TextButton(onPressed: ()async{
                                     String imagePath = await getContent(context,FileType.image);
-                                    if (imagePath.isNotEmpty) {
-                                      showDialog(context: context, builder: (context){
-                                        return Dialog(
-                                          child: Stack(
-                                            children: [
-                                              Image(image: FileImage(File(imagePath)),),
-                                              Column(children: [
-                                                IconButton(onPressed: (){}, icon: const Icon(Icons.check,)),
-                                                IconButton(onPressed: (){
-                                                  imagePath = "";
-                                                  Navigator.pop(context);
-                                                }, icon: const Icon(Icons.cancel))
-                                              ],)
-                                            ],
-                                          ),
-                                        );
-                                      });
-                                    } 
+                                    Navigator.push(context, (MaterialPageRoute(builder: (context)=>Preview(assetPath: imagePath, isImage: true))));
                                   }, child:const Text("Upload")),
                                   TextButton(onPressed: (){
                                     Navigator.pop(context);
@@ -709,39 +691,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [
                                   TextButton(onPressed: ()async{
-                                     String audioPath = await getContent(context,FileType.audio);
-                                     if (audioPath.isNotEmpty) {
-                                      final player = AudioPlayer();
-                                      await player.setSource(DeviceFileSource(audioPath));
-                                      Duration _duration = Duration();
-                                      Duration _position = Duration();
-                                      player.getDuration().then((onvalue){_duration=onvalue!;});
-                                      player.getCurrentPosition().then((value){_position = _position;});
-                                       showDialog(context: context, builder: (context){
-                                        return Dialog(
-                                          child: Center(
-                                            child:Column(
-                                              children: [
-                                                Slider(
-                                                  value: player.state == PlayerState.stopped?0:
-                                                  _position.inMilliseconds/_duration.inMilliseconds, 
-                                                  onChanged: (value){
-                                                    final position = value*_duration.inMilliseconds;
-                                                    player.seek(Duration(milliseconds: position.round()));
-                                                  }
-                                                  ),
-                                                  IconButton(onPressed: (){
-                                                    player.resume();
-                                                  }, icon:const Icon(Icons.play_arrow))
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                       });
-                                     }
+                                    String contentPath = await getContent(context, FileType.audio);
+                                     Navigator.push(context, (MaterialPageRoute(builder: (context)=>Preview(assetPath: contentPath, isImage: false))));
                                   }, child:const Text("Upload")),
                                   TextButton(onPressed: (){
-
+                                    Navigator.pop(context);
                                   }, child: const Text("cancel")),
                                 ],
                               )
