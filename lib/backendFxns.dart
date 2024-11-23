@@ -235,7 +235,11 @@ String state = "";
     "categories":[]
   });
   // await storage.child("/wallpapers/$imageId/wallpaper")
-  await store0.child("/wallpapers/$imageId/wallpaper").putFile(File(path));
+  String name0 = path.split("/").last;
+   await store0.child("/wallpapers/$imageId/$name0").putFile(File(path));
+  //await storage.child("/wallpapers").list().then((onValue){
+  //   print(onValue.items);
+  // });
   state = "Success";
   } catch (e) {
     state = e.toString();
@@ -245,15 +249,15 @@ String state = "";
   return state;
 }
 Future<Uint8List> getWallpaper(String id)async{
-  String state = "";
+  // String state = "";
   Uint8List wallpaper = Uint8List(100);
   try {
     await storage.child("/wallpapers/$id").getData().then((onValue){
       wallpaper = onValue!;
     });
-    state = "Success";
+    // state = "Success";
   } catch (e) {
-    state = e.toString();
+    // state = e.toString();
   }
   return wallpaper;
 }

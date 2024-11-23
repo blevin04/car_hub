@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:car_hub/backendFxns.dart';
 import 'package:car_hub/categories.dart';
+import 'package:car_hub/profile_Page.dart';
 import 'package:car_hub/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -85,38 +86,43 @@ return state;
                       IconButton(onPressed: ()async{
                         showDialog(context: context, builder: (context){
                           return Dialog(
-                            child: Column(
-                              children: [
-                                TextField(
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                      borderSide:const BorderSide(
-                                        color: Colors.grey
+                            child: SizedBox(
+                              height: 150,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  TextField(
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderSide:const BorderSide(
+                                          color: Colors.grey
+                                        ),
+                                        borderRadius: BorderRadius.circular(20),
                                       ),
-                                      borderRadius: BorderRadius.circular(20),
+                                      hintText: "Add name/ description",
                                     ),
-                                    hintText: "Add name/ description",
                                   ),
-                                ),
-                                TextButton(onPressed: ()async{
-                                  Navigator.pop(context);
-                                  String state = "";
-                                  while (state.isEmpty){
-                                    showDialog(context: context, builder: (context){
-                                      return const Dialog(
-                                        backgroundColor: Colors.transparent,
-                                        child: Center(child: CircularProgressIndicator(),),
-                                      );
-                                    });
-                                    state = await uploadWallpaper(widget.assetPath, "name");
-                                  }
-                                  Navigator.pop(context);
-                                  if (state == "Success") {
-                                    showsnackbar(context, "Uploaded");
+                                  TextButton(onPressed: ()async{
                                     Navigator.pop(context);
-                                  }
-                                }, child:const Text("Continue"))
-                              ],
+                                    String state = "";
+                                    while (state.isEmpty){
+                                      showDialog(context: context, builder: (context){
+                                        return const Dialog(
+                                          backgroundColor: Colors.transparent,
+                                          child: Center(child: CircularProgressIndicator(),),
+                                        );
+                                      });
+                                      state = await uploadWallpaper(widget.assetPath, "name");
+                                    }
+                                    //print("///////////////////////////////////////");
+                                    
+                                    if (state == "Success") {
+                                      showsnackbar(context, "Uploaded");
+                                      Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>const ProfilePage()));
+                                    }
+                                  }, child:const Text("Continue"))
+                                ],
+                              ),
                             ),
                           );
                         });

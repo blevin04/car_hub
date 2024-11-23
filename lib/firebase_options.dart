@@ -55,7 +55,7 @@ class DefaultFirebaseOptions {
     appId: '1:1078887520426:android:882af3f638c8c9576bd8d3',
     messagingSenderId: '1078887520426',
     projectId: 'carhub-d3ca7',
-    storageBucket: 'carhub-d3ca7.appspot.com',
+    //storageBucket: 'carhub-d3ca7.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
