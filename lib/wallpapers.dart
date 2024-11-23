@@ -1,3 +1,4 @@
+import 'package:car_hub/backendFxns.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
@@ -7,6 +8,7 @@ class Wallpapers extends StatefulWidget {
   @override
   State<Wallpapers> createState() => _WallpapersState();
 }
+
 List trending_wallpapers = ["1","2","3","4","5"];
 class _WallpapersState extends State<Wallpapers> {
   @override
@@ -42,20 +44,68 @@ class _WallpapersState extends State<Wallpapers> {
 
                      ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
                   child: Text("Collections",style: TextStyle(fontWeight: FontWeight.bold)),
                 ),
-                GridView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                  ),
-                  itemCount: 2,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Card();
-                  },
+                FutureBuilder(
+                  future: getWallpaperIds(),
+                  builder: (context,snapshot0) {
+                    return GridView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                      ),
+                      itemCount: snapshot0.data!.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        bool liked = snapshot0.data![index]["Likes"].contains(user!.uid);
+                        List likes = snapshot0.data![index]["Likes"];
+                        return Card(
+                          child: Column(
+                            children: [
+                              FutureBuilder(
+                                future: getWallpaper(snapshot0.data![index].id),
+                                builder: (BuildContext context, AsyncSnapshot snapshot1) {
+                                  if (snapshot1.connectionState == ConnectionState.waiting) {
+                                    return const Center( child: CircularProgressIndicator(),);
+                                  }
+                                  return Expanded(child: Image(image: MemoryImage(snapshot1.data)));
+                                },
+                              ),
+                              Row(
+                                children: [
+                                  StatefulBuilder(
+                                    builder: (context,likestate) {
+                                      return Row(
+                                        children: [
+                                          IconButton(onPressed: (){
+                                            liked?
+                                            likes.remove(user!.uid):
+                                            likes.add(user!.uid);
+                                            liked = !liked;
+                                            likeContent("wallpapers", snapshot0.data![index].id);
+                                            likestate((){});
+                                          }, icon: Icon(Icons.favorite,color: liked?Colors.red:null,)),
+                                          Text(likes.length.toString()),
+                                        ],
+                                      );
+                                    }
+                                  ),
+                                  Row(
+                                    children: [
+                                      IconButton(onPressed: (){}, icon: const Icon(Icons.download)),
+                                      Text(snapshot0.data![index]["downloads"].length.toString()),
+                                    ],
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  }
                 ),
               ],
             ),

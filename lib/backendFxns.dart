@@ -301,3 +301,28 @@ Future<String>UploadAudio(String audioPath,String name,List categories)async{
   }
   return state;
 }
+
+Future<List<QueryDocumentSnapshot>> getWallpaperIds({String filter= ""})async{
+  List<QueryDocumentSnapshot> wallpapers = [];
+  try {
+    await firestore.collection("wallpapers").where("categories",arrayContains: filter).get().then((onValue){
+      wallpapers = onValue.docs;
+    });
+  } catch (e) {
+    throw e.toString();
+  }
+  return wallpapers;
+}
+
+void likeContent(String content,String contentId)async{
+  List likes = [];
+  await firestore.collection(content).doc(contentId).get().then((onValue){
+    likes = onValue.data()!["Likes"];
+  });
+  if (likes.contains(user!.uid)) {
+    likes.remove(user!.uid);
+  }else{
+    likes.add(user!.uid);
+  }
+  await firestore.collection(content).doc(contentId).update({"Likes":likes});
+}
