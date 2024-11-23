@@ -64,3 +64,12 @@ if (result == null) {
 }
 return image;
 }
+
+void showcircularProgressIndicator(BuildContext context)async{
+  return await showDialog(context: context, builder: (context){
+                return const Dialog(
+                  backgroundColor: Colors.transparent,
+                  child: Center(child: CircularProgressIndicator(),),
+                );
+              });
+}

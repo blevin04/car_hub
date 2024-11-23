@@ -1,5 +1,9 @@
 import 'package:car_hub/firebase_options.dart';
+import 'package:car_hub/homepage.dart';
 import 'package:car_hub/mobile_layout.dart';
+import 'package:car_hub/profile_Page.dart';
+import 'package:car_hub/tunes.dart';
+import 'package:car_hub/wallpapers.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -65,6 +69,12 @@ void changeTheme(ThemeMode themeMode) {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
+      routes: {
+        "/home":(context)=>const Homepage(),
+        "/tunes":(context)=>const Tunes(),
+        "/wallpapers":(context)=>const Wallpapers(),
+        "profile":(context)=>const ProfilePage(),
+      },
       home: const MobileLayout(),
     );
   }

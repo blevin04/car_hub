@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:car_hub/categories.dart';
 import 'package:car_hub/models.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -273,15 +274,24 @@ Future<String> setDp(String imagePath)async{
   return state;
 }
 
-Future<String>UplaodAudio(String audioPath,String name)async{
+Future<String>UploadAudio(String audioPath,String name,List categories)async{
   String state = "";
   try {
     String tuneId = Uuid().v1();
+    List categoryNames = List.generate(categories.length, (index){
+      if (index == 0){
+        return engine_Size[categories[index]];
+      }
+      if (index == 1) {
+        return brands[categories[index]];
+      }
+      return type[categories[index]];
+    });
     await firestore.collection("tunes").doc(tuneId).set({
       "name":name,
       "downloads":0,
       "likes":[],
-      "categories":[],
+      "categories":categoryNames,
 
     });
     await storage.child("/tunes/$tuneId/$name").putFile(File(audioPath));

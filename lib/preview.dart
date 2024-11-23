@@ -39,8 +39,6 @@ return state;
   }
   @override
   Widget build(BuildContext context) {
-
-    
     if (widget.isImage) {
       return Scaffold(
       body: Transform.rotate(
@@ -321,32 +319,180 @@ return state;
                     );
                   },
                 ),
-                IconButton(onPressed: ()async{
-                  player.state == PlayerState.playing?
-                 await player.pause():
-                 await player.resume();
-                }, icon: Icon(
-                  player.state == PlayerState.playing?
-                  Icons.pause:
-                  Icons.play_arrow
-
-                  ))
+                StatefulBuilder(
+                  builder: (context,buttonState) {
+                    return IconButton(onPressed: ()async{
+                      player.state == PlayerState.playing?
+                     await player.pause():
+                     await player.resume();
+                     buttonState((){});
+                    }, icon: Icon(
+                      player.state == PlayerState.playing?
+                      Icons.pause:
+                      Icons.play_arrow,
+                    size: 40,
+                      ));
+                  }
+                )
 
               ],
             );
           }
         ),
         floatingActionButton: Container(
+          width: 200,
+          margin: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             color: Colors.grey,
             borderRadius: BorderRadius.circular(20)
           ),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              IconButton(onPressed: (){}, icon:const Icon(Icons.check)),
+              IconButton(onPressed: ()async{
+                List category = [0,0,0];
+                int selectededgine = 0;
+                int selectedbrand = 0;
+                int selectedtype = 0;
+                TextEditingController search = TextEditingController();
+                List filteredEngine = [];
+                List filteredbrand = [];
+                showDialog(context: context, builder: (context){
+                  return Dialog(
+                    child: SingleChildScrollView(
+                      child: StatefulBuilder(
+                        builder: (context,selectedtState) {
+                          return Column(
+                            children: [
+                              const SizedBox(height: 10,),
+                              const Text("Choose vehicle Category"),
+                               Padding(padding:const EdgeInsets.all(20),
+                              child: SearchBar(
+                                controller: search,
+                                hintText: "Search Category",
+                                onChanged: (value){
+                                  filteredEngine.clear();
+                                  filteredbrand.clear();
+                                  engine_Size.forEach((engine){
+                                    if (engine.toLowerCase().contains(value.toLowerCase())) {
+                                      filteredEngine.add(engine);
+                                    }
+                                  });
+                                  brands.forEach((brand){
+                                    if (brand.toLowerCase().contains(value.toLowerCase())) {
+                                      filteredbrand.add(brand);
+                                    }
+                                  });
+                                },
+                              ),
+                              
+                              ),
+                              const Text("Type"),
+                              SizedBox(
+                                width: 200,
+                                height: 70,
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: type.length,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemBuilder: (BuildContext context, int index) { 
+                                    return Row(
+                                      children: [
+                                        Text(type[index],softWrap: true,),
+                                        IconButton(onPressed: (){
+                                          category[2] = index;
+                                          selectedtState((){
+                                            
+                                            selectedtype = index;
+                                          });
+                                        }, icon: Icon(selectedtype==index?Icons.check_box:Icons.check_box_outline_blank))
+                                      ],
+                                    );
+                                  },
+                                ),
+                              ),
+                              const Text("Engine Category"),
+                              GridView.builder(
+                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  childAspectRatio: 2.5
+                                ),
+                                itemCount:search.text.isEmpty? engine_Size.length:filteredEngine.length,
+                                shrinkWrap: true,
+                                padding:const EdgeInsets.only(left: 10),
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemBuilder: (BuildContext context, int index) {
+                                  return Row(
+                                    children: [
+                                      Text(
+                                        search.text.isEmpty?
+                                        engine_Size[index]:
+                                        filteredEngine[index]
+                                        ,softWrap: true,),
+                                      IconButton(onPressed: (){
+                                        category[0] = index;
+                                        selectedtState((){
+                                          selectededgine = index;
+                                        });
+                                      }, icon:  Icon(selectededgine==index
+                                      ?Icons.check_box: Icons.check_box_outline_blank))
+                                    ],
+                                  );
+                                },
+                              ),
+                              const Text("Brand of vehicle"),
+                              GridView.builder(
+                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  childAspectRatio: 2.5
+                                ),
+                                itemCount:search.text.isEmpty? brands.length:filteredbrand.length,
+                                shrinkWrap: true,
+                                padding:const EdgeInsets.only(left: 10),
+                                physics:const NeverScrollableScrollPhysics(),
+                                itemBuilder: (BuildContext context, int index) {
+                                  return Row(
+                                    children: [
+                                      Text(
+                                        search.text.isEmpty?
+                                        brands[index]:
+                                        filteredbrand[index]
+                                        ,softWrap: true,),
+                                      IconButton(onPressed: (){
+                                        category[1]  = index;
+                                        selectedtState((){
+                                          selectedbrand = index;
+                                        });
+                                      }, icon: Icon(selectedbrand==index
+                                      ?Icons.check_box:Icons.check_box_outline_blank))
+                                    ],
+                                  );
+                                },
+                              ),
+                              TextButton(onPressed: ()async{
+                                String state = "";
+                                while (state.isEmpty) {
+                                  showcircularProgressIndicator(context);
+                                  state =await UploadAudio(widget.assetPath, "name",category);
+                                }
+                                Navigator.pop(context);
+                                if (state == "Success") {
+                                  showsnackbar(context, "Successfully uploaded file");
+                                  Navigator.popUntil(context, ModalRoute.withName("/profile"));
+                                }
+                              }, child:const Text("Done"))
+                            ],
+                          );
+                        }
+                      ),
+                    ),
+                  );
+                });
+              }, icon:const Icon(Icons.check,color: Colors.white,)),
               IconButton(onPressed: (){
                 Navigator.pop(context);
-              }, icon:const Icon(Icons.cancel))
+              }, icon:const Icon(Icons.cancel,color: Colors.white,))
             ],
           ),
         ),

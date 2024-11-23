@@ -38,3 +38,8 @@ List brands = [
   "TATA",
   
 ];
+
+List type = [
+  "Stock",
+  "Modified",
+];
