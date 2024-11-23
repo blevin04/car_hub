@@ -62,45 +62,48 @@ class _WallpapersState extends State<Wallpapers> {
                         bool liked = snapshot0.data![index]["Likes"].contains(user!.uid);
                         List likes = snapshot0.data![index]["Likes"];
                         return Card(
-                          child: Column(
-                            children: [
-                              FutureBuilder(
-                                future: getWallpaper(snapshot0.data![index].id),
-                                builder: (BuildContext context, AsyncSnapshot snapshot1) {
-                                  if (snapshot1.connectionState == ConnectionState.waiting) {
-                                    return const Center( child: CircularProgressIndicator(),);
-                                  }
-                                  return Expanded(child: Image(image: MemoryImage(snapshot1.data)));
-                                },
-                              ),
-                              Row(
-                                children: [
-                                  StatefulBuilder(
-                                    builder: (context,likestate) {
-                                      return Row(
-                                        children: [
-                                          IconButton(onPressed: (){
-                                            liked?
-                                            likes.remove(user!.uid):
-                                            likes.add(user!.uid);
-                                            liked = !liked;
-                                            likeContent("wallpapers", snapshot0.data![index].id);
-                                            likestate((){});
-                                          }, icon: Icon(Icons.favorite,color: liked?Colors.red:null,)),
-                                          Text(likes.length.toString()),
-                                        ],
-                                      );
+                          child: InkWell(
+                            
+                            child: Column(
+                              children: [
+                                FutureBuilder(
+                                  future: getWallpaper(snapshot0.data![index].id),
+                                  builder: (BuildContext context, AsyncSnapshot snapshot1) {
+                                    if (snapshot1.connectionState == ConnectionState.waiting) {
+                                      return const Center( child: CircularProgressIndicator(),);
                                     }
-                                  ),
-                                  Row(
-                                    children: [
-                                      IconButton(onPressed: (){}, icon: const Icon(Icons.download)),
-                                      Text(snapshot0.data![index]["downloads"].length.toString()),
-                                    ],
-                                  )
-                                ],
-                              )
-                            ],
+                                    return Expanded(child: Image(image: MemoryImage(snapshot1.data)));
+                                  },
+                                ),
+                                Row(
+                                  children: [
+                                    StatefulBuilder(
+                                      builder: (context,likestate) {
+                                        return Row(
+                                          children: [
+                                            IconButton(onPressed: (){
+                                              liked?
+                                              likes.remove(user!.uid):
+                                              likes.add(user!.uid);
+                                              liked = !liked;
+                                              likeContent("wallpapers", snapshot0.data![index].id);
+                                              likestate((){});
+                                            }, icon: Icon(Icons.favorite,color: liked?Colors.red:null,)),
+                                            Text(likes.length.toString()),
+                                          ],
+                                        );
+                                      }
+                                    ),
+                                    Row(
+                                      children: [
+                                        IconButton(onPressed: (){}, icon: const Icon(Icons.download)),
+                                        Text(snapshot0.data![index]["downloads"].length.toString()),
+                                      ],
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
                           ),
                         );
                       },
