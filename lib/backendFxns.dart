@@ -195,7 +195,7 @@ Future<String>sendMessage(String messagetext,String roomId,String media)async{
   try {
     messageModel message = messageModel(
       message: messagetext, 
-      time: FieldValue.serverTimestamp(), 
+      time: DateTime.now(), 
       seen: false, 
       media: media,
       );

@@ -47,7 +47,7 @@ class roomModel{
 
 class messageModel{
   final String message;
-  final FieldValue time;
+  final DateTime time;
   final bool seen;
   final String media;
   messageModel({

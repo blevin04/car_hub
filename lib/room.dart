@@ -21,14 +21,12 @@ class Room extends StatelessWidget {
       ),
       endDrawer:Drawer(),
       body: StreamBuilder(
-        stream: firestore.collection("rooms").doc(roomId).collection("messages").limit(30).snapshots(),
+        stream: firestore.collection("rooms").doc(roomId).collection("messages").orderBy("Time", descending: false).limit(30).snapshots(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator(),);
           }
-          
           if (snapshot.data.docs.isEmpty) {
-            
             return ChatView(
               messageConfig: MessageConfiguration(
               ),
@@ -66,7 +64,9 @@ class Room extends StatelessWidget {
           return 
                ChatView(
                 chatBubbleConfig: ChatBubbleConfiguration(
+                  inComingChatBubbleConfig: ChatBubble(
 
+                  )
                 ),
                 loadingWidget:const CircularProgressIndicator(),
                 onSendTap: (message, replyMessage, messageType) {
@@ -90,6 +90,11 @@ class Room extends StatelessWidget {
                   
                 },
                 sendMessageConfig: SendMessageConfiguration(
+                  imagePickerConfiguration: ImagePickerConfiguration(
+                    onImagePicked: (path) async{
+                      sendMessage("", roomId, "image");
+                    },
+                  ),
                   textFieldConfig: TextFieldConfiguration(
                     textStyle: TextStyle(color: Colors.black)
                   )

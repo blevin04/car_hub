@@ -1,7 +1,10 @@
 
+import 'dart:io';
+
 import 'package:car_hub/backendFxns.dart';
 import 'package:car_hub/room.dart';
 import 'package:car_hub/utils.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 class Chatrooms extends StatefulWidget {
@@ -102,6 +105,7 @@ class newRoom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool private = false;
+    String coverImage = "";
     TextEditingController nameController = TextEditingController();
     TextEditingController descController = TextEditingController();
     return Scaffold(
@@ -126,12 +130,12 @@ class newRoom extends StatelessWidget {
             ),
             ),
             Padding(
-            padding: EdgeInsets.all(10),
+            padding:const EdgeInsets.all(10),
             child: TextField(
               controller: descController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
-                  borderSide: BorderSide(
+                  borderSide:const BorderSide(
                     color: const Color.fromARGB(132, 59, 59, 59)
                   ),
                   borderRadius: BorderRadius.circular(15)
@@ -160,6 +164,34 @@ class newRoom extends StatelessWidget {
                   ],
                 );
               }
+            ),
+            Container(
+              //padding:const EdgeInsets.all(20),
+              width: MediaQuery.of(context).size.width-50,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: Colors.grey
+                ),
+
+                image: coverImage.isEmpty?null:
+                DecorationImage(
+                  fit: BoxFit.cover,
+                  image: FileImage(File(coverImage)))
+              ),
+              child: InkWell(
+                onTap: ()async{
+                  coverImage = await getContent(context, FileType.image);
+                },
+                child:const Column(
+                  children: [
+                    SizedBox(height: 20,),
+                    Icon(Icons.image),
+                    Text("Upload Cover image"),
+                    SizedBox(height: 20,),
+                  ],
+                ),
+              ),
             ),
             const SizedBox(height: 50,),
             Container(

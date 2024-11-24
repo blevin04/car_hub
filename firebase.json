@@ -1,1 +1,41 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"carhub-d3ca7","appId":"1:1078887520426:android:882af3f638c8c9576bd8d3","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"carhub-d3ca7","configurations":{"android":"1:1078887520426:android:882af3f638c8c9576bd8d3","ios":"1:1078887520426:ios:02469e0617397db16bd8d3","macos":"1:1078887520426:ios:02469e0617397db16bd8d3","web":"1:1078887520426:web:a3cf07e2ed143e496bd8d3","windows":"1:1078887520426:web:dff4958a97d92db26bd8d3"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "carhub-d3ca7",
+          "appId": "1:1078887520426:android:882af3f638c8c9576bd8d3",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "carhub-d3ca7",
+          "configurations": {
+            "android": "1:1078887520426:android:882af3f638c8c9576bd8d3",
+            "ios": "1:1078887520426:ios:02469e0617397db16bd8d3",
+            "macos": "1:1078887520426:ios:02469e0617397db16bd8d3",
+            "web": "1:1078887520426:web:a3cf07e2ed143e496bd8d3",
+            "windows": "1:1078887520426:web:dff4958a97d92db26bd8d3"
+          }
+        }
+      }
+    }
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ],
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR\" run lint"
+      ]
+    }
+  ]
+}

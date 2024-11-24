@@ -23,13 +23,13 @@ class _HomepageState extends State<Homepage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    //   // Handle foreground messages
-    //   if (message.notification != null) {
-    //     print("Notification Title: ${message.notification!.title}");
-    //     print("Notification Body: ${message.notification!.body}");
-    //   }
-    // });
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      // Handle foreground messages
+      if (message.notification != null) {
+        print("Notification Title: ${message.notification!.title}");
+        print("Notification Body: ${message.notification!.body}");
+      }
+    });
   }
   @override
   Widget build(BuildContext context) {

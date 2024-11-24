@@ -17,16 +17,16 @@ void main()async {
   await Hive.initFlutter();
   await Hive.openBox("theme");
   await Hive.openBox("UserData");
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
 
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+);
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
   // Request permissions for iOS (optional)
   await messaging.requestPermission();
 
   // Subscribe to the 'global' topic
   await messaging.subscribeToTopic("global");
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-);
   runApp(const MyApp());
 }
 class MyApp extends StatefulWidget {
