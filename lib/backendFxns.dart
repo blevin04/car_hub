@@ -5,6 +5,7 @@ import 'package:car_hub/categories.dart';
 import 'package:car_hub/models.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:hive/hive.dart';
@@ -122,8 +123,28 @@ Future<List<String>> getrooms()async{
   }else{
     rooms = Hive.box("Rooms").get("Rooms");
   }
-
+  checkSubscription(rooms);
   return rooms;
+}
+void checkSubscription(List rooms)async{
+  await Hive.openBox("subscriptions");
+  if (Hive.box("subscriptions").containsKey("subscriptions")) {
+    List subscribed = Hive.box("subscriptions").get("subcriptions");
+    for(var room in rooms){
+    if (!subscribed.contains(room)) {
+    await FirebaseMessaging.instance.subscribeToTopic(room);
+    subscribed.add(room);
+    }
+  }
+  Hive.box("subscriptions").put("subscriptions", subscribed);
+  }else{
+    for(var room in rooms){
+    await FirebaseMessaging.instance.subscribeToTopic(room);
+
+  }
+  Hive.box("subscriptions").put("subscriptions", rooms);
+  }
+  
 }
 
 Future<String> joinroom(String room)async{

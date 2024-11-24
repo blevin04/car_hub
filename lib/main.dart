@@ -10,13 +10,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
-
+import 'package:firebase_messaging/firebase_messaging.dart';
 void main()async {
     WidgetsFlutterBinding.ensureInitialized();
     Gemini.init(apiKey: 'AIzaSyBOoqJyIEK1oAqVtKjT28CzPfSekpFlZew');
   await Hive.initFlutter();
   await Hive.openBox("theme");
   await Hive.openBox("UserData");
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  // Request permissions for iOS (optional)
+  await messaging.requestPermission();
+
+  // Subscribe to the 'global' topic
+  await messaging.subscribeToTopic("global");
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
 );

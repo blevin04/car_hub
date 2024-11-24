@@ -1,9 +1,9 @@
 import 'package:car_hub/authPage.dart';
 import 'package:car_hub/backendFxns.dart';
-import 'package:car_hub/gamePages/chatrooms.dart';
+import 'package:car_hub/chatrooms.dart';
 import 'package:car_hub/revMatch.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:gif_view/gif_view.dart';
@@ -19,6 +19,18 @@ void openShit()async{
   });
 }
 class _HomepageState extends State<Homepage> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    //   // Handle foreground messages
+    //   if (message.notification != null) {
+    //     print("Notification Title: ${message.notification!.title}");
+    //     print("Notification Body: ${message.notification!.body}");
+    //   }
+    // });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -194,7 +206,6 @@ class _HomepageState extends State<Homepage> {
           }else{
             return Container();
           }
-          
         }
       ),
     );
