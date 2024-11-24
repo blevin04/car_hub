@@ -13,7 +13,7 @@ class Chatrooms extends StatefulWidget {
   @override
   _ChatroomsState createState() => _ChatroomsState();
 }
-
+TextEditingController search_controller = TextEditingController();
 class _ChatroomsState extends State<Chatrooms> {
   @override
   Widget build(BuildContext context) {
@@ -28,29 +28,50 @@ class _ChatroomsState extends State<Chatrooms> {
             return const Center(child: CircularProgressIndicator(),);
           }
           if (snapshot.data.isEmpty) {
-            return Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SearchBar(
-                    hintText: "Search for a public room to join",
-                  ),
-                ),
-                ListView.builder(
-                  itemCount: 10,
-                  shrinkWrap: true,
-                  itemBuilder: (BuildContext context, int index) {
-                    return ListTile(
-                      leading: CircleAvatar(),
-                      title: Text("Room title"),
-                      trailing: Text("20 members"),
-                    );
-                  },
-                ),
-              ],
+            List publicRooms = [];
+            return StatefulBuilder(
+              builder: (context,joinState) {
+                return Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SearchBar(
+                        controller: search_controller,
+                        hintText: "Search for a public room to join",
+                        onChanged: (value)async{
+                          publicRooms = await searchPublic(value);
+                          joinState((){});
+                        },
+                      ),
+                    ),
+                    Visibility(
+                      visible: publicRooms.isEmpty,
+                      child: 
+                      TextButton(onPressed: (){}, child: const Text("Use Passkey to enter Private room"))
+                    ),
+                    ListView.builder(
+                      itemCount: publicRooms.length,
+                      shrinkWrap: true,
+                      itemBuilder: (BuildContext context, int index) {
+                        String name = publicRooms[index].data()["Name"];
+                        int memberNums = publicRooms[index].data()["members"].length;
+                        String roomId = publicRooms[index].id;
+                        return ListTile(
+                          leading: CircleAvatar(),
+                          title: Text(name),
+                          subtitle: Text("$memberNums members"),
+                          trailing: TextButton(onPressed: ()async{
+                            await joinroom(roomId);
+                          }, child:const Text("join")),
+                        );
+                      },
+                    ),
+                  ],
+                );
+              }
             );
           }
-          print(snapshot.data);
+          //print(snapshot.data);
           return ListView.builder(
             itemCount: snapshot.data.length,
             shrinkWrap: true,

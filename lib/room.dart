@@ -23,124 +23,48 @@ class Room extends StatelessWidget {
       body: StreamBuilder(
         stream: firestore.collection("rooms").doc(roomId).collection("messages").orderBy("Time", descending: false).limit(30).snapshots(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator(),);
-          }
-          if (snapshot.data.docs.isEmpty) {
-            return ChatView(
-              messageConfig: MessageConfiguration(
-              ),
-              typeIndicatorConfig: TypeIndicatorConfiguration(
-              ),
-              chatController: ChatController(
-                initialMessageList: List.empty(), 
-                scrollController: ScrollController(), 
-                otherUsers: List.empty(), 
-                currentUser: ChatUser(id: user!.uid, name: uName)), 
-              chatViewState: ChatViewState.noData,
-              onSendTap: (message, replyMessage, messageType)async {
-                //print(message);
-                String type = "";
-                if ( messageType.isText) {
-                  type = "text";
-
-                }
-                if (messageType.isImage) {
-                  type = "image";
-
-                }
-                if (messageType.isVoice) {
-                  type = "audio";
-                }
-                if (messageType.isCustom) {
-                  type = "custom";
-                }
-                await sendMessage(message, roomId, type);
-              },
-              );
-          }
           List members = info["members"];
-          print(snapshot.data.docs);
-          return 
-               ChatView(
-                chatBubbleConfig: ChatBubbleConfiguration(
-                  inComingChatBubbleConfig: ChatBubble(
-
-                  )
-                ),
-                loadingWidget:const CircularProgressIndicator(),
-                onSendTap: (message, replyMessage, messageType) {
-                  String type = "";
-                if ( messageType.isText) {
-                  type = "text";
-
-                }
-                if (messageType.isImage) {
-                  type = "image";
-
-                }
-                if (messageType.isVoice) {
-                  type = "audio";
-                }
-                if (messageType.isCustom) {
-                  type = "custom";
-                }
-                  sendMessage(message, roomId, type);
-                  
-                  
-                },
-                sendMessageConfig: SendMessageConfiguration(
-                  imagePickerConfiguration: ImagePickerConfiguration(
-                    onImagePicked: (path) async{
-                      sendMessage("", roomId, "image");
-                    },
-                  ),
-                  textFieldConfig: TextFieldConfiguration(
-                    textStyle: TextStyle(color: Colors.black)
-                  )
-                ),
-                chatBackgroundConfig: ChatBackgroundConfiguration(
-                  backgroundColor: Colors.grey,
-                  messageTimeTextStyle: TextStyle(color: Colors.black,backgroundColor: Colors.blue)
-                ),
-                chatViewState:snapshot.data.docs.isEmpty?ChatViewState.noData: ChatViewState.hasMessages,
+          return ListView.builder(
+            shrinkWrap: true,
+            itemCount: snapshot.data.docs.length,
+            itemBuilder: (BuildContext context, int index) {
+              String type = snapshot.data.docs[index]["type"];
+              if (type == "image") {
+                //return BubbleNormalImage(id: "Image", image: )
+              }
+              if (type == "audio") {
+                //return BubbleNormalAudio(onSeekChanged: onSeekChanged, onPlayPauseButtonClick: onPlayPauseButtonClick)
+              }
+              List messages = snapshot.data.docs;
+              return ChatView(
                 chatController: ChatController(
-                  
-                  initialMessageList: List.generate(snapshot.data.docs.length, (index){
-                    String type = snapshot.data.docs[index]["type"];
-                    String textM = snapshot.data.docs[index]["message"];
-                    String sender = snapshot.data.docs[index]["sender"];
-                    //var seen = snapshot.data.docs[index]["Seen"];
-                    DateTime time = snapshot.data.docs[index]["Time"].toDate();
-                    MessageType type0 = MessageType.text;
-                    if (type == "text") {
-                      type0 = MessageType.text;
-                    }
-                    if (type == "audio") {
-                      type0 = MessageType.voice;
-                    }
-                    if (type == "image") {
-                      type0 = MessageType.image;
-                    }
+                  initialMessageList: List.generate(messages.length, (index){
+                    String message = messages[index]["message"];
+                    DateTime createdAt = messages[index]["Time"].toDate();
+                    String sentBy = messages[index]["sender"];
                     return Message(
-                      messageType: type0,
-                      message: textM, 
-                      createdAt: time, 
-                      sentBy: sender,
-                      status: MessageStatus.delivered
+                      message: message, 
+                      createdAt: createdAt, 
+                      sentBy: sentBy
                       );
                   }), 
                   scrollController: ScrollController(), 
                   otherUsers: List.generate(members.length, (index){
-                    return ChatUser(          
+                    return ChatUser(
                       id: members[index], 
-                      name:"user",
+                      name: "User",
                       );
-                  }),
-                  currentUser: ChatUser(id: user!.uid, name: uName)),);
-           
+                  }), 
+                  currentUser: ChatUser(id: user!.uid, name: "me")
+                  ), 
+                chatViewState: ChatViewState.hasMessages
+                );
+              
+            },
+          );
         },
       ),
+     
     );
   }
 }

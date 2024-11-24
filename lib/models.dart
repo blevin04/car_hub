@@ -26,6 +26,7 @@ class roomModel{
   final DateTime creationTime;
   final List admins;
   final String description;
+  final bool isprivate;
   roomModel({
     required this.roomName,
     required this.lastMessage,
@@ -33,6 +34,7 @@ class roomModel{
     required this.creationTime,
     required this.lastMessageTime,
     required this.description,
+    required this.isprivate,
   });
   Map<String,dynamic> toJson() =>{
     "Name":roomName,
@@ -42,6 +44,7 @@ class roomModel{
     "creationTime":creationTime,
     "members":[user!.uid],
     "description":description,
+    "isprivate":isprivate
   };
 }
 

@@ -173,6 +173,7 @@ Future<String> createRoom(String roomName,bool public,String description,)async{
   await Hive.openBox("Rooms");
   try {
     roomModel roomD = roomModel(
+      isprivate: public,
       roomName: roomName, 
       description: description,
       lastMessage: "$name created $roomName",
@@ -346,4 +347,28 @@ void likeContent(String content,String contentId)async{
     likes.add(user!.uid);
   }
   await firestore.collection(content).doc(contentId).update({"Likes":likes});
+}
+List<QueryDocumentSnapshot> publicr = [];
+Future<List<QueryDocumentSnapshot>> searchPublic(String filter)async{
+  List<QueryDocumentSnapshot> rooms = [];
+  
+  if (publicr.isEmpty) {
+    await firestore.collection("rooms").where("isprivate",isEqualTo: false).get().then((onValue){
+      //print(onValue.doc)
+    for(var room in onValue.docs){
+      publicr.add(room);
+      if (room.data()["Name"].toLowerCase().contains(filter.toLowerCase())) {
+        rooms.add(room);
+      }
+    }
+  });
+  }else{
+    for(var public in publicr){
+      if (public["Name"].toLowerCase().contains(filter.toLowerCase())) {
+        rooms.add(public);
+      }
+    }
+  }
+
+return rooms;
 }
