@@ -37,6 +37,9 @@ class Room extends StatelessWidget {
               }
               List messages = snapshot.data.docs;
               return ChatView(
+                onSendTap:(message, replyMessage, messageType) async {
+                  await sendMessage(message, roomId, "text");
+                },
                 chatController: ChatController(
                   initialMessageList: List.generate(messages.length, (index){
                     String message = messages[index]["message"];
@@ -57,7 +60,13 @@ class Room extends StatelessWidget {
                   }), 
                   currentUser: ChatUser(id: user!.uid, name: "me")
                   ), 
-                chatViewState: ChatViewState.hasMessages
+                chatViewState: ChatViewState.hasMessages,
+                sendMessageConfig: SendMessageConfiguration(
+
+                  textFieldConfig: TextFieldConfiguration(
+                    textStyle: TextStyle(color: Colors.black)
+                  )
+                ),
                 );
               
             },
