@@ -54,7 +54,7 @@ dependencies:
   firebase_messaging: ^15.1.5
   chatview: ^2.3.0
   wallpaper_handler: ^0.0.2
-  ringtone_set_mul: ^0.0.4
+  set_ringtone: ^1.0.0
   
 dependency_overrides:
   http: ^0.13.3

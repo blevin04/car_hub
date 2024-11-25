@@ -5,7 +5,8 @@ import 'package:car_hub/backendFxns.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:gif_view/gif_view.dart';
- import 'package:ringtone_set_mul/ringtone_set_mul.dart';
+import 'package:set_ringtone/set_ringtone.dart';
+ //import 'package:ringtone_set_mul/ringtone_set_mul.dart';
 
 class Tunes extends StatefulWidget {
   const Tunes({super.key});
@@ -110,15 +111,15 @@ class _TunesState extends State<Tunes> {
                                       const Text("Set as:",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 17),),
                                       TextButton(onPressed: ()async{
                                         File file = File.fromRawPath(snapshot1.data);
-                                        await RingtoneSet.setRingtoneFromFile(file);
+                                        await Ringtone.setRingtoneFromFile(file);
                                       }, child:const Text("Ringtone")),
                                       TextButton(onPressed: ()async{
-                                        File file = File.fromRawPath(snapshot1.data);
-                                        await RingtoneSet.setNotificationFromFile(file);
+                                         File file = File.fromRawPath(snapshot1.data);
+                                         Ringtone.setNotificationFromFile(file);
                                       }, child:const Text("Notification sound")),
                                       TextButton(onPressed: ()async{
                                         File file = File.fromRawPath(snapshot1.data);
-                                        await RingtoneSet.setAlarmFromFile(file);
+                                        await Ringtone.setAlarmFromFile(file);
                                       }, child: const Text("Alarm Sound"))
                                     ],
                                   ),

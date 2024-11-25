@@ -901,14 +901,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.8"
-  ringtone_set_mul:
-    dependency: "direct main"
-    description:
-      name: ringtone_set_mul
-      sha256: "52b13762402485e09e99b3cae9da7a4eb5d2949f673b28a5ac3642ef2b6a86c8"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.4"
   rxdart:
     dependency: transitive
     description:
@@ -917,6 +909,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.28.0"
+  set_ringtone:
+    dependency: "direct main"
+    description:
+      name: set_ringtone
+      sha256: "11d689c6fbb703a53baf00c05573cfb3bff441bfae56a47be4873558a3a80cfd"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   shared_preferences:
     dependency: transitive
     description:
