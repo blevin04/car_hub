@@ -84,16 +84,22 @@ class _TunesState extends State<Tunes> {
                       return Card(
                         child: Column(
                           children: [
-                            GifView.asset(
-                              controller: gifController,
-                              "lib/assets/44zG.gif"
-                              ),
-                              IconButton(
+                            Stack(
+                              alignment: Alignment.bottomCenter,
+                              children: [
+                                GifView.asset(
+                                  controller: gifController,
+                                  "lib/assets/44zG.gif"
+                                  ),
+                                  IconButton(
                                 onPressed: (){
                                   // player.setSource()
                                 gifController.isPlaying?
                                 gifController.stop():gifController.play();
                               }, icon:const Icon(Icons.play_circle_fill))
+                              ],
+                            ),
+                              
                           ],
                         ),
                       );
