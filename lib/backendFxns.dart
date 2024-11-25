@@ -326,7 +326,6 @@ Future<String>UploadAudio(String audioPath,String name,List categories)async{
 
 Future<List<QueryDocumentSnapshot>> getTunes()async{
   List<QueryDocumentSnapshot> tunes = [];
-
   await firestore.collection("tunes").where("name",isNotEqualTo: null).get().then((onValue){
     for(var value in onValue.docs){
       tunes.add(value);
@@ -334,6 +333,7 @@ Future<List<QueryDocumentSnapshot>> getTunes()async{
   });
   return tunes;
 }
+
 Future<Uint8List>gettuneData(String tuneId)async{
   Uint8List data = Uint8List(100);
   await storage.child("tunes/$tuneId").list().then((onValue)async{
@@ -342,6 +342,7 @@ Future<Uint8List>gettuneData(String tuneId)async{
 
   return data;
 }
+
 Future<List<QueryDocumentSnapshot>> getWallpaperIds({String filter= ""})async{
   List<QueryDocumentSnapshot> wallpapers = [];
   try {
@@ -350,7 +351,6 @@ Future<List<QueryDocumentSnapshot>> getWallpaperIds({String filter= ""})async{
       wallpapers = onValue.docs;
     });
     }
-    
   } catch (e) {
     throw e.toString();
   }
@@ -369,10 +369,10 @@ void likeContent(String content,String contentId)async{
   }
   await firestore.collection(content).doc(contentId).update({"Likes":likes});
 }
+
 List<QueryDocumentSnapshot> publicr = [];
 Future<List<QueryDocumentSnapshot>> searchPublic(String filter)async{
   List<QueryDocumentSnapshot> rooms = [];
-  
   if (publicr.isEmpty) {
     await firestore.collection("rooms").where("isprivate",isEqualTo: false).get().then((onValue){
       //print(onValue.doc)
@@ -396,13 +396,11 @@ return rooms;
 
 Future<Map<String,dynamic>>getMemberdata(List memberId)async{
   Map<String,dynamic> data = {};
-
   for(var id in memberId){
     await firestore.collection("users").doc(id).get().then((onValue){
       final dt =<String,dynamic> {id:onValue.data()!["fullName"]};
       data.addAll(dt);
     });
   }
-
   return data;
 }
