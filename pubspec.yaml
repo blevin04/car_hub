@@ -53,6 +53,7 @@ dependencies:
   audioplayers: ^6.1.0
   firebase_messaging: ^15.1.5
   chatview: ^2.3.0
+  async_wallpaper: ^2.1.0
   
 
 dev_dependencies:

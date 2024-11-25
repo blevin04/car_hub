@@ -16,7 +16,6 @@ List trending_sounds =[
   "3",
   "4"
 ];
-AudioPlayer player =AudioPlayer();
 class _TunesState extends State<Tunes> {
   @override
   Widget build(BuildContext context) {
@@ -79,29 +78,45 @@ class _TunesState extends State<Tunes> {
                     ),
                     itemCount: snapshot0.data!.length,
                     itemBuilder: (BuildContext context, int index) {
-                      GifController gifController = GifController();
-
-                      return Card(
-                        child: Column(
-                          children: [
-                            Stack(
-                              alignment: Alignment.bottomCenter,
-                              children: [
-                                GifView.asset(
-                                  controller: gifController,
-                                  "lib/assets/44zG.gif"
-                                  ),
-                                  IconButton(
-                                onPressed: (){
-                                  // player.setSource()
-                                gifController.isPlaying?
-                                gifController.stop():gifController.play();
-                              }, icon:const Icon(Icons.play_circle_fill))
-                              ],
-                            ),
-                              
-                          ],
+                      GifController gifController = GifController(autoPlay: false);
+                      AudioPlayer player =AudioPlayer();
+                      return FutureBuilder(
+                        future: gettuneData(snapshot0.data![index].id),
+                        builder: (BuildContext context, AsyncSnapshot snapshot1) {
+                          if (snapshot1.connectionState == ConnectionState.waiting) {
+                            return Card(
+                              child: GifView.asset("lib/assets/44zG.gif"),
+                            );
+                          }
+                          return Card(
+                        child: InkWell(
+                          child: Column(
+                            children: [
+                              Stack(
+                                alignment: Alignment.bottomCenter,
+                                children: [
+                                  GifView.asset(
+                                    controller: gifController,
+                                    "lib/assets/44zG.gif"
+                                    ),
+                                    IconButton(
+                                  onPressed: (){
+                                    // player.setSource()
+                                    // print(player.state);
+                                    player.state == PlayerState.playing?
+                                    player.stop():
+                                    player.play(BytesSource(snapshot1.data));
+                                  gifController.isPlaying?
+                                  gifController.stop():gifController.play();
+                                }, icon:const Icon(Icons.play_circle_fill))
+                                ],
+                              ),
+                                
+                            ],
+                          ),
                         ),
+                      );
+                        },
                       );
                     },
                   );
