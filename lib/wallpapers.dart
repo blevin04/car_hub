@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:car_hub/backendFxns.dart';
+import 'package:car_hub/preview0.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:wallpaper_handler/wallpaper_handler.dart';
 
 class Wallpapers extends StatefulWidget {
   const Wallpapers({super.key});
@@ -79,17 +83,7 @@ class _WallpapersState extends State<Wallpapers> {
                           child: InkWell(
                             onTap: (){},
                             onLongPress: (){
-                              showDialog(context: context, builder: (context){
-                                return Dialog(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                    children: [
-                                      TextButton(onPressed: (){}, child:const Text("SetWallpaper")),
-                                      TextButton(onPressed: (){}, child: const Text("Download")),
-                                    ],
-                                  ),
-                                );
-                              });
+                              
                             },
                             child: Column(
                               children: [
@@ -100,9 +94,42 @@ class _WallpapersState extends State<Wallpapers> {
                                       return const Center( child: CircularProgressIndicator(),);
                                     }
                                     return Expanded(
-                                      child: Image(
-                                      fit: BoxFit.fitWidth,
-                                      image: MemoryImage(snapshot1.data)));
+                                      child: InkWell(
+                                        onTap: (){
+                                          Navigator.push(context, (MaterialPageRoute(builder: (context)=>PreviewWallpaper(bytes: snapshot1.data))));
+                                        },
+                                        onLongPress: (){
+                                          showDialog(context: context, builder: (context){
+                                            return Dialog(
+                                              child: SizedBox(
+                                                height: 250,
+                                                child: Column(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                  children: [
+                                                    TextButton(onPressed: ()async{
+                                                      String filePath = File.fromRawPath(snapshot1.data).path;
+                                                      await WallpaperHandler.instance.setWallpaperFromFile(filePath, WallpaperLocation.homeScreen);
+                                                    }, child:const Text("Set Home Wallpaper")),
+                                                    TextButton(onPressed: ()async{
+                                                      String filePath = File.fromRawPath(snapshot1.data).path;
+                                                      await WallpaperHandler.instance.setWallpaperFromFile(filePath, WallpaperLocation.lockScreen);
+                                                    }, child:const Text("Set lockScreen Wallpaper")),
+                                                    TextButton(onPressed: ()async{
+                                                      String filePath = File.fromRawPath(snapshot1.data).path;
+                                                      await WallpaperHandler.instance.setWallpaperFromFile(filePath, WallpaperLocation.bothScreens);
+                                                    }, child:const Text("Set both Screens Wallpaper")),
+                                                    TextButton(onPressed: (){}, child: const Text("Download")),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          });
+                                        },
+                                        child: Image(
+                                        fit: BoxFit.fitWidth,
+                                        image: MemoryImage(snapshot1.data)),
+                                      ),
+                                    );
                                   },
                                 ),
                                 Row(
