@@ -275,8 +275,8 @@ Future<Uint8List> getWallpaper(String id)async{
   // String state = "";
   Uint8List wallpaper = Uint8List(100);
   try {
-    await storage.child("/wallpapers/$id").getData().then((onValue){
-      wallpaper = onValue!;
+    await storage.child("/wallpapers/$id").list().then((onValue)async{
+      wallpaper =(await onValue.items.single.getData())!;
     });
     // state = "Success";
   } catch (e) {
@@ -324,12 +324,26 @@ Future<String>UploadAudio(String audioPath,String name,List categories)async{
   return state;
 }
 
+Future<List<QueryDocumentSnapshot>> getTunes()async{
+  List<QueryDocumentSnapshot> tunes = [];
+
+  await firestore.collection("tunes").where("name",isNotEqualTo: null).get().then((onValue){
+    for(var value in onValue.docs){
+      tunes.add(value);
+    }
+  });
+  return tunes;
+}
+
 Future<List<QueryDocumentSnapshot>> getWallpaperIds({String filter= ""})async{
   List<QueryDocumentSnapshot> wallpapers = [];
   try {
-    await firestore.collection("wallpapers").where("categories",arrayContains: filter).get().then((onValue){
+    if (filter.isEmpty) {
+      await firestore.collection("wallpapers").where("name",isNotEqualTo: null).get().then((onValue){
       wallpapers = onValue.docs;
     });
+    }
+    
   } catch (e) {
     throw e.toString();
   }
@@ -371,4 +385,17 @@ Future<List<QueryDocumentSnapshot>> searchPublic(String filter)async{
   }
 
 return rooms;
+}
+
+Future<Map<String,dynamic>>getMemberdata(List memberId)async{
+  Map<String,dynamic> data = {};
+
+  for(var id in memberId){
+    await firestore.collection("users").doc(id).get().then((onValue){
+      final dt =<String,dynamic> {id:onValue.data()!["fullName"]};
+      data.addAll(dt);
+    });
+  }
+
+  return data;
 }

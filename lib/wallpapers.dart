@@ -51,6 +51,19 @@ class _WallpapersState extends State<Wallpapers> {
                 FutureBuilder(
                   future: getWallpaperIds(),
                   builder: (context,snapshot0) {
+                    if (snapshot0.connectionState == ConnectionState.waiting) {
+                      return GridView.builder(
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                        ),
+                        itemCount: 2,
+                        shrinkWrap: true,
+                        itemBuilder: (BuildContext context, int index) {
+                          return const Card();
+                        },
+                      );
+                    }
+                    print(snapshot0.data);
                     return GridView.builder(
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
@@ -62,8 +75,22 @@ class _WallpapersState extends State<Wallpapers> {
                         bool liked = snapshot0.data![index]["Likes"].contains(user!.uid);
                         List likes = snapshot0.data![index]["Likes"];
                         return Card(
+                          color: const Color.fromARGB(6, 158, 158, 158),
                           child: InkWell(
-                            
+                            onTap: (){},
+                            onLongPress: (){
+                              showDialog(context: context, builder: (context){
+                                return Dialog(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                    children: [
+                                      TextButton(onPressed: (){}, child:const Text("SetWallpaper")),
+                                      TextButton(onPressed: (){}, child: const Text("Download")),
+                                    ],
+                                  ),
+                                );
+                              });
+                            },
                             child: Column(
                               children: [
                                 FutureBuilder(
@@ -72,10 +99,14 @@ class _WallpapersState extends State<Wallpapers> {
                                     if (snapshot1.connectionState == ConnectionState.waiting) {
                                       return const Center( child: CircularProgressIndicator(),);
                                     }
-                                    return Expanded(child: Image(image: MemoryImage(snapshot1.data)));
+                                    return Expanded(
+                                      child: Image(
+                                      fit: BoxFit.fitWidth,
+                                      image: MemoryImage(snapshot1.data)));
                                   },
                                 ),
                                 Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     StatefulBuilder(
                                       builder: (context,likestate) {
@@ -95,9 +126,10 @@ class _WallpapersState extends State<Wallpapers> {
                                       }
                                     ),
                                     Row(
+                                      
                                       children: [
                                         IconButton(onPressed: (){}, icon: const Icon(Icons.download)),
-                                        Text(snapshot0.data![index]["downloads"].length.toString()),
+                                        Text(snapshot0.data![index]["downloads"].toString()),
                                       ],
                                     )
                                   ],

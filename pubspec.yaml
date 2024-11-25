@@ -90,6 +90,7 @@ flutter:
     - lib/assets/carTrivia.png
     - lib/assets/m1.png
     - lib/assets/img.jpg
+    - lib/assets/44zG.gif
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 

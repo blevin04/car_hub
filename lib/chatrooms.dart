@@ -92,8 +92,9 @@ class _ChatroomsState extends State<Chatrooms> {
                   String duration0 = duration(time);
                   return ListTile(
                     shape:const Border(top: BorderSide(color: Colors.grey)),
-                    onTap: (){
-                      Navigator.push(context, (MaterialPageRoute(builder: (context)=>Room(roomId: roomIds[index], roomName: roomName, info: snapshot1.data))));
+                    onTap: ()async{
+                      Map<String,dynamic> memberData = await getMemberdata(snapshot1.data["members"]);
+                      Navigator.push(context, (MaterialPageRoute(builder: (context)=>Room(roomId: roomIds[index], roomName: roomName, info: memberData))));
                     },
                     leading: CircleAvatar(),
                     title: Text(roomName,style:const TextStyle(fontWeight: FontWeight.bold),),

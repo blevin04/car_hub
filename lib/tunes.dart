@@ -1,5 +1,8 @@
+import 'package:audioplayers/audioplayers.dart';
+import 'package:car_hub/backendFxns.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:gif_view/gif_view.dart';
 
 class Tunes extends StatefulWidget {
   const Tunes({super.key});
@@ -13,6 +16,7 @@ List trending_sounds =[
   "3",
   "4"
 ];
+AudioPlayer player =AudioPlayer();
 class _TunesState extends State<Tunes> {
   @override
   Widget build(BuildContext context) {
@@ -37,7 +41,6 @@ class _TunesState extends State<Tunes> {
           ),
           Card(
             child: CarouselSlider(
-              
               items: trending_sounds.map((index){
                 return InkWell(
                   child: Center(child: Text("sound number $index"),),
@@ -51,18 +54,52 @@ class _TunesState extends State<Tunes> {
           ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text("Categories",style: TextStyle(fontWeight: FontWeight.bold),),
+                child: Text("Pure Sounds",style: TextStyle(fontWeight: FontWeight.bold),),
               ),
-              GridView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                ),
-                itemCount: 2,
-                itemBuilder: (BuildContext context, int index) {
-                  return Card();
-                },
+              FutureBuilder(
+                future: getTunes(),
+                builder: (context,snapshot0) {
+                  if (snapshot0.connectionState == ConnectionState.waiting) {
+                    return GridView.builder(
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                      ),
+                      itemCount: 2,
+                      shrinkWrap: true,
+                      itemBuilder: (BuildContext context, int index) {
+                        return const Card();
+                      },
+                    );
+                  }
+                  return GridView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                    ),
+                    itemCount: snapshot0.data!.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      GifController gifController = GifController();
+
+                      return Card(
+                        child: Column(
+                          children: [
+                            GifView.asset(
+                              controller: gifController,
+                              "lib/assets/44zG.gif"
+                              ),
+                              IconButton(
+                                onPressed: (){
+                                  // player.setSource()
+                                gifController.isPlaying?
+                                gifController.stop():gifController.play();
+                              }, icon:const Icon(Icons.play_circle_fill))
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                }
               ),
               ],
             ),

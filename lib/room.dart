@@ -19,24 +19,38 @@ class Room extends StatelessWidget {
         ),
         title: Text(roomName),
       ),
-      endDrawer:Drawer(),
+      endDrawer:Drawer(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircleAvatar(
+              radius: 50,
+              
+            ),
+            Text(roomName),
+            ListTile()
+          ],
+        ),
+      ),
       body: StreamBuilder(
         stream: firestore.collection("rooms").doc(roomId).collection("messages").orderBy("Time", descending: false).limit(30).snapshots(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
-          List members = info["members"];
-          return ListView.builder(
-            shrinkWrap: true,
-            itemCount: snapshot.data.docs.length,
-            itemBuilder: (BuildContext context, int index) {
-              String type = snapshot.data.docs[index]["type"];
-              if (type == "image") {
-                //return BubbleNormalImage(id: "Image", image: )
-              }
-              if (type == "audio") {
-                //return BubbleNormalAudio(onSeekChanged: onSeekChanged, onPlayPauseButtonClick: onPlayPauseButtonClick)
-              }
-              List messages = snapshot.data.docs;
-              return ChatView(
+          if(snapshot.connectionState == ConnectionState.waiting){
+            return const Center(child:CircularProgressIndicator());
+          }
+          List messages = snapshot.data.docs;
+          return ChatView(
+            chatBubbleConfig: ChatBubbleConfiguration(
+              inComingChatBubbleConfig: ChatBubble(
+
+              ),
+              outgoingChatBubbleConfig: ChatBubble(
+
+              )
+            ),
+            messageConfig: MessageConfiguration(
+
+            ),
                 onSendTap:(message, replyMessage, messageType) async {
                   await sendMessage(message, roomId, "text");
                 },
@@ -46,31 +60,40 @@ class Room extends StatelessWidget {
                     DateTime createdAt = messages[index]["Time"].toDate();
                     String sentBy = messages[index]["sender"];
                     return Message(
+                      reaction: Reaction(
+                        reactions: List.empty(), 
+                        reactedUserIds: List.empty()
+                        ),
                       message: message, 
                       createdAt: createdAt, 
-                      sentBy: sentBy
+                      sentBy: sentBy,
+                      status: MessageStatus.delivered
                       );
                   }), 
+                  
                   scrollController: ScrollController(), 
-                  otherUsers: List.generate(members.length, (index){
+                  otherUsers: List.generate(info.length, (index){
+                    String id = info.keys.toList()[index];
+                    String name = info[id];
                     return ChatUser(
-                      id: members[index], 
-                      name: "User",
+                      id: id, 
+                      name: name,
                       );
                   }), 
                   currentUser: ChatUser(id: user!.uid, name: "me")
                   ), 
                 chatViewState: ChatViewState.hasMessages,
                 sendMessageConfig: SendMessageConfiguration(
-
+                    micIconColor: Colors.black,
+                    imagePickerIconsConfig: ImagePickerIconsConfiguration(
+                      cameraIconColor: Colors.black,
+                      galleryIconColor: Colors.black
+                    ),
                   textFieldConfig: TextFieldConfiguration(
                     textStyle: TextStyle(color: Colors.black)
                   )
                 ),
                 );
-              
-            },
-          );
         },
       ),
      
