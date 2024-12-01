@@ -218,7 +218,9 @@ Widget screen0(){
                       child: Text("Welcome",style: TextStyle(fontSize: 20,fontWeight: FontWeight.w900,color: Colors.blue),),
                       
                     ),
-                    const SizedBox(height: 70,),
+                    const SizedBox(height: 40,),
+                    const Text("Suck squeeze bang blow"),
+                    const SizedBox(height: 30,),
                     InkWell(
                       onTap: (){
                         changeScreen(1);
@@ -320,6 +322,15 @@ Widget screen0(){
                     if (state == "Success") {
                       showsnackbar(context, "Welcome back");
                       Navigator.pop(context);
+                    }
+                    if (state == "user-disabled") {
+                      showsnackbar(context, "Account disabled");
+                    }
+                    if (state == "user-not-found") {
+                      showsnackbar(context, "Account not found try to create an account first");
+                    }
+                    if (state == "wrong-password") {
+                      showsnackbar(context, "Wrong password"); 
                     }
                   }
                 },
