@@ -3,7 +3,9 @@ import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:car_hub/backendFxns.dart';
 import 'package:car_hub/categories.dart';
+import 'package:car_hub/homepage.dart';
 import 'package:car_hub/profile_Page.dart';
+import 'package:car_hub/tunes.dart';
 import 'package:car_hub/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -383,6 +385,9 @@ return state;
                                       filteredbrand.add(brand);
                                     }
                                   });
+                                  selectedtState((){
+                                    
+                                  });
                                 },
                               ),
                               
@@ -479,7 +484,7 @@ return state;
                                 Navigator.pop(context);
                                 if (state == "Success") {
                                   showsnackbar(context, "Successfully uploaded file");
-                                  Navigator.popUntil(context, ModalRoute.withName("/profile"));
+                                  Navigator.pushAndRemoveUntil(context, (MaterialPageRoute(builder: (context)=> const Tunes())), (route)=>false);
                                 }
                               }, child:const Text("Done"))
                             ],

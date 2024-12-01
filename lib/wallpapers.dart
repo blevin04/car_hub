@@ -67,7 +67,7 @@ class _WallpapersState extends State<Wallpapers> {
                         },
                       );
                     }
-                    print(snapshot0.data);
+                    // print(snapshot0.data);
                     return GridView.builder(
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,

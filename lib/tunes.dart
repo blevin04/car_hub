@@ -129,24 +129,31 @@ class _TunesState extends State<Tunes> {
                           },
                           child: Column(
                             children: [
-                              Stack(
-                                alignment: Alignment.bottomCenter,
-                                children: [
-                                  GifView.asset(
-                                    controller: gifController,
-                                    "lib/assets/44zG.gif"
-                                    ),
-                                    IconButton(
-                                  onPressed: (){
-                                    // player.setSource()
-                                    // print(player.state);
-                                    player.state == PlayerState.playing?
-                                    player.stop():
-                                    player.play(BytesSource(snapshot1.data));
-                                  gifController.isPlaying?
-                                  gifController.stop():gifController.play();
-                                }, icon:const Icon(Icons.play_circle_fill))
-                                ],
+                              StatefulBuilder(
+                                builder: (context,state) {
+                                  return Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      GifView.asset(
+                                        controller: gifController,
+                                        "lib/assets/44zG.gif"
+                                        ),
+                                        IconButton(
+                                      onPressed: (){
+                                        // player.setSource()
+                                        // print(player.state);
+                                        player.state == PlayerState.playing?
+                                        player.stop():
+                                        player.play(BytesSource(snapshot1.data));
+                                      gifController.isPlaying?
+                                      gifController.stop():gifController.play();
+                                      state((){});
+                                    }, icon:gifController.isPlaying?
+                                    const Icon(Icons.pause):
+                                    const Icon(Icons.play_circle_fill,size: 40,))
+                                    ],
+                                  );
+                                }
                               ),
                             ],
                           ),
