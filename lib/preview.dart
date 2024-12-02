@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:car_hub/backendFxns.dart';
 import 'package:car_hub/categories.dart';
-import 'package:car_hub/homepage.dart';
 import 'package:car_hub/profile_Page.dart';
 import 'package:car_hub/tunes.dart';
 import 'package:car_hub/utils.dart';

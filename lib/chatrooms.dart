@@ -107,16 +107,36 @@ class _ChatroomsState extends State<Chatrooms> {
           );
         },
       ),
-      floatingActionButton: Container(
-        padding:const EdgeInsets.all(0),
-        decoration: BoxDecoration(
-          color: Colors.green,
-          borderRadius: BorderRadius.circular(20)
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              padding:const EdgeInsets.all(0),
+              decoration: BoxDecoration(
+                color: Colors.green,
+                borderRadius: BorderRadius.circular(20)
+              ),
+              child: TextButton(onPressed: ()async{
+                Navigator.push(context, (MaterialPageRoute(builder: (context)=>const newRoom())));
+              }, child: const Text("New",style: TextStyle(color: Colors.white),)),
+            ),
+            Container(
+              alignment: Alignment.center,
+              height: 50,
+              width: 80,
+              // padding:const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: Colors.blue,
+                borderRadius: BorderRadius.circular(20)
+              ),
+              child:const Text("Join"),
+            ),
+          ],
         ),
-        child: TextButton(onPressed: ()async{
-          Navigator.push(context, (MaterialPageRoute(builder: (context)=>const newRoom())));
-        }, child: const Text("New",style: TextStyle(color: Colors.white),)),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
