@@ -6,6 +6,7 @@ import 'package:car_hub/room.dart';
 import 'package:car_hub/utils.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
 class Chatrooms extends StatefulWidget {
   const Chatrooms({ Key? key }) : super(key: key);
@@ -86,6 +87,7 @@ class _ChatroomsState extends State<Chatrooms> {
                   if (!snapshot1.hasData) {
                     return const Center(child: Text("No data refresh page"),);
                   }
+                  print("................................s${snapshot1.data}");
                   String roomName = snapshot1.data["Name"];
                   String lastMessage = snapshot1.data["lastMessage"];
                   DateTime time = snapshot1.data["lastMessageTime"].toDate();
@@ -93,8 +95,11 @@ class _ChatroomsState extends State<Chatrooms> {
                   return ListTile(
                     shape:const Border(top: BorderSide(color: Colors.grey)),
                     onTap: ()async{
-                      Map<String,dynamic> memberData = await getMemberdata(snapshot1.data["members"]);
-                      Navigator.push(context, (MaterialPageRoute(builder: (context)=>Room(roomId: roomIds[index], roomName: roomName, info: memberData))));
+                      List memberss = snapshot1.data["members"];
+                      memberss.addAll(snapshot1.data["Admins"]);
+                      await Hive.openBox(roomIds[index]);
+                      Map<String,dynamic> memberData = await getMemberdata(memberss);
+                      Navigator.push(context, (MaterialPageRoute(builder: (context)=>Room(roomId: roomIds[index], roomName: roomName, memberNames: memberData))));
                     },
                     leading: CircleAvatar(),
                     title: Text(roomName,style:const TextStyle(fontWeight: FontWeight.bold),),

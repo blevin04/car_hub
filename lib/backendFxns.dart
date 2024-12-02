@@ -211,8 +211,10 @@ Future<String>sendMessage(String messagetext,String roomId,String media)async{
 }
 
 Future<Map<dynamic,dynamic>> getroominFo(String roomId)async{
+  // print("////////////////////////////// $roomId");
   Map<dynamic,dynamic>info = {};
   await Hive.openBox(roomId);
+  Hive.box(roomId).clear();
   try {
     if (Hive.box(roomId).isEmpty) {
       await firestore.collection("rooms").doc(roomId).get().then((onValue){
@@ -224,7 +226,6 @@ Future<Map<dynamic,dynamic>> getroominFo(String roomId)async{
       }else{
         info = Hive.box(roomId).toMap();
       }
-          
   } catch (e) {
     throw e.toString();
   }

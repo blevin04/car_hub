@@ -73,3 +73,14 @@ void showcircularProgressIndicator(BuildContext context)async{
                 );
               });
 }
+
+bool isSameDay(DateTime t1,DateTime t2){
+  bool res = false;
+  int t1Day = t1.day;
+  int t2Day = t2.day;
+  if (DateTime(t1.year,t1.month,t1Day) == DateTime(t2.year,t2.month,t2Day)) {
+    res = true;
+  }
+
+  return res;
+}
