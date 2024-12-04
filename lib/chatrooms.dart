@@ -212,33 +212,38 @@ class newRoom extends StatelessWidget {
                 );
               }
             ),
-            Container(
-              //padding:const EdgeInsets.all(20),
-              width: MediaQuery.of(context).size.width-50,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: Colors.grey
-                ),
-
-                image: coverImage.isEmpty?null:
-                DecorationImage(
-                  fit: BoxFit.cover,
-                  image: FileImage(File(coverImage)))
-              ),
-              child: InkWell(
-                onTap: ()async{
-                  coverImage = await getContent(context, FileType.image);
-                },
-                child:const Column(
-                  children: [
-                    SizedBox(height: 20,),
-                    Icon(Icons.image),
-                    Text("Upload Cover image"),
-                    SizedBox(height: 20,),
-                  ],
-                ),
-              ),
+            StatefulBuilder(
+              builder: (context,imageState) {
+                return Container(
+                  //padding:const EdgeInsets.all(20),
+                  width: MediaQuery.of(context).size.width-50,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: Colors.grey
+                    ),
+                
+                    image: coverImage.isEmpty?null:
+                    DecorationImage(
+                      fit: BoxFit.cover,
+                      image: FileImage(File(coverImage)))
+                  ),
+                  child: InkWell(
+                    onTap: ()async{
+                      coverImage = await getContent(context, FileType.image);
+                      imageState((){});
+                    },
+                    child:const Column(
+                      children: [
+                        SizedBox(height: 20,),
+                        Icon(Icons.image),
+                        Text("Upload Cover image"),
+                        SizedBox(height: 20,),
+                      ],
+                    ),
+                  ),
+                );
+              }
             ),
             const SizedBox(height: 50,),
             Container(

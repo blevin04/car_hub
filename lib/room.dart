@@ -16,7 +16,7 @@ class Room extends StatelessWidget {
 
     return  Scaffold(
       appBar: AppBar(
-        leading: Padding(
+        leading:const Padding(
           padding:EdgeInsets.all(5.0),
           child: CircleAvatar(),
         ),
@@ -127,7 +127,6 @@ class Room extends StatelessWidget {
             ),
             IconButton(
               onPressed: (){
-
             }, icon:const Icon(Icons.send))
           ],
         ),
