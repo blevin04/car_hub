@@ -391,13 +391,18 @@ Future<List<QueryDocumentSnapshot>> searchPublic(String filter)async{
       }
     }
   }
-
+for(var room in rooms){
+  Map data = room.data()! as Map;
+  if (data["members"].contains(user!.uid)) {
+    rooms.remove(room);
+  }
+}
 return rooms;
 }
 
-Future<Map<String,dynamic>>getMemberdata(List memberId)async{
+Future<Map<String,dynamic>>getMembersdata(List members)async{
   Map<String,dynamic> data = {};
-  for(var id in memberId){
+  for(var id in members){
     await firestore.collection("users").doc(id).get().then((onValue){
       final dt =<String,dynamic> {id:onValue.data()!["fullName"]};
       data.addAll(dt);

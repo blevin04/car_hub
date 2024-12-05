@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:car_hub/backendFxns.dart';
 import 'package:car_hub/room.dart';
 import 'package:car_hub/utils.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -22,92 +23,55 @@ class _ChatroomsState extends State<Chatrooms> {
       appBar: AppBar(
         title:const Text("Rev Wave Chatrooms",style: TextStyle(fontWeight: FontWeight.bold),),
       ),
-      body: FutureBuilder(
+      body:FutureBuilder(
         future: getrooms(),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator(),);
-          }
-          if (snapshot.data.isEmpty) {
-            List publicRooms = [];
-            return StatefulBuilder(
-              builder: (context,joinState) {
-                return Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: SearchBar(
-                        controller: search_controller,
-                        hintText: "Search for a public room to join",
-                        onChanged: (value)async{
-                          publicRooms = await searchPublic(value);
-                          joinState((){});
-                        },
-                      ),
-                    ),
-                    Visibility(
-                      visible: publicRooms.isEmpty,
-                      child: 
-                      TextButton(onPressed: (){}, child: const Text("Use Passkey to enter Private room"))
-                    ),
-                    ListView.builder(
-                      itemCount: publicRooms.length,
-                      shrinkWrap: true,
-                      itemBuilder: (BuildContext context, int index) {
-                        String name = publicRooms[index].data()["Name"];
-                        int memberNums = publicRooms[index].data()["members"].length;
-                        String roomId = publicRooms[index].id;
-                        return ListTile(
-                          leading: CircleAvatar(),
-                          title: Text(name),
-                          subtitle: Text("$memberNums members"),
-                          trailing: TextButton(onPressed: ()async{
-                            await joinroom(roomId);
-                          }, child:const Text("join")),
-                        );
-                      },
-                    ),
-                  ],
-                );
-              }
-            );
-          }
-          //print(snapshot.data);
+        builder: (BuildContext context, AsyncSnapshot snapshot0) {
           return ListView.builder(
-            itemCount: snapshot.data.length,
-            shrinkWrap: true,
+            itemCount: snapshot0.data.length,
             itemBuilder: (BuildContext context, int index) {
-              List roomIds = snapshot.data;
-              return FutureBuilder(
-                future: getroominFo(roomIds[index]),
-                builder: (BuildContext context, AsyncSnapshot snapshot1) {
-                  if (snapshot1.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                  if (!snapshot1.hasData) {
-                    return const Center(child: Text("No data refresh page"),);
-                  }
-                  print("................................s${snapshot1.data}");
-                  String roomName = snapshot1.data["Name"];
-                  String lastMessage = snapshot1.data["lastMessage"];
-                  DateTime time = snapshot1.data["lastMessageTime"].toDate();
-                  String duration0 = duration(time);
-                  return ListTile(
-                    shape:const Border(top: BorderSide(color: Colors.grey)),
-                    onTap: ()async{
-                      List memberss = snapshot1.data["members"];
-                      memberss.addAll(snapshot1.data["Admins"]);
-                      await Hive.openBox(roomIds[index]);
-                      Map<String,dynamic> memberData = await getMemberdata(memberss);
-                      Navigator.push(context, (MaterialPageRoute(builder: (context)=>Room(roomId: roomIds[index], roomName: roomName, memberNames: memberData))));
-                    },
-                    leading: CircleAvatar(),
-                    title: Text(roomName,style:const TextStyle(fontWeight: FontWeight.bold),),
-                    subtitle: Text(lastMessage),
-                    trailing: Text(duration0),
-                  );
-                },
-              );
+              return Card(
+            color: Colors.transparent,
+            elevation: 10,
+            child: FutureBuilder(
+              future: getroominFo(snapshot0.data[index]),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                Map roomInfo = snapshot.data;
+                String roomName = roomInfo["Name"];
+                String lastText = roomInfo["lastMessage"];
+                DateTime lastTextTime = roomInfo["lastMessageTime"].toDate();
+                String lastseen = duration(lastTextTime);
+                List members = roomInfo["members"];
+                return InkWell(
+                  onTap: ()async{
+                    if (!members.contains(user!.uid)) {
+                       members.add(user!.uid);
+                    }
+                   
+                    Map<String,dynamic> memberNames = await getMembersdata(members);
+                    Navigator.push(context, (MaterialPageRoute(builder: (context)=>Room(roomId: snapshot0.data[index], roomName: roomName, memberNames: memberNames))));
+                  },
+                  child: ListTile(
+                    title: Text(roomName,style:const TextStyle(fontWeight: FontWeight.bold,fontSize: 17),),
+                    subtitle: Text(lastText,style:const TextStyle(fontStyle: FontStyle.italic),),
+                    trailing: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Container(
+                          padding:const EdgeInsets.all(6),
+                          decoration:const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.blue
+                          ),
+                          child:const Text("9",style: TextStyle(fontWeight: FontWeight.bold),)
+                          ),
+                        Text(lastseen)
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          );
             },
           );
         },
@@ -136,12 +100,69 @@ class _ChatroomsState extends State<Chatrooms> {
                 color: Colors.blue,
                 borderRadius: BorderRadius.circular(20)
               ),
-              child:const Text("Join"),
+              child:TextButton(onPressed: (){
+                Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Join())));
+              }, child: const Text("Join")),
             ),
           ],
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+    );
+  }
+}
+class Join extends StatelessWidget {
+  const Join({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    TextEditingController search_controller = TextEditingController();
+    return Scaffold(
+      appBar: AppBar(),
+      body: Column(
+        children: [
+          SearchBar(
+            controller:  search_controller,
+            leading:const Icon(Icons.search),
+          ),
+          FutureBuilder(
+            future: searchPublic(search_controller.text),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              List publicRooms = snapshot.data;
+              return ListView.builder(
+                shrinkWrap: true,
+                itemCount: snapshot.data.length,
+                itemBuilder: (BuildContext context, int index) {
+                  QueryDocumentSnapshot roomData = publicRooms[index];
+                  Map roomMap = roomData.data()! as Map;
+                  String name = roomMap["Name"];
+                  String description = roomMap["description"];
+                  int memberNum = roomMap["members"].length;
+                  return Card(
+                    child: ListTile(
+                      minTileHeight: 80,
+                      title: Text(name,style:const TextStyle(fontWeight: FontWeight.bold,fontSize: 17),),
+                      subtitle: Text(description,style:const TextStyle(),overflow: TextOverflow.ellipsis,maxLines: 2,),
+                      trailing: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text("${memberNum.toString()} members"),
+                          InkWell(
+                            onTap: () async{
+                              await joinroom(roomData.id);
+                            },
+                            child:const Text("join +",style: TextStyle(color: Colors.blue),),
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 }
@@ -160,9 +181,9 @@ class newRoom extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Center(child: Text("Create new Room",style: TextStyle(fontWeight: FontWeight.bold),),),
+          const Center(child: Text("Create new Room",style: TextStyle(fontWeight: FontWeight.bold),),),
           Padding(
-            padding: EdgeInsets.all(10),
+            padding:const EdgeInsets.all(10),
             child: TextField(
               controller: nameController,
               decoration: InputDecoration(
@@ -183,7 +204,7 @@ class newRoom extends StatelessWidget {
               decoration: InputDecoration(
                 border: OutlineInputBorder(
                   borderSide:const BorderSide(
-                    color: const Color.fromARGB(132, 59, 59, 59)
+                    color: Color.fromARGB(132, 59, 59, 59)
                   ),
                   borderRadius: BorderRadius.circular(15)
                 ),

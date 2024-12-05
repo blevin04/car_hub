@@ -80,6 +80,7 @@ class _WallpapersState extends State<Wallpapers> {
                         List likes = snapshot0.data![index]["Likes"];
                         return Card(
                           //color: const Color.fromARGB(6, 158, 158, 158),
+                          color:Colors.transparent,
                           elevation: 0,
                           child: InkWell(
                             onTap: (){},
@@ -87,6 +88,7 @@ class _WallpapersState extends State<Wallpapers> {
                               
                             },
                             child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 FutureBuilder(
                                   future: getWallpaper(snapshot0.data![index].id),
@@ -153,12 +155,16 @@ class _WallpapersState extends State<Wallpapers> {
                                         );
                                       }
                                     ),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                      children: [
-                                        IconButton(onPressed: (){}, icon: const Icon(Icons.download)),
-                                        Text(snapshot0.data![index]["downloads"].toString()),
-                                      ],
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
+                                        
+                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                        children: [
+                                          IconButton(onPressed: (){}, icon: const Icon(Icons.download)),
+                                          Text(snapshot0.data![index]["downloads"].toString()),
+                                        ],
+                                      ),
                                     )
                                   ],
                                 )

@@ -11,16 +11,22 @@ class Room extends StatelessWidget {
   const Room({super.key,required this.roomId,required this.roomName,required this.memberNames});
   static String uName = Hive.box("UserData").get("fullName");
   // static ScrollController _scrollController = new ScrollController();
+  static TextEditingController textcontroller = TextEditingController();
   @override
   Widget build(BuildContext context) {
-
+bool addVisible = false;
     return  Scaffold(
       appBar: AppBar(
-        leading:const Padding(
+        //leading:IconButton(onPressed: (){}, icon: icon)
+        title: Row(
+          children: [
+            const Padding(
           padding:EdgeInsets.all(5.0),
           child: CircleAvatar(),
         ),
-        title: Text(roomName),
+            Text(roomName),
+          ],
+        ),
       ),
       endDrawer:Drawer(
         child: Column(
@@ -71,7 +77,7 @@ class Room extends StatelessWidget {
                 bool istoday = isSameDay(DateTime.now(), noww);
                 String memberId = messages[index].data()["sender"];
                 if (!memberNames.containsKey(memberId)) {
-                  print(memberId);
+                  // print(memberId);
                 }
                 // print(memberNames.containsKey(memberId));
                 return Column(
@@ -99,8 +105,10 @@ class Room extends StatelessWidget {
                           ],
                         )),
                       BubbleNormal(
+                        color: messages[index].data()["sender"]==user!.uid?Colors.blue:const Color.fromARGB(255, 59, 66, 59),
                         text: messages[index].data()["message"],
                         isSender: user!.uid == messages[index].data()["sender"],
+                        textStyle:const TextStyle(color: Colors.white),
                         ),
                   ],
                 );
@@ -109,26 +117,58 @@ class Room extends StatelessWidget {
           );
         },
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndDocked,
       floatingActionButton: Container(
         padding:const EdgeInsets.only(left: 10),
-        child: Row(
-          children: [
-            IconButton(onPressed: (){}, icon:const Icon(Icons.attach_file)),
-            IconButton(onPressed: (){}, icon:const Icon(Icons.camera_alt)),
-            Expanded(
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: "Text",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20)
-                  )
+        child: StatefulBuilder(
+          builder: (context,barState) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Visibility(
+                  visible:  addVisible,
+                  child: Row(
+                    children: [
+                      IconButton(onPressed: (){}, icon:const Icon(Icons.image)),
+                      IconButton(onPressed: (){}, icon: const Icon(Icons.document_scanner)),
+                      IconButton(onPressed: (){}, icon: const Icon(Icons.music_note)),
+                      IconButton(onPressed: (){}, icon: const Icon(Icons.attach_file))
+                    ],
+                  ),
                 ),
-              ),
-            ),
-            IconButton(
-              onPressed: (){
-            }, icon:const Icon(Icons.send))
-          ],
+                Row(
+                  children: [
+                    IconButton(onPressed: (){
+                      barState((){
+                        addVisible = !addVisible;
+                      });
+                    }, icon:const Icon(Icons.attach_file)),
+                    IconButton(onPressed: (){
+                
+                    }, icon:const Icon(Icons.camera_alt)),
+                    Expanded(
+                      child: TextField(
+                        controller:textcontroller ,
+                        decoration: InputDecoration(
+                          hintText: "Text",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20)
+                          )
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: ()async{
+                       String state =await sendMessage(textcontroller.text, roomId, "text");
+                       if (state == "Success") {
+                        textcontroller.clear();
+                       }
+                    }, icon:const Icon(Icons.send))
+                  ],
+                ),
+              ],
+            );
+          }
         ),
       ),
     );
