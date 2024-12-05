@@ -67,7 +67,7 @@ class _WallpapersState extends State<Wallpapers> {
                         },
                       );
                     }
-                    // print(snapshot0.data);
+                     //print(snapshot0.data!.length);
                     return GridView.builder(
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
@@ -76,7 +76,11 @@ class _WallpapersState extends State<Wallpapers> {
                       ),
                       itemCount: snapshot0.data!.length,
                       itemBuilder: (BuildContext context, int index) {
-                        bool liked = snapshot0.data![index]["Likes"].contains(user!.uid);
+                        bool liked = false;
+                        if (user !=null) {
+                         liked =   snapshot0.data![index]["Likes"].contains(user!.uid);
+                        }
+                        
                         List likes = snapshot0.data![index]["Likes"];
                         return Card(
                           //color: const Color.fromARGB(6, 158, 158, 158),

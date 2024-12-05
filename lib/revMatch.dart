@@ -153,7 +153,32 @@ class _RevmatchState extends State<Revmatch> {
                   TextButton(
                     onPressed: ()async{
                       // await triviaStart();
-                      Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Triviapage())));
+                      showDialog(context: context, builder: (builder){
+                        return Dialog(
+                          child: Container(
+                            height: 250,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                const Text("Select difficulty"),
+                                TextButton(onPressed: (){
+                                  Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Triviapage(duration:80 ,))));
+                                }, child:const Text("Easy")),
+                                TextButton(onPressed: (){
+                                  Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Triviapage(duration: 70,))));
+                                }, child:const Text("Mediaum")),
+                                TextButton(onPressed: (){
+                                  Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Triviapage(duration: 60,))));
+                                }, child:const Text("Hard")),
+                                TextButton(onPressed: (){
+                                  Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Triviapage(duration: 50,))));
+                                }, child: const Text("Petrol Head")),
+                              ],
+                            ),
+                          ),
+                        );
+                      });
+                      
                     },
                    child:Container(
                     height: 40,

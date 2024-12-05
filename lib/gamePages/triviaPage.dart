@@ -5,7 +5,8 @@ import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 class Triviapage extends StatefulWidget {
-  const Triviapage({super.key});
+  final int duration;
+  const Triviapage({super.key,required this.duration});
 static PageController controller = PageController();
 
   @override
@@ -132,7 +133,7 @@ class _TriviapageState extends State<Triviapage> {
                                                 ,
                                                 child: ListTile(
                                                   onTap: (){
-                                                    print(selected.length);
+                                                    //print(selected.length);
                                                     if (selected.length>=9) {
                                                       allfilled.value=1;
                                                     }
@@ -168,8 +169,8 @@ class _TriviapageState extends State<Triviapage> {
                         child: Builder(
                           builder: (context) {
                             double score = 0;
-                            print(answersAll);
-                            print(selected);
+                            // print(answersAll);
+                            // print(selected);
                             selected.forEach(
                               (key, value) {
                               if (answersAll[key]==value) {
@@ -189,7 +190,7 @@ class _TriviapageState extends State<Triviapage> {
                       :CircularCountDownTimer(
                         width: 180, 
                         height: 180, 
-                        duration: 50, 
+                        duration: widget.duration, 
                         fillColor: const Color.fromARGB(161, 17, 0, 255), 
                         ringColor:  const Color.fromARGB(40, 33, 149, 243),
                         backgroundColor: Colors.blue,

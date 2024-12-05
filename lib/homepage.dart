@@ -116,6 +116,7 @@ class _HomepageState extends State<Homepage> {
                   //margin: EdgeInsets.all(2),
                  // padding: EdgeInsets.all(5),
                   //height: 250,
+                  width: MediaQuery.of(context).size.width-10,
                   decoration: BoxDecoration(
                     
                     borderRadius: BorderRadius.circular(15)

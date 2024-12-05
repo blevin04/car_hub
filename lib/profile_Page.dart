@@ -406,29 +406,84 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: Stack(
                   alignment: Alignment.topLeft,
                   children: [
-                    Container(
-                  height: 200,
-                  width: MediaQuery.of(context).size.width,
-                  
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    image:const DecorationImage(
-                      fit: BoxFit.cover,
-                      image: AssetImage("lib/assets/default_cover.png"))
+                  Stack(
+                    alignment: Alignment.topRight,
+                    children: [
+                      Container(
+                      height: 200,
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        image:const DecorationImage(
+                          fit: BoxFit.cover,
+                          image: AssetImage("lib/assets/default_cover.png"))
+                      ),
+                        ),
+                      IconButton(
+                        onPressed: ()async{
+                          String newDp = await getContent(context, FileType.image);
+                          if (newDp.isNotEmpty) {
+                            String state =await setcover(newDp);
+                            if (state == "Success") {
+                              setState(() {});
+                            }
+                          }
+                        }, 
+                        icon:const Icon(Icons.edit,color: Colors.white,),
+                        color: Colors.black,
+                        )
+                    ],
                   ),
-                ),
                 Positioned(
                   top: 160,
                   left: 15,
                   child: InkWell(
                     onTap: (){
                       showDialog(context: context, builder: (context){
-                        return const Image(image: AssetImage("lib/assets/default_cover.png"));
+                        return  Stack(
+                          alignment: Alignment.bottomCenter,
+                          children: [
+                            Center(
+                              child: Image(image: 
+                              Hive.box("UserData").containsKey("Dp")?
+                              MemoryImage(Hive.box("UserData").get("Dp")):const
+                              AssetImage("lib/assets/default_profile.webp")
+                              ),
+                            ),
+                            Container(
+                              alignment: Alignment.center,
+                              margin:const EdgeInsets.only(bottom: 100),
+                              width: 120,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: Colors.blue,
+                                borderRadius: BorderRadius.circular(20)
+                              ),
+                              child: TextButton(onPressed: ()async{
+                                String newDp = await getContent(context, FileType.image);
+                                if (newDp.isNotEmpty) {
+                                  String state  = await setDp(newDp);
+                                  if (state == "Success") {
+                                    setState(() {
+                                      
+                                    });
+                                  }
+                                }
+                              }, child:const Text("Edit",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),)),
+                            )
+                          ],
+                        );
                       });
                     },
-                    child:const CircleAvatar(
-                      backgroundImage: AssetImage("lib/assets/default_profile.webp"),
-                      radius: 40,
+                    child:FutureBuilder(
+                      future: getDp(),
+                      initialData:const AssetImage("lib/assets/default_profile.webp"),
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        return  CircleAvatar(
+                            backgroundImage: snapshot.data,
+                            radius: 40,
+                          );
+                      },
                     ),
                   ),
                 ),
@@ -444,7 +499,44 @@ class _ProfilePageState extends State<ProfilePage> {
                     right: 20,
                     top: 200,
                     child: 
-                  IconButton(onPressed: (){}, icon:const Icon(Icons.edit))
+                  IconButton(onPressed: (){
+                    showDialog(context: context, builder: (context){
+                      TextEditingController controllerN = TextEditingController();
+                      return Dialog(
+                        child: Container(
+                          height: 150,
+                          //width: MediaQuery.of(context).size.width-100,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                               Padding(
+                                 padding: const EdgeInsets.all(12.0),
+                                 child: TextField(
+                                  controller:controllerN ,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                      borderSide:const BorderSide(color: Colors.grey),
+                                      borderRadius: BorderRadius.circular(12),
+                                      
+                                    ),
+                                    hintText: "Name",
+                                  ),
+                                                               ),
+                               ),
+                              //const SizedBox(height: 20,),
+                              TextButton(onPressed: ()async{
+                                String state = await setName(controllerN.text);
+                                if(state == "Success"){
+                                  Navigator.pop(context);
+                                  setState(() {});
+                                }
+                              }, child:const Text("Done"))
+                            ],
+                          ),
+                        ),
+                      );
+                    });
+                  }, icon:const Icon(Icons.edit))
                   )
                   ],
                 ),

@@ -1,12 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:ui';
 import 'package:car_hub/categories.dart';
 import 'package:car_hub/models.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
@@ -22,6 +25,7 @@ Future<Map<dynamic,dynamic>> getUserData()async{
   if (userbox.isNotEmpty) {
     return userbox.toMap();
   }
+  user ??= FirebaseAuth.instance.currentUser;
   await firestore.collection("users").doc(user!.uid).get().then((onValue){
     data = onValue.data()!;
   });
@@ -285,11 +289,60 @@ Future<Uint8List> getWallpaper(String id)async{
   }
   return wallpaper;
 }
+Future<ImageProvider> getCoverPic()async{
+  Uint8List dp = Uint8List(100);
+  ImageProvider img;
+  Box usbox = Hive.box("UserData");
+  try {
+    if (usbox.containsKey("cover")) {
+    dp = usbox.get("cover");
+    //img = MemoryImage(dp);
+  }else{
+    await storage.child("users/${user!.uid}/cover").list().then((onValue)async{
+      dp = (await (onValue.items.single.getData()))!;
+      usbox.put("cover", dp);
+      //img = MemoryImage(dp);
+    });
+  }
+  img = MemoryImage(dp);
+  } catch (e) {
+    img =const AssetImage("lib/assets/default_cover.png");
+  }
+  
+  return img;
+}
 
-Future<String> setDp(String imagePath)async{
+Future<ImageProvider> getDp()async{
+  Uint8List dp = Uint8List(100);
+  ImageProvider img;
+  Box usbox = Hive.box("UserData");
+  try {
+    if (usbox.containsKey("Dp")) {
+    dp = usbox.get("Dp");
+    //img = MemoryImage(dp);
+  }else{
+    await storage.child("users/${user!.uid}/dp").list().then((onValue)async{
+      dp = (await (onValue.items.single.getData()))!;
+      usbox.put("Dp", dp);
+      //img = MemoryImage(dp);
+    });
+  }
+  img = MemoryImage(dp);
+  } catch (e) {
+    img =const AssetImage("lib/assets/default_profile.webp");
+  }
+  
+  return img;
+}
+
+Future<String> setcover(String imagePath)async{
   String state = "";
   try {
-    await storage.child("/users/${user!.uid}/dp").putFile(File(imagePath));
+    String imgName = imagePath.split("/").last;
+    await storage.child("/users/${user!.uid}/cover/$imgName").putFile(File(imagePath));
+    
+    Uint8List cover =await File(imagePath).readAsBytes();
+    Hive.box("UserData").put("cover", cover);
     state = "Success";
   } catch (e) {
     state = e.toString();
@@ -297,6 +350,24 @@ Future<String> setDp(String imagePath)async{
   return state;
 }
 
+Future<String> setDp(String imagePath)async{
+  String state = "";
+  try {
+    String imgName = imagePath.split("/").last;
+    await storage.child("/users/${user!.uid}/dp/$imgName").putFile(File(imagePath));
+    Uint8List cover =await File(imagePath).readAsBytes();
+    Hive.box("UserData").put("Dp", cover);
+    state = "Success";
+  } catch (e) {
+    state = e.toString();
+  }
+  return state;
+}
+Future<String>setName(String newName)async{
+  await firestore.collection("users").doc(user!.uid).update({"fullName":newName});
+  Hive.box("UserData").put("fullName", newName);
+  return "Success";
+}
 Future<String>UploadAudio(String audioPath,String name,List categories)async{
   String state = "";
   try {
