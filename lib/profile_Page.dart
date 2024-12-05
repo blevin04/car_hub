@@ -1,4 +1,3 @@
-
 import 'dart:ui';
 import 'package:car_hub/authPage.dart';
 import 'package:car_hub/backendFxns.dart';
@@ -110,12 +109,14 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ),
                     ),
-                    const Positioned(
+                     const Positioned(
                       left: 100,
                       top: 200,
                       child: Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text("User Name",style: TextStyle(fontWeight: FontWeight.bold),),
+                            padding:const EdgeInsets.all(8.0),
+                            child: Text(
+                              "User Name",
+                              style:TextStyle(fontWeight: FontWeight.bold),),
                           ),
                       ),
                       Positioned(
@@ -129,7 +130,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
                const Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(8.0),
                   child: Card(
                     child: Column(
                       children: [
@@ -431,12 +432,12 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                 ),
-                const Positioned(
+                 Positioned(
                   left: 100,
                   top: 200,
                   child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text("User Name",style: TextStyle(fontWeight: FontWeight.bold),),
+                        padding:const EdgeInsets.all(8.0),
+                        child: Text(Hive.box("UserData").get("fullName"),style:const TextStyle(fontWeight: FontWeight.bold),),
                       ),
                   ),
                   Positioned(

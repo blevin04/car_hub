@@ -79,7 +79,8 @@ class _WallpapersState extends State<Wallpapers> {
                         bool liked = snapshot0.data![index]["Likes"].contains(user!.uid);
                         List likes = snapshot0.data![index]["Likes"];
                         return Card(
-                          color: const Color.fromARGB(6, 158, 158, 158),
+                          //color: const Color.fromARGB(6, 158, 158, 158),
+                          elevation: 0,
                           child: InkWell(
                             onTap: (){},
                             onLongPress: (){
@@ -153,7 +154,7 @@ class _WallpapersState extends State<Wallpapers> {
                                       }
                                     ),
                                     Row(
-                                      
+                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                                       children: [
                                         IconButton(onPressed: (){}, icon: const Icon(Icons.download)),
                                         Text(snapshot0.data![index]["downloads"].toString()),
