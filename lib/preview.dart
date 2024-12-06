@@ -359,6 +359,9 @@ return state;
                 List filteredEngine = [];
                 List filteredbrand = [];
                 showDialog(context: context, builder: (context){
+                  List<String> specific = List.empty(growable: true);
+                  bool specificShow = false;
+                  TextEditingController specify_ = TextEditingController();
                   return Dialog(
                     child: SingleChildScrollView(
                       child: StatefulBuilder(
@@ -385,11 +388,60 @@ return state;
                                     }
                                   });
                                   selectedtState((){
-                                    
                                   });
                                 },
                               ),
                               
+                              ),
+                              StatefulBuilder(
+                                builder: (context,specificState) {
+                                  return Column(
+                                    children: [
+                                      TextButton(
+                                        onPressed: (){
+                                          specificState((){
+                                            specificShow = !specificShow;
+                                          });
+                                        }, 
+                                        child:const Text("New")),
+                                        Visibility(
+                                          visible:specificShow ,
+                                          child:SizedBox(
+                                           height: 60,
+
+                                            child: TextField(
+                                              controller: specify_,
+                                              decoration: InputDecoration(
+                                                suffix: IconButton(onPressed: ()async{
+                                                  if (!specific.contains(specify_.text)) {
+                                                    specific.add(specify_.text);
+                                                  specify_.clear();
+                                                  }
+                                                  specificState((){});
+                                                }, icon:const Icon(Icons.check)),
+                                                border: OutlineInputBorder(
+                                                  borderSide:const BorderSide(color: Colors.grey),
+                                                  borderRadius: BorderRadius.circular(15),
+                                                )
+                                              ),
+                                            ),
+                                          )
+                                           ),
+                                        GridView.builder(
+                                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                            crossAxisCount: 4,
+                                            childAspectRatio: 2.5
+                                          ),
+                                          itemCount: specific.length,
+                                          shrinkWrap: true,
+                                          physics: const NeverScrollableScrollPhysics(),
+                                          itemBuilder: (BuildContext context, int index) {
+                                            return Text(specific[index]);
+                                          },
+                                        ),
+                                    ],
+                                  );
+                                }
                               ),
                               const Text("Type"),
                               SizedBox(
@@ -478,7 +530,7 @@ return state;
                                 String state = "";
                                 while (state.isEmpty) {
                                   showcircularProgressIndicator(context);
-                                  state =await UploadAudio(widget.assetPath, "name",category);
+                                  state =await UploadAudio(widget.assetPath, "name",category,specific);
                                 }
                                 Navigator.pop(context);
                                 if (state == "Success") {

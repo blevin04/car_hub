@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-import 'dart:ui';
 import 'package:car_hub/categories.dart';
 import 'package:car_hub/models.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -194,7 +193,7 @@ Future<String> createRoom(String roomName,bool public,String description,)async{
   }
   return state;
 }
-Future<String>sendMessage(String messagetext,String roomId,String media)async{
+Future<String>sendMessage(String messagetext,String roomId,String media,[String mediaPath = ""])async{
   String state = "";
   String messageId = Uuid().v1();
   try {
@@ -204,8 +203,11 @@ Future<String>sendMessage(String messagetext,String roomId,String media)async{
       seen: false, 
       media: media,
       );
-      print(message);
     await firestore.collection("rooms").doc(roomId).collection("messages").doc(messageId).set(message.toJson());
+    if (mediaPath.isNotEmpty) {
+      String mediaN = mediaPath.split("/").last;
+      await storage.child("messages/$roomId/$messageId/$mediaN").putFile(File(mediaPath));
+    }
     state = "Success";
   } catch (e) {
     state = e.toString();
@@ -368,7 +370,7 @@ Future<String>setName(String newName)async{
   Hive.box("UserData").put("fullName", newName);
   return "Success";
 }
-Future<String>UploadAudio(String audioPath,String name,List categories)async{
+Future<String>UploadAudio(String audioPath,String name,List categories,List more)async{
   String state = "";
   try {
     String tuneId = Uuid().v1();
@@ -381,6 +383,7 @@ Future<String>UploadAudio(String audioPath,String name,List categories)async{
       }
       return type[categories[index]];
     });
+    categoryNames.addAll(more);
     await firestore.collection("tunes").doc(tuneId).set({
       "name":name,
       "downloads":0,
@@ -480,4 +483,15 @@ Future<Map<String,dynamic>>getMembersdata(List members)async{
     });
   }
   return data;
+}
+
+Future<Uint8List>getMessageMedia(String messageId,String roomId)async{
+  Uint8List media = Uint8List(100);
+
+  await storage.child("messages/$roomId/$messageId/").list().then((onValue)async{
+    print(onValue.items.length);
+    media = (await onValue.items.single.getData() )!;
+  });
+
+  return media;
 }

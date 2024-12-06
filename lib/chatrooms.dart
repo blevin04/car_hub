@@ -7,7 +7,6 @@ import 'package:car_hub/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 
 class Chatrooms extends StatefulWidget {
   const Chatrooms({ Key? key }) : super(key: key);
@@ -26,6 +25,16 @@ class _ChatroomsState extends State<Chatrooms> {
       body:FutureBuilder(
         future: getrooms(),
         builder: (BuildContext context, AsyncSnapshot snapshot0) {
+          if (snapshot0.connectionState == ConnectionState.waiting) {
+            return ListView.builder(
+              itemCount: 5,
+              shrinkWrap: true,
+              itemBuilder: (BuildContext context, int index) {
+                return Card();
+              },
+            );
+          }
+          //print(snapshot0.data.length);
           return ListView.builder(
             itemCount: snapshot0.data.length,
             itemBuilder: (BuildContext context, int index) {
@@ -35,6 +44,47 @@ class _ChatroomsState extends State<Chatrooms> {
             child: FutureBuilder(
               future: getroominFo(snapshot0.data[index]),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        children: [
+                          Container(
+                            margin:const EdgeInsets.only(top: 20),
+                            height: 20,
+                            width: 120,
+                            decoration: BoxDecoration(color: Colors.grey,borderRadius: BorderRadius.circular(20)),
+                          ),
+                          Container(
+                            margin:const EdgeInsets.only(top: 5),
+                            height: 10,
+                            width: 150,
+                            decoration: BoxDecoration(color: Colors.grey,borderRadius: BorderRadius.circular(20)),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const CircleAvatar(
+                            backgroundColor: Colors.grey,
+                            radius: 10,
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(top: 8),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.grey,
+                            ),
+                            height: 10,
+                            width: 90,
+                          )
+                        ],
+                      )
+                    ],
+                  );
+                }
                 Map roomInfo = snapshot.data;
                 String roomName = roomInfo["Name"];
                 String lastText = roomInfo["lastMessage"];
@@ -128,6 +178,15 @@ class Join extends StatelessWidget {
           FutureBuilder(
             future: searchPublic(search_controller.text),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return ListView.builder(
+                  itemCount: 5,
+                  shrinkWrap: true,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Card();
+                  },
+                );
+              }
               List publicRooms = snapshot.data;
               return ListView.builder(
                 shrinkWrap: true,
