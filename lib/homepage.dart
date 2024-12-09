@@ -179,9 +179,14 @@ class _HomepageState extends State<Homepage> {
                 return Card();
               },
             ),
+
+
+
+            
             // TextButton(onPressed: (){
             //   openShit();
             // }, child: Text("openshit"))
+            // AspectRatio(aspectRatio: aspectRatio)
           ],
         ),
       ),

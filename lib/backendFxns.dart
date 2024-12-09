@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -215,6 +216,7 @@ Future<String>sendMessage(String messagetext,String roomId,String media,[String 
   print(state);
   return state;
 }
+StreamController controller = StreamController();
 
 Future<Map<dynamic,dynamic>> getroominFo(String roomId)async{
   // print("////////////////////////////// $roomId");
@@ -235,10 +237,8 @@ Future<Map<dynamic,dynamic>> getroominFo(String roomId)async{
   } catch (e) {
     throw e.toString();
   }
-
   return info;
 }
-
 
 // Future<Map<String,dynamic>> getChat(String roomId)async{
 //   Map<String,dynamic> chatData = {};
