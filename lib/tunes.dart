@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:car_hub/backendFxns.dart';
@@ -86,83 +87,130 @@ class _TunesState extends State<Tunes> {
                       itemBuilder: (BuildContext context, int index) {
                         GifController gifController = GifController(autoPlay: false);
                         AudioPlayer player =AudioPlayer();
-                        return FutureBuilder(
-                          future: gettuneData(snapshot0.data![index].id),
-                          builder: (BuildContext context, AsyncSnapshot snapshot1) {
-                            if (snapshot1.connectionState == ConnectionState.waiting) {
-                              return Card(
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    GifView.asset("lib/assets/44zG.gif"),
-                                    const CircularProgressIndicator(),
-                                  ],
-                                ),
-                              );
-                            }
-                            return Card(
-                          child: InkWell(
-                            onTap: (){
-                              showDialog(context: context, builder: (context){
-                                return Dialog(
-                                  child: SizedBox(
-                                    height: 200,
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                      children: [
-                                        const Text("Set as:",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 17),),
-                                        TextButton(onPressed: ()async{
-                                          File file = File.fromRawPath(snapshot1.data);
-                                          await Ringtone.setRingtoneFromFile(file);
-                                        }, child:const Text("Ringtone")),
-                                        TextButton(onPressed: ()async{
-                                           File file = File.fromRawPath(snapshot1.data);
-                                           Ringtone.setNotificationFromFile(file);
-                                        }, child:const Text("Notification sound")),
-                                        TextButton(onPressed: ()async{
-                                          File file = File.fromRawPath(snapshot1.data);
-                                          await Ringtone.setAlarmFromFile(file);
-                                        }, child: const Text("Alarm Sound"))
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              });
-                            },
-                            child: Column(
-                              children: [
-                                StatefulBuilder(
-                                  builder: (context,state) {
-                                    return Stack(
-                                      alignment: Alignment.center,
-                                      children: [
-                                        GifView.asset(
-                                          controller: gifController,
-                                          "lib/assets/44zG.gif"
-                                          ),
-                                          IconButton(
-                                        onPressed: (){
-                                          // player.setSource()
-                                          // print(player.state);
-                                          player.state == PlayerState.playing?
-                                          player.stop():
-                                          player.play(BytesSource(snapshot1.data));
-                                        gifController.isPlaying?
-                                        gifController.stop():gifController.play();
-                                        state((){});
-                                      }, icon:gifController.isPlaying?
-                                      const Icon(Icons.pause):
-                                      const Icon(Icons.play_circle_fill,size: 40,))
-                                      ],
-                                    );
+                        ValueNotifier playState = ValueNotifier(0);
+                        
+                        return Card(
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              GifView.asset("lib/assets/44zG.gif",controller: gifController,),
+                              IconButton(onPressed: ()async{
+                   
+                                //Uint8List audio = Uint8List(100);
+                                playState.value = 1;
+                                
+                                Uint8List  audio = await gettuneData(snapshot0.data![index].id);
+                                
+                                player.onPlayerStateChanged.listen((event){
+                                  if (event == PlayerState.completed) {
+                                    playState.value = 0;
                                   }
-                                ),
-                              ],
-                            ),
+                                    if (player.source != BytesSource(audio)) {
+                                      //playState.value = 0;
+                                    }
+                                  });
+                                 
+                                   if (player.state == PlayerState.playing) {
+                                     player.pause();
+                                     playState.value = 0;
+                                     gifController.pause();
+                                   }else{
+                                     player.play(BytesSource(audio));
+                                     gifController.play();
+                                    playState.value = 2;
+                                   }
+                                  //  print("llllllllllllllllllllllllllll");
+                                 
+                              }, icon: ListenableBuilder(
+                                listenable: Listenable.merge([playState]),
+                              builder: (context,child){
+                                if (playState.value == 0) {
+                                  return const Icon(Icons.play_circle,size: 40,);
+                                }if (playState.value == 2) {
+                                  return const Icon(Icons.pause,size: 40,);
+                                }
+                                return const Center(child: CircularProgressIndicator(),);
+                              }))
+                            ],
                           ),
                         );
-                          },
-                        );
+                        // return FutureBuilder(
+                        //   future: gettuneData(snapshot0.data![index].id),
+                        //   builder: (BuildContext context, AsyncSnapshot snapshot1) {
+                        //     if (snapshot1.connectionState == ConnectionState.waiting) {
+                        //       return Card(
+                        //         child: Stack(
+                        //           alignment: Alignment.center,
+                        //           children: [
+                        //             GifView.asset("lib/assets/44zG.gif"),
+                        //             const CircularProgressIndicator(),
+                        //           ],
+                        //         ),
+                        //       );
+                        //     }
+                        //     return Card(
+                        //   child: InkWell(
+                        //     onTap: (){
+                        //       showDialog(context: context, builder: (context){
+                        //         return Dialog(
+                        //           child: SizedBox(
+                        //             height: 200,
+                        //             child: Column(
+                        //               mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        //               children: [
+                        //                 const Text("Set as:",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 17),),
+                        //                 TextButton(onPressed: ()async{
+                        //                   File file = File.fromRawPath(snapshot1.data);
+                        //                   await Ringtone.setRingtoneFromFile(file);
+                        //                 }, child:const Text("Ringtone")),
+                        //                 TextButton(onPressed: ()async{
+                        //                    File file = File.fromRawPath(snapshot1.data);
+                        //                    Ringtone.setNotificationFromFile(file);
+                        //                 }, child:const Text("Notification sound")),
+                        //                 TextButton(onPressed: ()async{
+                        //                   File file = File.fromRawPath(snapshot1.data);
+                        //                   await Ringtone.setAlarmFromFile(file);
+                        //                 }, child: const Text("Alarm Sound"))
+                        //               ],
+                        //             ),
+                        //           ),
+                        //         );
+                        //       });
+                        //     },
+                        //     child: Column(
+                        //       children: [
+                        //         StatefulBuilder(
+                        //           builder: (context,state) {
+                        //             return Stack(
+                        //               alignment: Alignment.center,
+                        //               children: [
+                        //                 GifView.asset(
+                        //                   controller: gifController,
+                        //                   "lib/assets/44zG.gif"
+                        //                   ),
+                        //                   IconButton(
+                        //                 onPressed: (){
+                        //                   // player.setSource()
+                        //                   // print(player.state);
+                        //                   player.state == PlayerState.playing?
+                        //                   player.stop():
+                        //                   player.play(BytesSource(snapshot1.data));
+                        //                 gifController.isPlaying?
+                        //                 gifController.stop():gifController.play();
+                        //                 state((){});
+                        //               }, icon:gifController.isPlaying?
+                        //               const Icon(Icons.pause):
+                        //               const Icon(Icons.play_circle_fill,size: 40,))
+                        //               ],
+                        //             );
+                        //           }
+                        //         ),
+                        //       ],
+                        //     ),
+                        //   ),
+                        // );
+                        //   },
+                        // );
                       },
                     );
                   }

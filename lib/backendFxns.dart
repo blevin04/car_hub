@@ -408,14 +408,19 @@ Future<List<QueryDocumentSnapshot>> getTunes()async{
   });
   return tunes;
 }
-
+Map<String,dynamic> catchedTunes = {};
 Future<Uint8List>gettuneData(String tuneId)async{
-  Uint8List data = Uint8List(100);
+  if(catchedTunes.containsKey(tuneId)){
+    return catchedTunes[tuneId];
+  }else{
+    Uint8List data = Uint8List(100);
   await storage.child("tunes/$tuneId").list().then((onValue)async{
     data = (await onValue.items.single.getData())!;
   });
-
+  catchedTunes.addAll({tuneId:data});
   return data;
+  }
+  
 }
 
 Future<List<QueryDocumentSnapshot>> getWallpaperIds({String filter= ""})async{
