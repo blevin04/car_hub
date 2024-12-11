@@ -118,6 +118,7 @@ Future<List<String>> getrooms()async{
   List<String>rooms =List.empty(growable: true);
   await Hive.openBox("Rooms");
   if (Hive.box("Rooms").isEmpty) {
+    user ??= FirebaseAuth.instance.currentUser;
     await firestore.collection("rooms").where("members",arrayContains: user!.uid).get().then((onValue){
       for(var doc in onValue.docs){
         rooms.add(doc.id);

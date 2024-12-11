@@ -12,10 +12,11 @@ static PageController controller = PageController();
   @override
   State<Triviapage> createState() => _TriviapageState();
 }
-ValueNotifier allfilled = ValueNotifier(0);
+
 class _TriviapageState extends State<Triviapage> {
   @override
   Widget build(BuildContext context) {
+    ValueNotifier allfilled = ValueNotifier(0);
     bool completed = false;
     CountDownController countDownController = CountDownController();
     Map selected ={};
@@ -208,50 +209,54 @@ class _TriviapageState extends State<Triviapage> {
                         },
                         ),
                         const SizedBox(height: 20,),
-                      Container(
-                        width: MediaQuery.of(context).size.width-80,
-                        height: 45,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.circular(20)
-                        ),
-                        child: TextButton(
-                          onPressed: (){
-                            if (allfilled.value == 1) {
-                              countDownController.pause();
-                              pagestateAll((){
-                                completed = true;
-                              });
-                            }else{
-                               Triviapage.controller.animateToPage((Triviapage.controller.page!).toInt()+1, duration:const Duration(milliseconds: 250), curve: Curves.bounceInOut);
-                            }
-                            if (completed) {
-                              setState(() {
-                                
-                              });
-                            }
-                           
+                      InkWell(
+                        onTap: (){
+                          if (completed) {
+                                print("lllll");
+                                setState(() {
+                                  
+                                });
+                              }
+                              if (allfilled.value == 1) {
+                                print("kkkkk");
+                                countDownController.pause();
+                                pagestateAll((){
+                                  completed = true;
+                                });
+                              }else{
+                                 Triviapage.controller.animateToPage((Triviapage.controller.page!).toInt()+1, duration:const Duration(milliseconds: 250), curve: Curves.bounceInOut);
+                              }
+                              
+                        },
+                        child: Container(
+                          width: MediaQuery.of(context).size.width-80,
+                          height: 45,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.circular(20)
+                          ),
                           
-                        }, child: 
-                        ListenableBuilder(
-                          listenable: allfilled, 
-                          builder: (context,child){
-                            Widget button = Container();
-                            print(allfilled.value);
-                            if (allfilled.value == 1) {
-                              return button =  const Text("Finish",style:TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 18),);
-                            }
-                            if (allfilled.value == 0) {
-                              return  const Text("Continue",style:TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 18),);
-                            }
-                            if (completed) {
-                              return const Text("Play Again",style:TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 18),);
-                            }
-                            return  button;
-                          })
-                        
-                         ),
+                             child: 
+                          ListenableBuilder(
+                            listenable: allfilled, 
+                            builder: (context,child){
+                              Widget button = Container();
+                              // print(allfilled.value);
+                              if (allfilled.value == 1 && !completed)  {
+                                return button =  const Text("Finish",style:TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 18),);
+                              }
+                              if (allfilled.value == 0 && !completed) {
+                                return  const Text("Continue",style:TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 18),);
+                              }
+                              if (completed) {
+                                return const Text("Play Again",style:TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 18),);
+                              }
+                              return  button;
+                            })
+                          
+                           
+                        ),
                       ),
                       const SizedBox(height: 20,)
                     ],
@@ -259,7 +264,12 @@ class _TriviapageState extends State<Triviapage> {
                 }
               );
             }
-            return const Center(child: Text("Error occured please refresh the page"),);
+            return Center(child: InkWell(
+              onTap: () {
+                setState(() {
+                });
+              },
+              child:const Text("Error occured please refresh the page")),);
           },
         ),
       ),
