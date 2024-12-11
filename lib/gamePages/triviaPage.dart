@@ -212,13 +212,12 @@ class _TriviapageState extends State<Triviapage> {
                       InkWell(
                         onTap: (){
                           if (completed) {
-                                print("lllll");
+                                // print("lllll");
                                 setState(() {
-                                  
                                 });
                               }
                               if (allfilled.value == 1) {
-                                print("kkkkk");
+                                // print("kkkkk");
                                 countDownController.pause();
                                 pagestateAll((){
                                   completed = true;

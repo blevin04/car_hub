@@ -34,7 +34,7 @@ class _ChatroomsState extends State<Chatrooms> {
               },
             );
           }
-          //print(snapshot0.data.length);
+          // print(snapshot0.data.length);
           return ListView.builder(
             itemCount: snapshot0.data.length,
             itemBuilder: (BuildContext context, int index) {

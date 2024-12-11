@@ -114,40 +114,49 @@ if (Hive.box("Score").containsKey("CarTrivia")) {
   return state;
 }
 
-Future<List<String>> getrooms()async{
-  List<String>rooms =List.empty(growable: true);
+Future<List> getrooms()async{
+  List rooms =List.empty(growable: true);
   await Hive.openBox("Rooms");
   if (Hive.box("Rooms").isEmpty) {
     user ??= FirebaseAuth.instance.currentUser;
+    // print("ppppppp");
     await firestore.collection("rooms").where("members",arrayContains: user!.uid).get().then((onValue){
+      // print(onValue.docs.length);
       for(var doc in onValue.docs){
         rooms.add(doc.id);
       }
     });
     await Hive.box("Rooms").put("Rooms", rooms);
+    print(Hive.box("tt").isOpen);
+    // print(".//////////////////");
   }else{
+    // print("||||||||||||||||||||||||||");
     rooms = Hive.box("Rooms").get("Rooms");
+    // print(rooms);
+    //  Hive.box("Rooms").clear();
   }
   checkSubscription(rooms);
+  // print(Hive.box("tt").isOpen);
+  // print(rooms.length);
   return rooms;
 }
 void checkSubscription(List rooms)async{
   await Hive.openBox("subscriptions");
-  if (Hive.box("subscriptions").containsKey("subscriptions")) {
-    List subscribed = Hive.box("subscriptions").get("subcriptions");
+  if (Hive.box("subscriptions").containsKey("subscribed")) {
+    // print(".................${Hive.box("subscriptions").get("subscribed")}");
+    List subscribed = Hive.box("subscriptions").get("subscribed");
     for(var room in rooms){
     if (!subscribed.contains(room)) {
     await FirebaseMessaging.instance.subscribeToTopic(room);
     subscribed.add(room);
     }
   }
-  Hive.box("subscriptions").put("subscriptions", subscribed);
+  Hive.box("subscriptions").put("subscribed", subscribed);
   }else{
     for(var room in rooms){
     await FirebaseMessaging.instance.subscribeToTopic(room);
-
   }
-  Hive.box("subscriptions").put("subscriptions", rooms);
+  Hive.box("subscriptions").put("subscribed", rooms);
   }
   
 }
@@ -229,9 +238,9 @@ Future<Map<dynamic,dynamic>> getroominFo(String roomId)async{
       await firestore.collection("rooms").doc(roomId).get().then((onValue){
         
         info = onValue.data()!;
-        print(info);
+        // print(info);
       });
-       Hive.box(roomId).putAll(info);
+      //  Hive.box(roomId).putAll(info);
       }else{
         info = Hive.box(roomId).toMap();
       }
