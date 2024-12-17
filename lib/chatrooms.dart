@@ -1,6 +1,4 @@
-
 import 'dart:io';
-
 import 'package:car_hub/backendFxns.dart';
 import 'package:car_hub/room.dart';
 import 'package:car_hub/utils.dart';
@@ -21,6 +19,13 @@ class _ChatroomsState extends State<Chatrooms> {
     return Scaffold(
       appBar: AppBar(
         title:const Text("Rev Wave Chatrooms",style: TextStyle(fontWeight: FontWeight.bold),),
+        // leading: Badge(
+        //   label: Text("90"),
+        //   child: Container(
+        //     child: Icon(Icons.notifications)
+        //   ),
+        // ),
+
       ),
       body:FutureBuilder(
         future: getrooms(),
