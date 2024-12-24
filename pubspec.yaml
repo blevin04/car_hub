@@ -55,6 +55,7 @@ dependencies:
   wallpaper_handler: ^0.0.2
   set_ringtone: ^1.0.0
   chat_bubbles: ^1.6.0
+  flutter_native_splash: ^2.4.3
   
 dependency_overrides:
   http: ^0.13.3
