@@ -1,12 +1,12 @@
-import 'dart:io';
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:car_hub/backendFxns.dart';
+import 'package:car_hub/utils.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:gif_view/gif_view.dart';
-import 'package:set_ringtone/set_ringtone.dart';
  //import 'package:ringtone_set_mul/ringtone_set_mul.dart';
 
 class Tunes extends StatefulWidget {
@@ -21,7 +21,35 @@ List trending_sounds =[
   "3",
   "4"
 ];
+  late FixedExtentScrollController _controller;
+  late Timer _timer;
+  int _currentIndex = 0;
 class _TunesState extends State<Tunes> {
+  void startScroll(){
+    _timer = Timer.periodic(Duration(seconds: 2), (timer){
+       if (_controller.hasClients) {
+        _currentIndex = (_currentIndex + 1) % 10; // Change `10` to the total number of items in your list.
+        _controller.animateToItem(
+          _currentIndex,
+          duration: Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _controller = FixedExtentScrollController();
+    startScroll();
+  }
+  @override
+  void dispose() {
+    _timer.cancel();
+    _controller.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
@@ -83,54 +111,80 @@ class _TunesState extends State<Tunes> {
                         crossAxisCount: 2,
                       ),
                       itemCount: snapshot0.data!.length,
-                      //physics:const NeverScrollableScrollPhysics(),
+                      // physics:const NeverScrollableScrollPhysics(),
                       itemBuilder: (BuildContext context, int index) {
                         GifController gifController = GifController(autoPlay: false);
                         AudioPlayer player =AudioPlayer();
                         ValueNotifier playState = ValueNotifier(0);
-                        
+                        List categories0 = snapshot0.data![index].data()["categories"];
                         return Card(
                           child: Stack(
-                            alignment: Alignment.center,
+                            alignment: Alignment.bottomCenter,
                             children: [
                               GifView.asset("lib/assets/44zG.gif",controller: gifController,),
-                              IconButton(onPressed: ()async{
-                   
-                                //Uint8List audio = Uint8List(100);
-                                playState.value = 1;
-                                
-                                Uint8List  audio = await gettuneData(snapshot0.data![index].id);
-                                
-                                player.onPlayerStateChanged.listen((event){
-                                  if (event == PlayerState.completed) {
-                                    playState.value = 0;
-                                  }
-                                    if (player.source != BytesSource(audio)) {
-                                      //playState.value = 0;
+                              Center(
+                                child: IconButton(onPressed: ()async{
+                                                   
+                                  //Uint8List audio = Uint8List(100);
+                                  playState.value = 1;
+                                  
+                                  Uint8List  audio = await gettuneData(snapshot0.data![index].id);
+                                  
+                                  player.onPlayerStateChanged.listen((event){
+                                    if (event == PlayerState.completed) {
+                                      playState.value = 0;
                                     }
-                                  });
-                                 
-                                   if (player.state == PlayerState.playing) {
-                                     player.pause();
-                                     playState.value = 0;
-                                     gifController.pause();
-                                   }else{
-                                     player.play(BytesSource(audio));
-                                     gifController.play();
-                                    playState.value = 2;
-                                   }
-                                  //  print("llllllllllllllllllllllllllll");
-                                 
-                              }, icon: ListenableBuilder(
-                                listenable: Listenable.merge([playState]),
-                              builder: (context,child){
-                                if (playState.value == 0) {
-                                  return const Icon(Icons.play_circle,size: 40,);
-                                }if (playState.value == 2) {
-                                  return const Icon(Icons.pause,size: 40,);
-                                }
-                                return const Center(child: CircularProgressIndicator(),);
-                              }))
+                                      if (player.source != BytesSource(audio)) {
+                                        //playState.value = 0;
+                                      }
+                                    });
+                                   
+                                     if (player.state == PlayerState.playing) {
+                                       player.pause();
+                                       playState.value = 0;
+                                       gifController.pause();
+                                     }else{
+                                       player.play(BytesSource(audio));
+                                       gifController.play();
+                                      playState.value = 2;
+                                     }
+                                    //  print("llllllllllllllllllllllllllll");
+                                   
+                                }, icon: ListenableBuilder(
+                                  listenable: Listenable.merge([playState]),
+                                builder: (context,child){
+                                  if (playState.value == 0) {
+                                    return const Icon(Icons.play_circle,size: 40,);
+                                  }if (playState.value == 2) {
+                                    return const Icon(Icons.pause,size: 40,);
+                                  }
+                                  return const Center(child: CircularProgressIndicator(),);
+                                })),
+                              ),
+                              SizedBox(
+                                 height: 20,
+                                width: MediaQuery.of(context).size.width-60,
+                                child: RotatedBox(
+                                  quarterTurns: -1,
+                                  child: ListWheelScrollView(
+                                    controller: _controller,
+                                    itemExtent: 80, 
+                                    children: List.generate(categories0, (index){
+                                      return Container(
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white
+                                        ),
+                                        child: RotatedBox(
+                                          quarterTurns: 1,
+                                          child: Text(
+                                            categories0[index].toString()),
+                                        ),
+                                      );
+                                    })
+                                    ),
+                                )
+                              )
                             ],
                           ),
                         );
