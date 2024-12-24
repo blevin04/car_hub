@@ -3,7 +3,6 @@ import 'dart:typed_data';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:car_hub/backendFxns.dart';
-import 'package:car_hub/utils.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:gif_view/gif_view.dart';
