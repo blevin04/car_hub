@@ -116,7 +116,8 @@ class _TunesState extends State<Tunes> {
                         GifController gifController = GifController(autoPlay: false);
                         AudioPlayer player =AudioPlayer();
                         ValueNotifier playState = ValueNotifier(0);
-                        List categories0 = snapshot0.data![index].data()["categories"];
+                        Map datas0 = snapshot0.data![index].data() as Map;
+                        List categories0 = datas0["categories"];
                         return Card(
                           child: Stack(
                             alignment: Alignment.bottomCenter,
@@ -138,7 +139,6 @@ class _TunesState extends State<Tunes> {
                                         //playState.value = 0;
                                       }
                                     });
-                                   
                                      if (player.state == PlayerState.playing) {
                                        player.pause();
                                        playState.value = 0;
@@ -169,7 +169,7 @@ class _TunesState extends State<Tunes> {
                                   child: ListWheelScrollView(
                                     controller: _controller,
                                     itemExtent: 80, 
-                                    children: List.generate(categories0, (index){
+                                    children: List.generate(categories0.length, (index){
                                       return Container(
                                         alignment: Alignment.center,
                                         decoration: BoxDecoration(
