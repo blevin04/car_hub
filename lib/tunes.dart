@@ -10,7 +10,6 @@ import 'package:gif_view/gif_view.dart';
 
 class Tunes extends StatefulWidget {
   const Tunes({super.key});
-
   @override
   State<Tunes> createState() => _TunesState();
 }
@@ -98,6 +97,7 @@ class _TunesState extends State<Tunes> {
                         ),
                         itemCount: 2,
                         shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (BuildContext context, int index) {
                           return const Card();
                         },
@@ -164,9 +164,10 @@ class _TunesState extends State<Tunes> {
                                  height: 20,
                                 width: MediaQuery.of(context).size.width-60,
                                 child: RotatedBox(
+
                                   quarterTurns: -1,
                                   child: ListWheelScrollView(
-                                    controller: _controller,
+                                    controller: FixedExtentScrollController(),
                                     itemExtent: 80, 
                                     children: List.generate(categories0.length, (index){
                                       return Container(
@@ -268,6 +269,7 @@ class _TunesState extends State<Tunes> {
                     );
                   }
                 ),
+                const SizedBox(height: 50,)
                 ],
               ),
             ),

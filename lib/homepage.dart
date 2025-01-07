@@ -37,6 +37,7 @@ class _HomepageState extends State<Homepage> {
       appBar: AppBar(toolbarHeight: 20,),
       body: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             StreamBuilder(
               stream: FirebaseAuth.instance.authStateChanges(),
@@ -169,6 +170,7 @@ class _HomepageState extends State<Homepage> {
                 ),
               ),
             ),
+            const Text("Wallpapers "),
             GridView.builder(
               shrinkWrap: true,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -179,10 +181,17 @@ class _HomepageState extends State<Homepage> {
                 return Card();
               },
             ),
-
-
-
-            
+            const Text("Revs"),
+            GridView.builder(
+              shrinkWrap: true,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+              ),
+              itemCount: 2,
+              itemBuilder: (BuildContext context, int index) {
+                return Card();
+              },
+            ),
             // TextButton(onPressed: (){
             //   openShit();
             // }, child: Text("openshit"))
