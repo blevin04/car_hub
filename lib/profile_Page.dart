@@ -3,7 +3,6 @@ import 'package:car_hub/authPage.dart';
 import 'package:car_hub/backendFxns.dart';
 import 'package:car_hub/main.dart';
 import 'package:car_hub/preview.dart';
-import 'package:car_hub/revMatch.dart';
 import 'package:car_hub/utils.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -577,7 +576,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 child:InkWell(
                   onTap: () {
                     index==0?
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>const Revmatch())):
+                    // Navigator.push(context, MaterialPageRoute(builder: (context)=>const Revmatch()))
+                    showsnackbar(context, "damn")
+                    :
                     showDialog(context: context, builder: (context){
                       return Dialog(
                         child: Container(

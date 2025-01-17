@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 
-class Revmatch extends StatefulWidget {
-  const Revmatch({super.key});
+class Revmatch0 extends StatefulWidget {
+  const Revmatch0({super.key});
 
   @override
-  State<Revmatch> createState() => _RevmatchState();
+  State<Revmatch0> createState() => _RevmatchState();
 }
 
-class _RevmatchState extends State<Revmatch> {
+class _RevmatchState extends State<Revmatch0> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +41,6 @@ class _RevmatchState extends State<Revmatch> {
 
           ),
           Card(
-            
             child: SizedBox(
               width: MediaQuery.of(context).size.width-20,
               child: Padding(

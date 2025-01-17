@@ -50,61 +50,61 @@ class _MobileLayoutState extends State<MobileLayout> {
               ),
           ),
         //  IconButton(onPressed: (){}, ),
-          InkWell(
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-            onTap: () {
-              scale[1] = 1.3;
-              currentPage = 1;
-              setState(() {
+          // InkWell(
+          //   splashColor: Colors.transparent,
+          //   highlightColor: Colors.transparent,
+          //   onTap: () {
+          //     scale[1] = 1.3;
+          //     currentPage = 1;
+          //     setState(() {
                 
-              });
-            },
-            child: AnimatedScale(
-              scale: scale[1],
-              duration:const Duration(milliseconds: 200),
-              child: Column(
-                children: [
-                  Icon(Icons.image,color: currentPage==1?const Color.fromARGB(255, 248, 74, 0):null,),
-                  Text("Wallpaper",style: TextStyle(fontSize: 14,color: currentPage==1?const Color.fromARGB(255, 248, 74, 0):null),),
-                ]
-                ),
-              onEnd: (){
-                scale[1] = 1.0;
-                setState(() {
+          //     });
+          //   },
+          //   child: AnimatedScale(
+          //     scale: scale[1],
+          //     duration:const Duration(milliseconds: 200),
+          //     child: Column(
+          //       children: [
+          //         Icon(Icons.image,color: currentPage==1?const Color.fromARGB(255, 248, 74, 0):null,),
+          //         Text("Wallpaper",style: TextStyle(fontSize: 14,color: currentPage==1?const Color.fromARGB(255, 248, 74, 0):null),),
+          //       ]
+          //       ),
+          //     onEnd: (){
+          //       scale[1] = 1.0;
+          //       setState(() {
                   
-                });
-              },
-              ),
-          ),
-          InkWell(
-            radius: 20,
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-            onTap: () {
-              currentPage = 2;
-              scale[2] = 1.3;
-              setState(() {
+          //       });
+          //     },
+          //     ),
+          // ),
+          // InkWell(
+          //   radius: 20,
+          //   splashColor: Colors.transparent,
+          //   highlightColor: Colors.transparent,
+          //   onTap: () {
+          //     currentPage = 2;
+          //     scale[2] = 1.3;
+          //     setState(() {
                 
-              });
-            },
-            child: AnimatedScale(
-              scale: scale[2],
-              duration:const Duration(milliseconds: 200),
-              child: Column(
-                children: [
-                  Icon(Icons.music_note_outlined,color: currentPage==2?const Color.fromARGB(255, 248, 74, 0):null,),
-                  Text("Revs",style: TextStyle(fontSize: 14,color: currentPage==2?const Color.fromARGB(255, 248, 74, 0):null),),
-                ]
-                ),
-              onEnd: (){
-                scale[2] = 1.0;
-                setState(() {
+          //     });
+          //   },
+          //   child: AnimatedScale(
+          //     scale: scale[2],
+          //     duration:const Duration(milliseconds: 200),
+          //     child: Column(
+          //       children: [
+          //         Icon(Icons.music_note_outlined,color: currentPage==2?const Color.fromARGB(255, 248, 74, 0):null,),
+          //         Text("Revs",style: TextStyle(fontSize: 14,color: currentPage==2?const Color.fromARGB(255, 248, 74, 0):null),),
+          //       ]
+          //       ),
+          //     onEnd: (){
+          //       scale[2] = 1.0;
+          //       setState(() {
                   
-                });
-              },
-              ),
-          ),
+          //       });
+          //     },
+          //     ),
+          // ),
           InkWell(
             splashColor: Colors.transparent,
             highlightColor: Colors.transparent,
