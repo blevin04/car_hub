@@ -1,8 +1,5 @@
 import 'dart:async';
-
-import 'package:car_hub/profile_Page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gif_view/gif_view.dart';
 
 class Revmatch extends StatefulWidget {
@@ -14,14 +11,34 @@ class Revmatch extends StatefulWidget {
 GifController gifController = GifController(
   autoPlay: false
 );
+GifController _gifController = GifController(
+  autoPlay: true,
+  inverted: false,
+  loop: false,
+  onFinish: (){
+    startUpDone.value =true;
+  }
+
+);
+
+ValueNotifier<bool> startUpDone = ValueNotifier(false);
 class _RevmatchState extends State<Revmatch> {
   @override
+  // void initState() {
+  //   // TODO: implement initState
+  //   super.initState();
+  //   _gifController.addListener((){
+  //     print(_gifController.onFinish);
+  //     _gifController.onFinish;
+  //   });
+  // }
+  @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: Future.delayed(const Duration(seconds: 1)),
+    return ListenableBuilder(
+      listenable: startUpDone,
       // initialData: null,
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
+      builder: (BuildContext context,  child) {
+        if (!startUpDone.value) {
           return Scaffold(
             backgroundColor: const Color.fromARGB(225, 37, 35, 35),
             body: Container(
@@ -31,18 +48,10 @@ class _RevmatchState extends State<Revmatch> {
               //     fit: BoxFit.cover,
               //     image: AssetImage("lib/assets/revmatchBackground.png"))
               // ),
-              child: Animate(
-                onComplete: (controller){
-                  controller.reverse();
-                },
-              effects: [FadeEffect(
-                begin: 0.7,
-                end: 0.9,
-                duration: Duration(seconds: 1)
-              )],
-              delay: Duration(seconds: 0),
-              child: Image(image: AssetImage("lib/assets/rev_match0.png"))
-              )
+              child: GifView.asset(
+                controller: _gifController,
+                "lib/assets/startup_gif.gif"
+                )
             ),
           );
         }
@@ -84,7 +93,7 @@ class _RevmatchState extends State<Revmatch> {
                       children: [
                         Card(
                           child: Container(
-                            padding: EdgeInsets.all(20),
+                            padding:const EdgeInsets.all(20),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20)
                             ),

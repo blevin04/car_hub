@@ -1,15 +1,12 @@
 import 'package:car_hub/authPage.dart';
 import 'package:car_hub/backendFxns.dart';
-import 'package:car_hub/chatrooms.dart';
 import 'package:car_hub/gamePages/revMatch.dart';
 import 'package:car_hub/gamePages/triviaPage.dart';
-import 'package:car_hub/revMatch.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:gif_view/gif_view.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
