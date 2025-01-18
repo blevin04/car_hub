@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
 import 'package:car_hub/categories.dart';
 import 'package:car_hub/models.dart';
@@ -509,4 +511,62 @@ Future<Uint8List>getMessageMedia(String messageId,String roomId)async{
   });
 
   return media;
+}
+Future<Map<String,dynamic>> preGame()async{
+Map<String,dynamic> gameMap = {};
+
+await firestore.collection("tunes").get().then((onValue)async{
+  List tuneData = onValue.docs.toList();
+  tuneData.shuffle();
+  List sequence = [];
+  while (sequence.length<5) {
+    int newN = Random().nextInt(tuneData.length);
+    if (!sequence.contains(newN)) {
+      sequence.add(newN);
+    }
+  }
+  // List sequence = List.generate((5), (index){
+  //   return Random().nextInt(tuneData.length);
+  // });
+  List master = [];
+  List repeated = [];
+  for (var i = 0; i < sequence.length; i++) {
+    if(master.contains(sequence[i])){
+      repeated.add(sequence[i]);
+    }else{
+      master.add(sequence[i]);
+    }
+  }
+  
+  print("lllllllllllllllllls$sequence");
+  for (var i = 0; i < sequence.length; i++) {
+    Map<String,dynamic> dataAll = tuneData[sequence[i]].data();
+    await storage.child("tunes/${tuneData[sequence[i]].id}").list().then((onValueM)async{
+      Uint8List?  mp3Data = await onValueM.items.single.getData();
+      
+      dataAll.addAll({"MP3":mp3Data!});
+    });
+    gameMap.addAll({tuneData[sequence[i]].id:dataAll});
+  }
+  //  sequence.forEach((index)async{
+    
+  // });
+
+});
+// Map mp3Map = {};
+// gameMap.forEach((key,value)async{
+//   await storage.child("/tunes/$key").list().then((onValue)async{
+    
+//     Uint8List? mp3data = await onValue.items.single.getData();
+//     mp3Map.addAll({key:mp3data!});
+//   });
+// });
+// print("nnnnnnnnnnnnnnnnnnn${mp3Map.length}");
+// mp3Map.forEach((key,value){
+//   Map data0 = gameMap[key];
+//   data0.addAll({"MP3":value});
+//   gameMap.update(key, (data)=>data0);
+// });
+print(gameMap.keys);
+return gameMap;
 }
