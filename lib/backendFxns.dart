@@ -521,6 +521,7 @@ await firestore.collection("tunes").get().then((onValue)async{
   while (sequence.length<5) {
     int newN = Random().nextInt(tuneData.length);
     if (!sequence.contains(newN)) {
+      print("sssssssssssssss$sequence");
       sequence.add(newN);
     }
   }

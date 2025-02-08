@@ -98,6 +98,8 @@ flutter:
     - lib/assets/img.jpg
     - lib/assets/44zG.gif
     - lib/assets/revmatchBackground.png
+    - lib/assets/v8.jpeg
+    - lib/assets/v6.jpg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 

@@ -24,13 +24,6 @@ class _HomepageState extends State<Homepage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      // Handle foreground messages
-      if (message.notification != null) {
-        print("Notification Title: ${message.notification!.title}");
-        print("Notification Body: ${message.notification!.body}");
-      }
-    });
   }
   @override
   Widget build(BuildContext context) {
@@ -131,40 +124,40 @@ class _HomepageState extends State<Homepage> {
                         fit: BoxFit.fill,
                         repeat: ImageRepeat.noRepeat,
                         "lib/assets/startup_gif.gif"),
-                      Card(
-                        margin:const EdgeInsets.all(0),
-                        color: const Color.fromARGB(81, 255, 255, 255),
-                        child: Container(
-                          padding:const EdgeInsets.all(0),
-                          height: 200,
-                          width: 130,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                             const Image(
-                                fit: BoxFit.fill,
-                                image: AssetImage("lib/assets/rev_match0.png")),
-                               const Text("High Score:",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,color: Colors.yellow),),
-                               const Text("200",style: TextStyle(color:  Color.fromARGB(255, 255, 98, 0),fontWeight: FontWeight.bold,fontSize: 18),),
-                                TextButton(onPressed: ()async{
-                                  // await Navigator.push(context, MaterialPageRoute(builder: (context)=>const Revmatch()));
-                                }, 
-                                child: const Card(
-                                  margin: EdgeInsets.all(0),
-                                  color: Colors.blue,
-                                  child: Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                      children: [
-                                        Text("Play"),
-                                        Icon(Icons.play_arrow)],
-                                        ),
-                                  ),))
-                            ],
-                          )
-                        )
-                      ),
+                      // Card(
+                      //   margin:const EdgeInsets.all(0),
+                      //   color: const Color.fromARGB(81, 255, 255, 255),
+                      //   child: Container(
+                      //     padding:const EdgeInsets.all(0),
+                      //     height: 200,
+                      //     width: 130,
+                      //     child: Column(
+                      //       mainAxisAlignment: MainAxisAlignment.start,
+                      //       children: [
+                      //        const Image(
+                      //           fit: BoxFit.fill,
+                      //           image: AssetImage("lib/assets/rev_match0.png")),
+                      //          const Text("High Score:",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,color: Colors.yellow),),
+                      //          const Text("200",style: TextStyle(color:  Color.fromARGB(255, 255, 98, 0),fontWeight: FontWeight.bold,fontSize: 18),),
+                      //           TextButton(onPressed: ()async{
+                      //             // await Navigator.push(context, MaterialPageRoute(builder: (context)=>const Revmatch()));
+                      //           }, 
+                      //           child: const Card(
+                      //             margin: EdgeInsets.all(0),
+                      //             color: Colors.blue,
+                      //             child: Padding(
+                      //               padding: EdgeInsets.all(8.0),
+                      //               child: Row(
+                      //                 mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      //                 children: [
+                      //                   Text("Play"),
+                      //                   Icon(Icons.play_arrow)],
+                      //                   ),
+                      //             ),))
+                      //       ],
+                      //     )
+                      //   )
+                      // ),
                       
                     ],
                   ),
