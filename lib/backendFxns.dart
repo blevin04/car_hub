@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:ffi';
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
@@ -15,7 +14,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
-
 final gemini = Gemini.instance;
 final firestore = FirebaseFirestore.instance;
 final storage = FirebaseStorage.instance.ref();
@@ -82,9 +80,9 @@ Future<Map<dynamic,dynamic>> triviaStart()async{
     values.replaceAll(RegExp(r"0"), "0");
       var check  = jsonDecode(values);
     //triviaQuiz = values[0]
-    print(check);
+    // print(check);
     triviaQuiz = check;
-    print(triviaQuiz);
+    // print(triviaQuiz);
   });
   return triviaQuiz;
 }
@@ -129,7 +127,7 @@ Future<List> getrooms()async{
       }
     });
     await Hive.box("Rooms").put("Rooms", rooms);
-    print(Hive.box("tt").isOpen);
+    // print(Hive.box("tt").isOpen);
     // print(".//////////////////");
   }else{
     // print("||||||||||||||||||||||||||");
@@ -225,7 +223,7 @@ Future<String>sendMessage(String messagetext,String roomId,String media,[String 
   } catch (e) {
     state = e.toString();
   }
-  print(state);
+  // print(state);
   return state;
 }
 StreamController controller = StreamController();
@@ -286,8 +284,8 @@ String state = "";
   } catch (e) {
     state = e.toString();
   }
-  print(".................................");
-  print(state);
+  // print(".................................");
+  // print(state);
   return state;
 }
 Future<Uint8List> getWallpaper(String id)async{
@@ -382,6 +380,7 @@ Future<String>setName(String newName)async{
   Hive.box("UserData").put("fullName", newName);
   return "Success";
 }
+
 Future<String>UploadAudio(String audioPath,String name,List categories,List more)async{
   String state = "";
   try {
@@ -506,7 +505,7 @@ Future<Uint8List>getMessageMedia(String messageId,String roomId)async{
   Uint8List media = Uint8List(100);
 
   await storage.child("messages/$roomId/$messageId/").list().then((onValue)async{
-    print(onValue.items.length);
+    // print(onValue.items.length);
     media = (await onValue.items.single.getData() )!;
   });
 
@@ -538,7 +537,7 @@ await firestore.collection("tunes").get().then((onValue)async{
     }
   }
   
-  print("lllllllllllllllllls$sequence");
+  // print("lllllllllllllllllls$sequence");
   for (var i = 0; i < sequence.length; i++) {
     Map<String,dynamic> dataAll = tuneData[sequence[i]].data();
     await storage.child("tunes/${tuneData[sequence[i]].id}").list().then((onValueM)async{
@@ -567,6 +566,6 @@ await firestore.collection("tunes").get().then((onValue)async{
 //   data0.addAll({"MP3":value});
 //   gameMap.update(key, (data)=>data0);
 // });
-print(gameMap.keys);
+// print(gameMap.keys);
 return gameMap;
 }

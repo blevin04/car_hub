@@ -40,7 +40,7 @@ class _RevmatchState extends State<Revmatch> {
         if (snapshot.connectionState == ConnectionState.waiting) {
       return Scaffold(
         backgroundColor: const Color.fromARGB(225, 37, 35, 35),
-        body: Container(
+        body: SizedBox(
           height: MediaQuery.of(context).size.height,
           // decoration: BoxDecoration(
           //   image: DecorationImage(
@@ -67,7 +67,7 @@ class _RevmatchState extends State<Revmatch> {
             listenable: pageControllerG, 
             builder: (context,child){
               
-              return Text("${currPage}/5");
+              return Text("$currPage/5");
             }),
            IconButton(onPressed: (){
             pageControllerG.animateToPage(pageControllerG.page!.ceil()+1, duration:const Duration(milliseconds: 250), curve: Curves.bounceInOut);
@@ -128,15 +128,15 @@ class _RevmatchState extends State<Revmatch> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20)
                           ),
-                          child: Text("Answer")),
+                          child: const Text("Answer")),
                       ),
                       Card(
                         child:  Container(
-                          padding: EdgeInsets.all(20),
+                          padding: const EdgeInsets.all(20),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20)
                           ),
-                          child: Text("Answer")),
+                          child: const Text("Answer")),
                       )
                     ],
                   ),
@@ -145,19 +145,19 @@ class _RevmatchState extends State<Revmatch> {
                     children: [
                       Card(
                         child:  Container(
-                          padding: EdgeInsets.all(20),
+                          padding: const EdgeInsets.all(20),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20)
                           ),
-                          child: Text("Answer")),
+                          child: const Text("Answer")),
                       ),
                       Card(
                         child:  Container(
-                          padding: EdgeInsets.all(20),
+                          padding: const EdgeInsets.all(20),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20)
                           ),
-                          child: Text("Answer")),
+                          child: const Text("Answer")),
                       )
                     ],
                   )
