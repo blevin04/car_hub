@@ -491,7 +491,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   top: 200,
                   child: Padding(
                         padding:const EdgeInsets.all(8.0),
-                        child: Text(Hive.box("UserData").get("fullName"),style:const TextStyle(fontWeight: FontWeight.bold),),
+                        child: Text(
+                          Hive.box("UserData").get("fullName"),
+                          style:const TextStyle(fontWeight: FontWeight.bold),),
                       ),
                   ),
                   Positioned(

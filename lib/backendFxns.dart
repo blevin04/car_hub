@@ -528,15 +528,15 @@ await firestore.collection("tunes").get().then((onValue)async{
   // List sequence = List.generate((5), (index){
   //   return Random().nextInt(tuneData.length);
   // });
-  List master = [];
-  List repeated = [];
-  for (var i = 0; i < sequence.length; i++) {
-    if(master.contains(sequence[i])){
-      repeated.add(sequence[i]);
-    }else{
-      master.add(sequence[i]);
-    }
-  }
+  // List master = [];
+  // List repeated = [];
+  // for (var i = 0; i < sequence.length; i++) {
+  //   if(master.contains(sequence[i])){
+  //     repeated.add(sequence[i]);
+  //   }else{
+  //     master.add(sequence[i]);
+  //   }
+  // }
   
   // print("lllllllllllllllllls$sequence");
   for (var i = 0; i < sequence.length; i++) {

@@ -11,6 +11,8 @@ import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:splash_master/core/source.dart';
+import 'package:splash_master/core/splash_master.dart';
 void main()async {
     WidgetsFlutterBinding.ensureInitialized();
     Gemini.init(apiKey: 'AIzaSyBOoqJyIEK1oAqVtKjT28CzPfSekpFlZew');
@@ -24,7 +26,7 @@ void main()async {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   // Request permissions for iOS (optional)
   await messaging.requestPermission();
-
+  SplashMaster.initialize();
   // Subscribe to the 'global' topic
   await messaging.subscribeToTopic("global");
   runApp(const MyApp());
@@ -82,7 +84,10 @@ void changeTheme(ThemeMode themeMode) {
         "/wallpapers":(context)=>const Wallpapers(),
         "profile":(context)=>const ProfilePage(),
       },
-      home: const MobileLayout(),
+      home: SplashMaster.video(
+        source: AssetSource("lib/assets/CARHUB.mp4"),
+        nextScreen: const MobileLayout(),
+        ),
     );
   }
 }

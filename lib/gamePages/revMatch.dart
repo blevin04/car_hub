@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:audioplayers/audioplayers.dart';
@@ -20,7 +21,21 @@ GifController _gifController = GifController(
   inverted: false,
   loop: false,
 );
-
+List engines = [
+  "V8",
+  "V10",
+  "V12",
+  "V6",
+  "V16",
+  "I3",
+  "I4",
+  "I5",
+  "I6",
+  "W12",
+  "W16",
+  "Rotery",
+  "V4",
+];
 ValueNotifier<bool> startUpDone = ValueNotifier(false);
 PageController pageControllerG = PageController();
 AudioPlayer audioPlayerG = AudioPlayer();
@@ -58,22 +73,30 @@ class _RevmatchState extends State<Revmatch> {
             transform: GradientRotation(90)
             )
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Stack(
+            // mainAxisAlignment: MainAxisAlignment.center,
+            alignment: Alignment.bottomCenter,
             children: [
-              GifView.asset(
-                controller: _gifController,
-                "lib/assets/startup_gif.gif"
+                Center(
+                  child: GifView.asset(
+                    controller: _gifController,
+                    "lib/assets/startup_gif.gif"
+                    ),
                 ),
-                
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    const Text("Preparing Your experience ",style: TextStyle(color: Colors.blue),),
-                    LoadingAnimationWidget.progressiveDots(color: Colors.white30, size: 20)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("Preparing Your experience ",style: TextStyle(color: Colors.blue),),
+                        LoadingAnimationWidget.progressiveDots(color: Colors.white30, size: 20)
+                      ],
+                    ),
+                    LoadingAnimationWidget.waveDots(color: Colors.indigoAccent, size: 50),
                   ],
                 ),
-                LoadingAnimationWidget.waveDots(color: Colors.indigoAccent, size: 50),
+                
             ],
           ),
         ),
@@ -82,7 +105,6 @@ class _RevmatchState extends State<Revmatch> {
   playPositions = [0.0,0.0,0.0,0.0,0.0];
  ValueNotifier< List<bool>> playingAll =ValueNotifier([false,false,false,false,false]) ;
     Map<String,dynamic> tunesData = snapshot.data;
-    Map<int,dynamic> selectedChoice = {};
     
     List tuneKeys = tunesData.keys.toList();
     return Scaffold(
@@ -107,14 +129,15 @@ class _RevmatchState extends State<Revmatch> {
         controller: pageControllerG,
         children: List.generate(5, (index){
           // Future.delayed(const Duration(seconds: 1));
+          ValueNotifier playChange = ValueNotifier(true);
+         
           return FutureBuilder(
-            future: Future.delayed(const Duration(seconds: 1)),
+            future: audioPlayerG.setSource(BytesSource(tunesData[tuneKeys[index]]["MP3"])),
             builder: (context,snap) {
               if (snap.connectionState == ConnectionState.waiting) {
                 return LoadingAnimationWidget.threeArchedCircle(color: Colors.white, size: 30);
               }
-              ValueNotifier<Map> pageAnswer = ValueNotifier(selectedChoice.containsKey(pageControllerG.page!.toInt())?
-          selectedChoice[pageControllerG.page!.toInt()]:{}); 
+               
               return SingleChildScrollView(
                 child: Column(
                 children: [
@@ -146,28 +169,52 @@ class _RevmatchState extends State<Revmatch> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         ListenableBuilder(
-                          listenable: playingAll,
+                          listenable: playChange,
                           builder: (context,child) {
-                            return IconButton(onPressed: (){
-                            playingAll.value[index] = !playingAll.value[index];
-                            playingAll.value[index] == false?
-                            audioPlayerG.play(tunesData[tuneKeys[index]]["Mp3"]):
-                            audioPlayerG.pause();
+                            print("lllllllllllllllllll");
+                            return IconButton(
+                              onPressed: (){
+                                // print(tunesData[tuneKeys[index]].keys.toList());
+                                
+                            if (playingAll.value[index] == false) {
+                              audioPlayerG.play(BytesSource(tunesData[tuneKeys[index]]["MP3"]));
+                              playingAll.value[index] = true;
+                              playChange.value = !playChange.value;
+                            }else{
+                              audioPlayerG.pause();
+                              playingAll.value[index] = false;
+                              playChange.value = !playChange.value;
+                            }
                             }, icon:Icon( 
-                              playingAll.value[index]?
+                              playingAll.value[index] == true?
                               Icons.pause:
                               Icons.play_arrow));
                           }
                         ),
                         SizedBox(
                           width: MediaQuery.of(context).size.width-80,
-                          child: Slider(
-                          value: playPositions[index], 
-                          onChanged: (valueNew){
-
-                          },
-                          thumbColor: Colors.blue,
-                          ),
+                          child: FutureBuilder(
+                            future: audioPlayerG.getDuration(),
+                            initialData:const Duration(microseconds: 1),
+                            builder: (context,snapshot) {
+                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                return LinearProgressIndicator();
+                              }
+                              // DateTime startT = DateTime.now();
+                              return StreamBuilder(
+                                stream: audioPlayerG.onPositionChanged,
+                                initialData:const Duration(microseconds: 0),
+                                builder: (context, snapshot1) {
+                                  return Slider(
+                                    value: snapshot1.data!.inMicroseconds/snapshot.data!.inMicroseconds, 
+                                    activeColor: Colors.blue,
+                                    onChanged: (value){
+                                  
+                                  });
+                                }
+                              );
+                            }
+                          )
                         ),
                       ],
                     ),
@@ -196,7 +243,17 @@ class _RevmatchState extends State<Revmatch> {
                     itemCount: 6,
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    itemBuilder: (BuildContext context, int index) {
+                    itemBuilder: (BuildContext context, int EngineIndex) {
+                      List engineOptions = List.empty(growable: true);
+                      engineOptions.add(tunesData[tuneKeys[index]]["categories"].first);
+                        while (engineOptions.length<6) {
+                          int newN = Random().nextInt(engines.length);
+                          if (!engineOptions.contains(engines[newN])) {
+                             print("ppppppppppppppppppppp$newN");
+                            engineOptions.add(engines[newN]);
+                          }
+                        }
+                        print(engineOptions);
                       return Card(
                         child: Stack(
                           alignment: Alignment.bottomLeft,
@@ -213,7 +270,7 @@ class _RevmatchState extends State<Revmatch> {
                                 )
                               ),
                             ),
-                            Text("V8",style: TextStyle(color: Colors.white,fontSize: 20),)
+                            Text(engineOptions[EngineIndex].toString(),style: TextStyle(color: Colors.white,fontSize: 20),)
                           ],
                         ),
                       
@@ -289,28 +346,51 @@ class _RevmatchState extends State<Revmatch> {
             ),
             color: Colors.blue
           ),
-          child: Center(
-            child: Text("Skip",style: TextStyle(
-              color: Colors.white,
-              fontSize: 23
-            ),),
+          child: InkWell(
+            onTap: (){
+              pageControllerG.animateToPage(pageControllerG.page!.toInt()+1, duration:const Duration(milliseconds: 200), curve: Curves.bounceInOut);
+            },
+            child: Center(
+              child: Text("Skip",style: TextStyle(
+                color: Colors.white,
+                fontSize: 23
+              ),),
+            ),
           ),
          ),
          Container(
           height: 50,
           width: MediaQuery.of(context).size.width/2 -30,
-          decoration: BoxDecoration(
+          decoration:const BoxDecoration(
             borderRadius: BorderRadius.only(
               topRight: Radius.circular(20),
               bottomRight: Radius.circular(20)
             ),
             color: Colors.blueGrey
           ),
-          child: Center(
-            child: Text("Quit",style: TextStyle(
-              color: Colors.white,
-              fontSize: 23
-            ),),
+          child: InkWell(
+            onTap: (){
+              showDialog(context: context, builder: (context){
+                return AlertDialog(
+                  title:const Text("Are you sure?"),
+                  actions: [
+                    TextButton(onPressed: (){
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    }, child: const Text("Yes")),
+                    TextButton(onPressed: (){
+                      Navigator.pop(context);
+                    }, child: const Text("No"))
+                  ],
+                );
+              });
+            },
+            child: Center(
+              child: Text("Quit",style: TextStyle(
+                color: Colors.white,
+                fontSize: 23
+              ),),
+            ),
           ),
          )
         ],

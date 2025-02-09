@@ -56,7 +56,6 @@ Widget screen0(){
                     changeScreen(0);
                   }, icon:const Icon(Icons.keyboard_arrow_left,size: 30,)),
                   const Text("Sign Up",style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
-
                 ],
               ),
               const SizedBox(height: 50,),
@@ -234,7 +233,7 @@ Widget screen0(){
                           borderRadius: BorderRadius.circular(15),
                           color: Colors.black
                         ),
-                        child: const Text("Sign Up",style: TextStyle(color: Colors.white),),
+                        child: const Text("Sign in",style: TextStyle(color: Colors.white),),
                       )
                     ),
                     const SizedBox(
@@ -260,8 +259,6 @@ Widget screen0(){
                   ],
                 ),
               );
-           
-    
     case 2:
       return Container(
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
@@ -343,7 +340,7 @@ Widget screen0(){
                     color: Colors.black,
                     borderRadius: BorderRadius.circular(25)
                   ),
-                  child:const Text("Sign Up",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                  child:const Text("Sign in",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
                 ),
               ),
               
