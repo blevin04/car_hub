@@ -128,4 +128,4 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
 splash_master:
-  color: '#FFFFFF'
+  color: '#e4e2dd'

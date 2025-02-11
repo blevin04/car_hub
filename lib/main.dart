@@ -13,6 +13,7 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:splash_master/core/source.dart';
 import 'package:splash_master/core/splash_master.dart';
+import 'package:splash_master/splash_master.dart';
 void main()async {
     WidgetsFlutterBinding.ensureInitialized();
     Gemini.init(apiKey: 'AIzaSyBOoqJyIEK1oAqVtKjT28CzPfSekpFlZew');
@@ -87,6 +88,9 @@ void changeTheme(ThemeMode themeMode) {
       home: SplashMaster.video(
         source: AssetSource("lib/assets/CARHUB.mp4"),
         nextScreen: const MobileLayout(),
+        videoConfig: VideoConfig(
+          videoVisibilityEnum: VisibilityEnum.useAspectRatio
+        ),
         ),
     );
   }

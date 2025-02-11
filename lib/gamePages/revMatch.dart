@@ -295,6 +295,7 @@ class _RevmatchState extends State<Revmatch> {
                     shrinkWrap: true,
                     physics:const  NeverScrollableScrollPhysics(),
                     itemBuilder: (BuildContext context, int index) {
+                      
                       return Card(
                         child: Stack(
                           alignment: Alignment.bottomLeft,
