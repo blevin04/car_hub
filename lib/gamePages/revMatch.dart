@@ -52,7 +52,7 @@ class _RevmatchState extends State<Revmatch> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    AudioPlayer audioPlayerG = AudioPlayer();
+    
     
     pageControllerG = PageController();
     pageControllerG.addListener((){
