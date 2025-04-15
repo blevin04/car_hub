@@ -43,9 +43,16 @@ List playPositions = [];
 class _RevmatchState extends State<Revmatch> {
   int currPage = 1;
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    audioPlayerG.stop();
+  }
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    AudioPlayer audioPlayerG = AudioPlayer();
     
     pageControllerG = PageController();
     pageControllerG.addListener((){

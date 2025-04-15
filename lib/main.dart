@@ -59,6 +59,7 @@ void changeTheme(ThemeMode themeMode) {
     return MaterialApp(
       title: 'Flutter Demo',
       themeMode: _themeMode,
+      debugShowCheckedModeBanner: false,
       darkTheme: ThemeData.dark(),
       theme: ThemeData(
         // This is the theme of your application.
@@ -86,9 +87,10 @@ void changeTheme(ThemeMode themeMode) {
         "profile":(context)=>const ProfilePage(),
       },
       home: SplashMaster.video(
+        backGroundColor:const Color.fromARGB(255,229,228,222),
         source: AssetSource("lib/assets/CARHUB.mp4"),
         nextScreen: const MobileLayout(),
-        videoConfig: VideoConfig(
+        videoConfig:const VideoConfig(
           videoVisibilityEnum: VisibilityEnum.useAspectRatio
         ),
         ),
