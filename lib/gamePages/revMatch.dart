@@ -56,7 +56,7 @@ async{
         child:Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text("Your Score",style: TextStyle(
+            const Text("Your Score",style:TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 50
             ),),
@@ -72,7 +72,7 @@ async{
   });
   Center(
         child: Confetti(controller: Confetti.launch(context, options: 
-        ConfettiOptions(
+        const ConfettiOptions(
          startVelocity: 45,
          scalar: 1.2,
          ticks: 200,
@@ -84,7 +84,6 @@ class _RevmatchState extends State<Revmatch> {
   int currPage = 1;
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     audioPlayerG.stop();
     // selectedEngines.dispose();
@@ -95,7 +94,6 @@ class _RevmatchState extends State<Revmatch> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     startTime = DateTime.now();
     
@@ -122,7 +120,7 @@ class _RevmatchState extends State<Revmatch> {
       return Scaffold(
         backgroundColor: Colors.transparent,
         body: Container(
-          decoration: BoxDecoration(
+          decoration:const BoxDecoration(
             gradient: LinearGradient(colors: [
               Colors.black,
               Colors.white,
@@ -177,9 +175,11 @@ class _RevmatchState extends State<Revmatch> {
               choice.add(engines[rand]);
             }
            }
+           choice.shuffle();
            choices.addAll({i:choice});
+           
          }
-         print(choices);
+        //  print(choices);
     return Scaffold(
       appBar: AppBar(
         title:const Text("Rev Match",style: TextStyle(color: Colors.blue,fontSize: 20),),
@@ -224,7 +224,7 @@ class _RevmatchState extends State<Revmatch> {
                          height: 250,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        image: DecorationImage(
+                        image:const DecorationImage(
                           invertColors: false,
                           fit: BoxFit.cover,
                           image: AssetImage("lib/assets/default_profile.webp"),),)
@@ -243,7 +243,7 @@ class _RevmatchState extends State<Revmatch> {
                                 ),
                               );
                       return Container(
-                        margin: EdgeInsets.all(5),
+                        margin:const EdgeInsets.all(5),
                         decoration: BoxDecoration(
                           border: Border.all(color: const Color.fromARGB(178, 0, 0, 0)),
                           borderRadius: BorderRadius.circular(20)
@@ -358,7 +358,7 @@ class _RevmatchState extends State<Revmatch> {
                           return Card(
                             child: InkWell(
                               onTap: (){
-                                print("selected ${selectedEngines.value}");
+                                // print("selected ${selectedEngines.value}");
                                 if (completed.value != "marked") {
                                    selectedEngines.value.update(index,(value)=>engineOptions[EngineIndex],ifAbsent: () => engineOptions[EngineIndex],);
                                 if (selectedEngines.value.length == 5) {
@@ -406,7 +406,7 @@ class _RevmatchState extends State<Revmatch> {
                                         ),
                                       ),
                                     
-                                  Text(engineOptions[EngineIndex].toString(),style: TextStyle(color: Colors.white,fontSize: 20),)
+                                  Text(engineOptions[EngineIndex].toString(),style:const TextStyle(color: Colors.white,fontSize: 20),)
                                 ],
                               ),
                             ),
@@ -490,14 +490,14 @@ class _RevmatchState extends State<Revmatch> {
                       scorerv+=80/5;
                     }
                   });
-                  print(taken.inSeconds);
-                  print(taken.inMinutes);
+                  // print(taken.inSeconds);
+                  // print(taken.inMinutes);
                   if (taken.inMinutes <1) {
                     var bonus =(taken.inSeconds)/60;
                     bonus= bonus*20;
                     scorerv+=bonus;
-                    print(taken.inSeconds);
-                    print(scorerv);
+                    // print(taken.inSeconds);
+                    // print(scorerv);
                   }else if (taken.inMinutes<5) {
                     var bonus = taken.inSeconds/(60*5);
                     bonus = bonus *15;
@@ -526,7 +526,7 @@ class _RevmatchState extends State<Revmatch> {
                       "Finish":
                       completed.value == "marked"?
                       "Play again":
-                      "Next",style: TextStyle(
+                      "Next",style:const TextStyle(
                       color: Colors.white,
                       fontSize: 23
                     ),);

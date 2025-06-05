@@ -26,21 +26,20 @@ class Room extends StatefulWidget {
 
 class _RoomState extends State<Room> {
   final ScrollController _scrollController = ScrollController(onAttach:(pos){pos.animateTo(pos.maxScrollExtent,duration: const Duration(microseconds: 10),curve: Curves.bounceIn);});
-  bool _autoScrollEnabled = true;
   @override
   void initState() {
     super.initState();
      // Listen for user scroll
     _scrollController.addListener(() {
-      print("ooooooooooo");
+      // print("ooooooooooo");
       if (_scrollController.position.atEdge) {
         // Check if at the bottom
         if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
-          _autoScrollEnabled = true;
-          print("ppppppppppppppppp");
+         
+          // print("ppppppppppppppppp");
         } else {
-          print("llllllllllllll");
-          _autoScrollEnabled = false;
+          // print("llllllllllllll");
+          
         }
       }
     });
@@ -49,15 +48,6 @@ class _RoomState extends State<Room> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
      // _scrollToBottom();
     });
-  }
-  void _scrollToBottom() {
-    if (_autoScrollEnabled) {
-      _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        duration:const Duration(milliseconds: 300),
-        curve: Curves.easeOut,
-      );
-    }
   }
   @override
   Widget build(BuildContext context) {
@@ -81,12 +71,12 @@ FileType previewType = FileType.any;
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircleAvatar(
+            const CircleAvatar(
               radius: 50,
               
             ),
             Text(widget.roomName),
-            ListTile()
+            
           ],
         ),
       ),

@@ -1,12 +1,9 @@
-import 'dart:math';
-
 import 'package:car_hub/authPage.dart';
 import 'package:car_hub/backendFxns.dart';
 import 'package:car_hub/gamePages/revMatch.dart';
 import 'package:car_hub/gamePages/triviaPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_confetti/flutter_confetti.dart';
 import 'package:gif_view/gif_view.dart';
 import 'package:hive_flutter/adapters.dart';
 class Homepage extends StatefulWidget {
@@ -261,107 +258,105 @@ class _HomepageState extends State<Homepage> {
             ),
           ),
           Card(
-            child: Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Container(
-                    //height: 150,
-                    padding:const EdgeInsets.all(10),
-                    width: 200,
-                    decoration: BoxDecoration(
-                      //color: Colors.blue,
-                      borderRadius: BorderRadius.circular(15)
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        const Text("High Score",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
-                        FutureBuilder(
-                          future: getScore(1),
-                          builder: (BuildContext context, AsyncSnapshot snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
-                              return const CircularProgressIndicator();
-                            }
-                            // if (snapshot.data) {
-                            //   return const Text("00",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),);
-                            // }
-                            return Text(snapshot.data.toString(),style:const TextStyle(fontSize: 20,fontWeight: FontWeight.bold));
-                          },
-                        ),
-                      ],
-                    ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Container(
+                  //height: 150,
+                  padding:const EdgeInsets.all(10),
+                  width: 200,
+                  decoration: BoxDecoration(
+                    //color: Colors.blue,
+                    borderRadius: BorderRadius.circular(15)
                   ),
-                  TextButton(
-                    onPressed: ()async{
-                      // await triviaStart();
-                      if (FirebaseAuth.instance.currentUser == null) {
-                        showDialog(context: context, builder: (context){
-                          return Dialog(
-                            child: Card(
-                              
-                              child: SizedBox(
-                                height: 150,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Text("You need to Log in First to play a game"),
-                                    TextButton(onPressed: (){
-                                      Navigator.pop(context);
-                                      Navigator.push(context, MaterialPageRoute(builder: (context)=>const Authpage()));
-                                    }, child:const Text("LogIn / SignUp"))
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        });
-                      }else{
-                        showDialog(context: context, builder: (builder){
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      const Text("High Score",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+                      FutureBuilder(
+                        future: getScore(1),
+                        builder: (BuildContext context, AsyncSnapshot snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          }
+                          // if (snapshot.data) {
+                          //   return const Text("00",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),);
+                          // }
+                          return Text(snapshot.data.toString(),style:const TextStyle(fontSize: 20,fontWeight: FontWeight.bold));
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                TextButton(
+                  onPressed: ()async{
+                    // await triviaStart();
+                    if (FirebaseAuth.instance.currentUser == null) {
+                      showDialog(context: context, builder: (context){
                         return Dialog(
-                          child: Container(
-                            height: 250,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                const Text("Select difficulty"),
-                                TextButton(onPressed: (){
-                                  Navigator.pop(context);
-                                  Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Triviapage(duration:80 ,))));
-                                }, child:const Text("Easy")),
-                                TextButton(onPressed: (){
-                                  Navigator.pop(context);
-                                  Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Triviapage(duration: 70,))));
-                                }, child:const Text("Mediaum")),
-                                TextButton(onPressed: (){
-                                  Navigator.pop(context);
-                                  Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Triviapage(duration: 60,))));
-                                }, child:const Text("Hard")),
-                                TextButton(onPressed: (){
-                                  Navigator.pop(context);
-                                  Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Triviapage(duration: 50,))));
-                                }, child: const Text("Petrol addict")),
-                              ],
+                          child: Card(
+                            
+                            child: SizedBox(
+                              height: 150,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Text("You need to Log in First to play a game"),
+                                  TextButton(onPressed: (){
+                                    Navigator.pop(context);
+                                    Navigator.push(context, MaterialPageRoute(builder: (context)=>const Authpage()));
+                                  }, child:const Text("LogIn / SignUp"))
+                                ],
+                              ),
                             ),
                           ),
                         );
                       });
-                      }
-                      
-                      
-                    },
-                   child:Container(
-                    height: 40,
-                    width: 120,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(15)
-                    ),
-                    child:const Text("Play",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 19),),
-                   ) )
-                ],
-              ),
+                    }else{
+                      showDialog(context: context, builder: (builder){
+                      return Dialog(
+                        child: SizedBox(
+                          height: 250,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              const Text("Select difficulty"),
+                              TextButton(onPressed: (){
+                                Navigator.pop(context);
+                                Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Triviapage(duration:80 ,))));
+                              }, child:const Text("Easy")),
+                              TextButton(onPressed: (){
+                                Navigator.pop(context);
+                                Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Triviapage(duration: 70,))));
+                              }, child:const Text("Mediaum")),
+                              TextButton(onPressed: (){
+                                Navigator.pop(context);
+                                Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Triviapage(duration: 60,))));
+                              }, child:const Text("Hard")),
+                              TextButton(onPressed: (){
+                                Navigator.pop(context);
+                                Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Triviapage(duration: 50,))));
+                              }, child: const Text("Petrol addict")),
+                            ],
+                          ),
+                        ),
+                      );
+                    });
+                    }
+                    
+                    
+                  },
+                 child:Container(
+                  height: 40,
+                  width: 120,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(15)
+                  ),
+                  child:const Text("Play",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 19),),
+                 ) )
+              ],
             ),
           )
             // TextButton(onPressed: (){
