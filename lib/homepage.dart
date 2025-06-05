@@ -1,10 +1,12 @@
+import 'dart:math';
+
 import 'package:car_hub/authPage.dart';
 import 'package:car_hub/backendFxns.dart';
 import 'package:car_hub/gamePages/revMatch.dart';
 import 'package:car_hub/gamePages/triviaPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gemini/flutter_gemini.dart';
+import 'package:flutter_confetti/flutter_confetti.dart';
 import 'package:gif_view/gif_view.dart';
 import 'package:hive_flutter/adapters.dart';
 class Homepage extends StatefulWidget {
@@ -12,17 +14,16 @@ class Homepage extends StatefulWidget {
   @override
   State<Homepage> createState() => _HomepageState();
 }
-final gemini = Gemini.instance;
-void openShit()async{
-  gemini.text("random car fact").then((onValue){
-    print(onValue?.output);
-  });
-}
+
+
+
 class _HomepageState extends State<Homepage> {
+
   @override
   void initState() {
-    // TODO: implement initState
-    super.initState();
+     super.initState();
+  
+   
   }
   @override
   Widget build(BuildContext context) {
@@ -73,6 +74,9 @@ class _HomepageState extends State<Homepage> {
                         dpData = snapshot.data!["Dp"];
                       }
                       return ListTile(
+                        onTap: () {
+                       
+                        },
                     leading: CircleAvatar(
                       backgroundImage:hasDp?
                       MemoryImage(dpData):
@@ -176,30 +180,47 @@ class _HomepageState extends State<Homepage> {
                     children: [
                      const Text("High Score",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
                       FutureBuilder(
-                        future: Hive.openBox("Score"),
-                        
+                        future:getScore(0),
                         builder: (BuildContext context, AsyncSnapshot snapshot) {
                           if (snapshot.connectionState == ConnectionState.waiting) {
                             return const Center(child: CircularProgressIndicator(),);
                           }
-                          double score = 0;
+                          
                           return ListenableBuilder(
                             listenable: Hive.box("Score").listenable(),
-                            builder: (context,child) {
-                              if (!Hive.box("Score").containsKey("RevMatch")) {
-                            return const Text("00",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),);
-                            }else{
-                              score = Hive.box("Score").get("RevMatch");
-                            }
-                              return Text(score.toString(),style:const TextStyle(fontWeight: FontWeight.bold,fontSize: 20),);
-                            }
-                          );
+                             builder: (context,child){
+                              return Text(snapshot.data.roundToDouble().toString(),style:const TextStyle(fontWeight: FontWeight.bold,fontSize: 20));
+                             });
                         },
                       ),
                     ],
                   ),
                     TextButton(onPressed: (){
-                      Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Revmatch())));
+                      if (FirebaseAuth.instance.currentUser == null) {
+                        showDialog(context: context, builder: (context){
+                          return Dialog(
+                            child: Card(
+                              
+                              child: SizedBox(
+                                height: 150,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Text("You need to Log in First to play a game"),
+                                    TextButton(onPressed: (){
+                                      Navigator.pop(context);
+                                      Navigator.push(context, MaterialPageRoute(builder: (context)=>const Authpage()));
+                                    }, child:const Text("LogIn / SignUp"))
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        });
+                      }else{
+                        Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Revmatch())));
+                      }
+                      
                     }, 
                     child: Container(
                       width: 100,
@@ -257,15 +278,15 @@ class _HomepageState extends State<Homepage> {
                       children: [
                         const Text("High Score",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
                         FutureBuilder(
-                          future: Hive.openBox("Score"),
+                          future: getScore(1),
                           builder: (BuildContext context, AsyncSnapshot snapshot) {
                             if (snapshot.connectionState == ConnectionState.waiting) {
                               return const CircularProgressIndicator();
                             }
-                            if (snapshot.data.isEmpty) {
-                              return const Text("00",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),);
-                            }
-                            return Text(snapshot.data.get("CarTrivia").toString());
+                            // if (snapshot.data) {
+                            //   return const Text("00",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),);
+                            // }
+                            return Text(snapshot.data.toString(),style:const TextStyle(fontSize: 20,fontWeight: FontWeight.bold));
                           },
                         ),
                       ],
@@ -274,7 +295,29 @@ class _HomepageState extends State<Homepage> {
                   TextButton(
                     onPressed: ()async{
                       // await triviaStart();
-                      showDialog(context: context, builder: (builder){
+                      if (FirebaseAuth.instance.currentUser == null) {
+                        showDialog(context: context, builder: (context){
+                          return Dialog(
+                            child: Card(
+                              
+                              child: SizedBox(
+                                height: 150,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Text("You need to Log in First to play a game"),
+                                    TextButton(onPressed: (){
+                                      Navigator.pop(context);
+                                      Navigator.push(context, MaterialPageRoute(builder: (context)=>const Authpage()));
+                                    }, child:const Text("LogIn / SignUp"))
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        });
+                      }else{
+                        showDialog(context: context, builder: (builder){
                         return Dialog(
                           child: Container(
                             height: 250,
@@ -283,22 +326,28 @@ class _HomepageState extends State<Homepage> {
                               children: [
                                 const Text("Select difficulty"),
                                 TextButton(onPressed: (){
+                                  Navigator.pop(context);
                                   Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Triviapage(duration:80 ,))));
                                 }, child:const Text("Easy")),
                                 TextButton(onPressed: (){
+                                  Navigator.pop(context);
                                   Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Triviapage(duration: 70,))));
                                 }, child:const Text("Mediaum")),
                                 TextButton(onPressed: (){
+                                  Navigator.pop(context);
                                   Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Triviapage(duration: 60,))));
                                 }, child:const Text("Hard")),
                                 TextButton(onPressed: (){
+                                  Navigator.pop(context);
                                   Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Triviapage(duration: 50,))));
-                                }, child: const Text("Petrol Head")),
+                                }, child: const Text("Petrol addict")),
                               ],
                             ),
                           ),
                         );
                       });
+                      }
+                      
                       
                     },
                    child:Container(

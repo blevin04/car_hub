@@ -38,7 +38,7 @@ dependencies:
   carousel_slider: ^5.0.0
   gif_view: ^0.4.4
   hive: ^2.2.3
-  firebase_core: ^3.6.0
+  firebase_core: ^3.13.1
   hive_flutter: ^1.1.0
   firebase_auth: ^5.3.1
   firebase_ui_auth: ^1.16.0
@@ -58,6 +58,11 @@ dependencies:
   # flutter_native_splash: ^2.4.3
   flutter_animate: ^4.5.2
   splash_master: ^0.0.2
+  firebase_ai: ^2.0.0
+  internet_connection_checker_plus: ^2.7.2
+  waveform_flutter: ^1.2.0
+  confetti: ^0.8.0
+  flutter_confetti: ^0.5.1
 
 dependency_overrides:
   http: ^0.13.3
@@ -99,8 +104,21 @@ flutter:
     - lib/assets/img.jpg
     - lib/assets/44zG.gif
     - lib/assets/revmatchBackground.png
-    - lib/assets/v8.jpeg
-    - lib/assets/v6.jpg
+    - lib/assets/v8.jpg
+    - lib/assets/V6.png
+    - lib/assets/V12.png
+    - lib/assets/V16.png
+    - lib/assets/F4.png
+    - lib/assets/F6.png
+    - lib/assets/W12.png
+    - lib/assets/W16.png
+    - lib/assets/I3.png
+    - lib/assets/I4.png
+    - lib/assets/I5.png
+    - lib/assets/I6.png
+    - lib/assets/V10.png
+    - lib/assets/V4.png
+    - lib/assets/Rotery.png
     - lib/assets/CARHUB.mp4
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

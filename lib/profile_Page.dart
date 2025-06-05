@@ -547,6 +547,7 @@ class _ProfilePageState extends State<ProfilePage> {
               padding:const EdgeInsets.all(8.0),
               child: Card(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const Text("🏎 Today's Random Fact  🏎",style: TextStyle(fontWeight: FontWeight.bold),),
                     Padding(
@@ -557,7 +558,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           if (snapshot.connectionState == ConnectionState.waiting) {
                             return const Center(child: CircularProgressIndicator(),);
                           }
-                          return Text(snapshot.data);
+                          return Center(child: Text(snapshot.data));
                         },
                       ),
                     )
@@ -620,7 +621,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
                         child: Image(
                           image: AssetImage(gridImages[index]))),
-                       const Text("High Score: 200",style: TextStyle(fontWeight: FontWeight.bold),)
+                       const Text("no collections",style: TextStyle(fontWeight: FontWeight.bold),)
                     ],
                   ),
                 ) ,

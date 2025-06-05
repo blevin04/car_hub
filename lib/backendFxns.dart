@@ -11,12 +11,14 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
-final gemini = Gemini.instance;
+import 'package:firebase_ai/firebase_ai.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 final firestore = FirebaseFirestore.instance;
 final storage = FirebaseStorage.instance.ref();
+final model =
+      FirebaseAI.googleAI().generativeModel(model: 'gemini-2.0-flash');
 User? user = FirebaseAuth.instance.currentUser;
 Future<Map<dynamic,dynamic>> getUserData()async{
     Map<dynamic,dynamic> data = {};
@@ -35,18 +37,22 @@ Future<Map<dynamic,dynamic>> getUserData()async{
 Future<String> getFact()async{
 String fact = "";
   await Hive.openBox("Facts");
-  //print(DateTime.now().difference(Hive.box("Facts").get("Data").first));
+  // print(DateTime.now().difference(Hive.box("Facts").get("Data").first));
   if(Hive.box("Facts").isEmpty)
   {
+    
     try{
-      await gemini.text("random car fact").then((onValue){
-      fact = onValue!.output!;
-    });
+      final prompt = [Content.text('Generate a single random car fact ')];
+// To generate text output, call generateContent with the text input
+    final response = await model.generateContent(prompt);
+      fact = response.text!;
+
     final factdata = {
       "Data":[DateTime.now(),fact]
     };
     Hive.box("Facts").putAll(factdata);
     }catch(e){
+      print(e.toString());
       fact = "";
     }
     
@@ -54,9 +60,11 @@ String fact = "";
     if (DateTime.now().difference(Hive.box("Facts").
   get("Data").first)>=const Duration(days: 1)) {
       try{
-      await gemini.text("random car fact").then((onValue){
-      fact = onValue!.output!;
-    });
+      // Provide a prompt that contains text
+final prompt = [Content.text('Generate a single random car fact ')];
+// To generate text output, call generateContent with the text input
+final response = await model.generateContent(prompt);
+fact = response.text!;
     final factdata = {
       "Data":[DateTime.now(),fact]
     };
@@ -74,28 +82,82 @@ return fact;
 Future<Map<dynamic,dynamic>> triviaStart()async{
   Map<dynamic,dynamic> triviaQuiz = {};
   //int questionNo = 0;
-  await gemini.text("Generate ten questions questions should be about cars and the car community.Put them in a map format with keys being string from 0 to 9 and value be a map of key question with the question as the value and key choice with the list 4 choices as the value then key answer with the answer as the value.make all keys strings").
-  then((onValue){
-    var values = onValue!.output!.replaceAll(RegExp(r"`"), " ");
-    values.replaceAll(RegExp(r"0"), "0");
+  // Provide a prompt that contains text
+  try {
+    final prompt = [Content.text("Generate ten questions questions should be about cars and the car community.Put them in a map format with keys being string from 0 to 9 and value be a map of key question with the question as the value and key choice with the list 4 choices as the value then key answer with the answer as the value.make all keys strings note: dont add any unncessesary information like example usage ")];
+  final responce = await model.generateContent(prompt);
+  
+  
+  
+    // var values = responce.text!.replaceAll(RegExp(r"`"), " ").replaceAll(RegExp(r"python"), " ").replaceAll(RegExp(r"import json"), " ");
+    
+    var values = responce.text!.replaceAll(RegExp(r"0"), "0").replaceAll(RegExp(r"`"), " ").replaceAll(RegExp(r"python"), " ").replaceFirst(RegExp("car_questions = "), " ");
       var check  = jsonDecode(values);
     //triviaQuiz = values[0]
-    // print(check);
+    print(check);
     triviaQuiz = check;
     // print(triviaQuiz);
-  });
+  } catch (e) {
+    print(e.toString());
+  }
+
+ 
   return triviaQuiz;
 }
+Future<double> getScore(int gameNum )async{
+  double score = 0;
+  await Hive.openBox("Score");
+  if (FirebaseAuth.instance.currentUser != null) {
+     if ( !await InternetConnection().hasInternetAccess) {
+    if (gameNum == 0) {
+      await Hive.openBox("Score");
+      score = Hive.box("Score").get("RevWaveScore");
+    }
+    if (gameNum == 1) {
+      await Hive.openBox("Score");
+    score =Hive.box("Score").get("TriviaScore");
 
-Future<String>UpdateHighScore(double score)async{
+    }
+  }else{
+   
+    if (gameNum == 0) {
+      
+      await firestore.collection("users").doc(user!.uid).get().then((onValue){
+        if (onValue.data()!.containsKey("RevWaveScore")) {
+          score = onValue.data()!["RevWaveScore"];
+          UpdateHighScore(score,gameNum);
+        }
+      });
+    }
+    if (gameNum == 1) {
+      
+    await firestore.collection("users").doc(user!.uid).get().then((onValue){
+      if (onValue.data()!.containsKey("TriviaScore")) {
+        
+          score = onValue.data()!["TriviaScore"].toDouble();
+        
+        UpdateHighScore(score,gameNum);
+      }
+    });
+
+    }
+  }
+  }
+ 
+  return score;
+}
+Future<String>UpdateHighScore(double score,int gameNum)async{
   String state = "";
+  String game = gameNum == 0? "RevWaveScore": gameNum == 1? "TriviaScore":"default";
 await Hive.openBox("Score");
-if (Hive.box("Score").containsKey("CarTrivia")) {
-  if (Hive.box("Score").get("CarTrivia")<score) {
+if (Hive.box("Score").containsKey(game)) {
+  print("00000");
+  if (Hive.box("Score").get(game)<score) {
+    print("11111111");
   try {
-     await firestore.collection("users").doc(user!.uid).update({"Score":score});
+     await firestore.collection("users").doc(user!.uid).update({game:score});
      
-     Hive.box("Score").put("CarTrivia", score);
+     Hive.box("Score").put(game, score);
      state = "Success";
   } catch (e) {
     state = e.toString();
@@ -103,14 +165,31 @@ if (Hive.box("Score").containsKey("CarTrivia")) {
 }
 }else{
   try {
-     await firestore.collection("users").doc(user!.uid).update({"Score":score});
+    print("2222222222");
+     await firestore.collection("users").doc(user!.uid).get().then((onValue)async{
+      if (onValue.data()!.containsKey(game)) {
+        print("wwwwwwwwwww");
+        if (onValue.data()![game]>score) {
+          print("rrrrrrrrrrrr");
+          Hive.box("Score").put(game, onValue.data()![game]);
+        }else{
+          print("llllllllllllll");
+          await firestore.collection("users").doc(user!.uid).update({game:score});
+          Hive.box("Score").put(game, score);
+        }
+      }else{
+        await firestore.collection("users").doc(user!.uid).update({game:score});
+        Hive.box("Score").put(game, score);
+      }
+     });
      
-     Hive.box("Score").put("CarTrivia", score);
+     
      state = "Success";
   } catch (e) {
     state = e.toString();
   }
 }
+print(state);
   return state;
 }
 

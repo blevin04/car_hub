@@ -180,7 +180,7 @@ class _TriviapageState extends State<Triviapage> {
                             },);
                             score = (score*8)+jsonDecode(countDownController.getTime()!);
                             
-                            UpdateHighScore(score.toDouble());
+                            UpdateHighScore(score.toDouble(),1);
                             return Padding(
                               padding: const EdgeInsets.all(10.0),
                               child: Text("$score/100 ",style:const TextStyle(fontSize: 35,fontWeight: FontWeight.bold),),
