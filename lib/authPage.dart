@@ -175,6 +175,18 @@ Widget screen0(){
                       email: signupEmail.text, password: signUpPassword.text, fullName: name.text);
                   }
                   Navigator.pop(context);
+                  if (state == "email-already-in-use") {
+                    showsnackbar(context, "Email Already in use, please login");
+                  }
+                  if (state == "invalid-email") {
+                    showsnackbar(context, "Please use a valid email");
+                  }
+                  if (state == "network-request-failed") {
+                    showsnackbar(context, "Failed check connection");
+                  }
+                  if (state == "weak-password") {
+                    showsnackbar(context, "password is weak");
+                  }
                   if (state == "Success") {
                     showsnackbar(context, "Welcome ${name.text}");
                     Navigator.pop(context);
@@ -316,6 +328,21 @@ Widget screen0(){
                       state = await AuthMethods().signIn(email: loginEmail.text, password: loginPassword.text);
                     }
                     Navigator.pop(context);
+                    if (state == "wrong-password") {
+                      showsnackbar(context, "Wrong password, try again");
+                    }
+                    if (state == "user-not-found") {
+                      showsnackbar(context, "User not found, create account");
+                    }
+                    if (state == "invalid-email") {
+                      showsnackbar(context, "Please use a valid email");
+                    }
+                    if (state == "network-request-failed") {
+                      showsnackbar(context, "Failed check connection");
+                    }
+                    if (state == "user-disabled") {
+                      showsnackbar(context, "Well shit happens, create another account");
+                    }
                     if (state == "Success") {
                       showsnackbar(context, "Welcome back");
                       Navigator.pop(context);
