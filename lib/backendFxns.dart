@@ -107,8 +107,9 @@ Future<Map<dynamic,dynamic>> triviaStart()async{
 Future<double> getScore(int gameNum )async{
   double score = 0;
   await Hive.openBox("Score");
+  String game = gameNum==0?"RevWaveScore":"TriviaScore";
   if (FirebaseAuth.instance.currentUser != null) {
-     if ( !await InternetConnection().hasInternetAccess) {
+     if ( Hive.box("Score").containsKey(game)) {
     if (gameNum == 0) {
       await Hive.openBox("Score");
       score = Hive.box("Score").get("RevWaveScore");
@@ -119,8 +120,8 @@ Future<double> getScore(int gameNum )async{
 
     }
   }else{
-   
-    if (gameNum == 0) {
+   if (await InternetConnection().internetStatus == InternetStatus.connected) {
+     if (gameNum == 0) {
       
       await firestore.collection("users").doc(user!.uid).get().then((onValue){
         if (onValue.data()!.containsKey("RevWaveScore")) {
@@ -139,8 +140,9 @@ Future<double> getScore(int gameNum )async{
         UpdateHighScore(score,gameNum);
       }
     });
-
     }
+   }
+    
   }
   }
  
@@ -649,3 +651,43 @@ await firestore.collection("tunes").get().then((onValue)async{
 // print(gameMap.keys);
 return gameMap;
 }
+
+// Future<Map<String,dynamic>> getCollections()async{
+//   Map<String,dynamic> collections0 = {};
+
+//   await Hive.openBox("Collections");
+//   try {
+//     List collectionUid = List.empty(growable: true);
+//     await firestore.collection("users").doc(user!.uid).get().then((onValue){
+//       if (onValue.data()!.containsKey("Collections")) {
+//         collectionUid.addAll(onValue.data()!["Collections"]);
+//       }
+//     });
+//     collectionUid.forEach((val)async{
+//       await firestore.collection("Collections").doc(val).get().then((onValue){
+//         collections0.addAll({val:onValue.data()!});
+//       });
+//     });
+//   } catch (e) {
+    
+//   }
+
+//   return collections0;
+// }
+
+// Future<String> addCollection(collectionModel info,List dataPath)async{
+//   String state = " ";
+//   try {
+//     await firestore.collection("users").doc(user!.uid).update({"Collections":[info.uid]});
+//     await firestore.collection("Collections").doc(info.uid).set(info.toJson());
+
+//     info.data.forEach((val)async{
+//       await storage.child("/Collections/${info.uid}/$val").putFile(File(dataPath[info.data.indexOf(val)]));
+//     });
+    
+//   } catch (e) {
+    
+//   }
+
+//   return state;
+// }

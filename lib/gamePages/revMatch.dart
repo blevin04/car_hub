@@ -526,7 +526,8 @@ class _RevmatchState extends State<Revmatch> {
                       "Finish":
                       completed.value == "marked"?
                       "Play again":
-                      "Next",style:const TextStyle(
+                      "Next",style:
+                      const TextStyle(
                       color: Colors.white,
                       fontSize: 23
                     ),);

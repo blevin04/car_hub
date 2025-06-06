@@ -28,7 +28,7 @@ void themechange(BuildContext context) async {
   print(Hive.box("theme").get("theme"));
 }
 List gridImages = ["lib/assets/rev_match_cover_0.jpeg","lib/assets/wallpaper_folder_.jpeg"];
-List gridtitles = ["Rev Match","Add Collection"];
+List gridtitles = ["New tunes collection","New image Collection"];
 bool addopen = false;
 bool darkmode = false;
 class _ProfilePageState extends State<ProfilePage> {
@@ -142,83 +142,83 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                 ),
-               GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                   crossAxisCount: 2,
-                 ),
-                 itemCount: 2,
-                 itemBuilder: (BuildContext context, int index) {
-                   return  Card(
-                    child:Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(gridtitles[index],style:const TextStyle(fontWeight: FontWeight.bold),),
-                        Container(
-                         // padding: EdgeInsets.all(8.0),
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-                          child: Image(
-                            image: AssetImage(gridImages[index]))),
-                         const Text("High Score: 200",style: TextStyle(fontWeight: FontWeight.bold),)
-                      ],
-                    ) ,
-                   );
-                 },
-               ),
-                       const Padding(
-                padding:  EdgeInsets.all(4.0),
-                child:  Text("Collections",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18,decoration: TextDecoration.underline),),
-              ),
-               Visibility(
-                child: GridView.builder(
-                  shrinkWrap: true,
-                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                   crossAxisCount: 2,
-                 ),
-                 itemCount: 2,
-                 itemBuilder: (BuildContext context, int index) {
-                   return Card(
-                    child: InkWell(
-                      child: Column(
-                        children: [
-                          const Text("Collection Name.....",
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          ),
-                         const Image(image: AssetImage("lib/assets/default_profile.webp")),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                padding:const EdgeInsets.all(3),
-                                child:const Row(
-                                  children: [
-                                    Icon(Icons.person),
-                                    Icon(Icons.person),
-                                    Icon(Icons.person),
-                                    Icon(Icons.person),
-                                  ],
-                                ),
+              //  GridView.builder(
+              //   shrinkWrap: true,
+              //   physics: const NeverScrollableScrollPhysics(),
+              //    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              //      crossAxisCount: 2,
+              //    ),
+              //    itemCount: 2,
+              //    itemBuilder: (BuildContext context, int index) {
+              //      return  Card(
+              //       child:Column(
+              //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //         children: [
+              //           Text(gridtitles[index],style:const TextStyle(fontWeight: FontWeight.bold),),
+              //           Container(
+              //            // padding: EdgeInsets.all(8.0),
+              //             decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+              //             child: Image(
+              //               image: AssetImage(gridImages[index]))),
+              //            const Text("High Score: 200",style: TextStyle(fontWeight: FontWeight.bold),)
+              //         ],
+              //       ) ,
+              //      );
+              //    },
+              //  ),
+              //          const Padding(
+              //   padding:  EdgeInsets.all(4.0),
+              //   child:  Text("Collections",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18,decoration: TextDecoration.underline),),
+              // ),
+              //  Visibility(
+              //   child: GridView.builder(
+              //     shrinkWrap: true,
+              //    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              //      crossAxisCount: 2,
+              //    ),
+              //    itemCount: 2,
+              //    itemBuilder: (BuildContext context, int index) {
+              //      return Card(
+              //       child: InkWell(
+              //         child: Column(
+              //           children: [
+              //             const Text("Collection Name.....",
+              //             maxLines: 1,
+              //             overflow: TextOverflow.ellipsis,
+              //             ),
+              //            const Image(image: AssetImage("lib/assets/default_profile.webp")),
+              //             Row(
+              //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //               children: [
+              //                 Container(
+              //                   padding:const EdgeInsets.all(3),
+              //                   child:const Row(
+              //                     children: [
+              //                       Icon(Icons.person),
+              //                       Icon(Icons.person),
+              //                       Icon(Icons.person),
+              //                       Icon(Icons.person),
+              //                     ],
+              //                   ),
               
-                              ),
-                             const Padding(
-                                padding:  EdgeInsets.all(3.0),
-                                child: Row(
-                                  children: [
-                                    Icon(Icons.download),
-                                    Text("20"),
-                                  ],
-                                ),
-                              )
-                            ],
-                            )
-                        ],
-                      ),
-                    ),
-                   );
-                 },
-               ),)
+              //                 ),
+              //                const Padding(
+              //                   padding:  EdgeInsets.all(3.0),
+              //                   child: Row(
+              //                     children: [
+              //                       Icon(Icons.download),
+              //                       Text("20"),
+              //                     ],
+              //                   ),
+              //                 )
+              //               ],
+              //               )
+              //           ],
+              //         ),
+              //       ),
+              //      );
+              //    },
+              //  ),)
               ],
                       ),
                     ),
@@ -316,19 +316,19 @@ class _ProfilePageState extends State<ProfilePage> {
               backgroundImage:const AssetImage("lib/assets/CAR_HUB.png"),
               
             ),
-            ListTile(
+            const ListTile(
               leading: Icon(Icons.settings),
               title: Text("Settings"),
             ),
-            ListTile(
+            const ListTile(
               leading: Icon(Icons.circle),
               title: Text("Send feedback "),
             ),
-            ListTile(
+            const ListTile(
               leading: Icon(Icons.circle),
               title: Text("Contact Development team"),
             ),
-            ListTile(
+            const ListTile(
               leading: Icon(Icons.circle),
               title: Text("About App"),
             ),
@@ -489,12 +489,29 @@ class _ProfilePageState extends State<ProfilePage> {
                  Positioned(
                   left: 100,
                   top: 200,
-                  child: Padding(
-                        padding:const EdgeInsets.all(8.0),
-                        child: Text(
-                          Hive.box("UserData").get("fullName"),
-                          style:const TextStyle(fontWeight: FontWeight.bold),),
-                      ),
+                  child: FutureBuilder(
+                    future: getUserData(),
+                    builder: (context,snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Padding(padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          width: 70,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(10)
+                          ),
+                          child: const Text(" "),
+                        ));
+                      }
+                      return Padding(
+                            padding:const EdgeInsets.all(8.0),
+                            child: Text(
+                              Hive.box("UserData").get("fullName"),
+                              style:const TextStyle(fontWeight: FontWeight.bold),),
+                          );
+                    }
+                  ),
                   ),
                   Positioned(
                     right: 20,
@@ -567,260 +584,275 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
             
-           GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-               crossAxisCount: 2,
-             ),
-             itemCount: 2,
-             itemBuilder: (BuildContext context, int index) {
-               return  Card(
-                child:InkWell(
-                  onTap: () {
-                    index==0?
-                    // Navigator.push(context, MaterialPageRoute(builder: (context)=>const Revmatch()))
-                    showsnackbar(context, "damn")
-                    :
-                    showDialog(context: context, builder: (context){
-                      return Dialog(
-                        child: Container(
-                          height: 200,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
+          //  GridView.builder(
+          //   shrinkWrap: true,
+          //   physics: const NeverScrollableScrollPhysics(),
+          //    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          //      crossAxisCount: 2,
+          //    ),
+          //    itemCount: 2,
+          //    itemBuilder: (BuildContext context, int index) {
+          //      return  Card(
+          //       child:InkWell(
+          //         onTap: () {
+          //           index==0?
+          //           // Navigator.push(context, MaterialPageRoute(builder: (context)=>const Revmatch()))
+          //           showsnackbar(context, "damn")
+          //           :
+          //           showDialog(context: context, builder: (context){
+          //             return Dialog(
+          //               child: Container(
+          //                 height: 200,
+          //                 decoration: BoxDecoration(
+          //                   borderRadius: BorderRadius.circular(12),
                             
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                             const Text("Add Collection",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
-                              TextButton(onPressed: (){}, 
-                              child:const Text("New wellpaper collection"),
+          //                 ),
+          //                 child: Column(
+          //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //                   children: [
+          //                    const Text("Add Collection",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+          //                     TextButton(onPressed: (){}, 
+          //                     child:const Text("New wellpaper collection"),
 
                               
-                              ),
-                              TextButton(onPressed: (){}, 
-                              child:const Text("New tunes collection")
-                              ),
-                              TextButton(onPressed: (){
-                                Navigator.pop(context);
-                              }, child:const Text("Cancel")
-                              )
-                            ],
-                          ),
-                        ),
-                      );
-                    });
-                  },
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(gridtitles[index],style:const TextStyle(fontWeight: FontWeight.bold),),
-                      Container(
-                       // padding: EdgeInsets.all(8.0),
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-                        child: Image(
-                          image: AssetImage(gridImages[index]))),
-                       const Text("no collections",style: TextStyle(fontWeight: FontWeight.bold),)
-                    ],
-                  ),
-                ) ,
-               );
-             },
-           ),
+          //                     ),
+          //                     TextButton(onPressed: (){}, 
+          //                     child:const Text("New tunes collection")
+          //                     ),
+          //                     TextButton(onPressed: (){
+          //                       Navigator.pop(context);
+          //                     }, child:const Text("Cancel")
+          //                     )
+          //                   ],
+          //                 ),
+          //               ),
+          //             );
+          //           });
+          //         },
+          //         child: Column(
+          //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //           children: [
+          //             Text(gridtitles[index],style:const TextStyle(fontWeight: FontWeight.bold),),
+          //             Container(
+          //              // padding: EdgeInsets.all(8.0),
+          //               decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+          //               child: Image(
+          //                 image: AssetImage(gridImages[index]))),
+          //               Text(
+                        
+          //               "no collections",style: TextStyle(fontWeight: FontWeight.bold),)
+          //           ],
+          //         ),
+          //       ) ,
+          //      );
+          //    },
+          //  ),
            const SizedBox(height: 10,),
 
-         const Padding(
-            padding:  EdgeInsets.all(4.0),
-            child:  Text("Collections",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18,decoration: TextDecoration.underline),),
-          ),
+        //  const Padding(
+        //     padding:  EdgeInsets.all(4.0),
+        //     child:  Text("Collections",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18,decoration: TextDecoration.underline),),
+        //   ),
           const SizedBox(height: 10,),
-          GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-            ),
+          // GridView.builder(
+          //   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          //     crossAxisCount: 2,
+          //   ),
+          //   shrinkWrap: true,
+          //   physics:const NeverScrollableScrollPhysics(),
+          //   itemCount: 2,
+          //   itemBuilder: (BuildContext context, int index) {
+          //     String img = index==0?"lib/assets/m1.png":"lib/assets/img.jpg";
+          //     String title = index == 1?"Wallpaper":"Tunes";
+          //     return Card(
+          //       child: InkWell(
+          //         onTap: (){},
+          //         child: Column(
+          //           children: [
+          //             Padding(
+          //               padding: const EdgeInsets.all(8.0),
+          //               child:  Text("Saved $title"),
+          //             ),
+          //             Expanded(
+          //               child: Image(
+          //                 fit: BoxFit.cover,
+          //                 image: AssetImage(img)),
+          //             )
+          //           ],
+          //         ),
+          //       ),
+          //     );
+          //   },
+          // ),
+          //  Visibility(
+          //   child: GridView.builder(
+          //     shrinkWrap: true,
+          //    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          //      crossAxisCount: 2,
+          //    ),
+          //    itemCount: 2,
+          //    physics: const NeverScrollableScrollPhysics(),
+          //    itemBuilder: (BuildContext context, int index) {
+          //      return Card(
+          //       child: InkWell(
+          //         child: Column(
+          //           children: [
+          //            const Text("Collection Name.....",
+          //             maxLines: 1,
+          //             overflow: TextOverflow.ellipsis,
+          //             ),
+          //            const Image(image: AssetImage("lib/assets/default_profile.webp")),
+          //             Row(
+          //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //               children: [
+          //                 Container(
+          //                   padding:const EdgeInsets.all(3),
+          //                   child:const Row(
+          //                     children: [
+          //                       Icon(Icons.person),
+          //                       Icon(Icons.person),
+          //                       Icon(Icons.person),
+          //                       Icon(Icons.person),
+          //                     ],
+          //                   ),
+
+          //                 ),
+          //                 const Padding(
+          //                   padding: EdgeInsets.all(3.0),
+          //                   child: Row(
+          //                     children: [
+          //                       Icon(Icons.download),
+          //                       Text("20"),
+          //                     ],
+          //                   ),
+          //                 )
+          //               ],
+          //               )
+          //           ],
+          //         ),
+          //       ),
+          //      );
+          //    },
+          //  ),)
+          ListView.builder(
+            itemCount: 4,
             shrinkWrap: true,
             physics:const NeverScrollableScrollPhysics(),
-            itemCount: 2,
             itemBuilder: (BuildContext context, int index) {
-              String img = index==0?"lib/assets/m1.png":"lib/assets/img.jpg";
-              String title = index == 1?"Wallpaper":"Tunes";
-              return Card(
-                child: InkWell(
-                  onTap: (){},
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child:  Text("Saved $title"),
-                      ),
-                      Expanded(
-                        child: Image(
-                          fit: BoxFit.cover,
-                          image: AssetImage(img)),
-                      )
-                    ],
-                  ),
+              return const Card(
+                margin: EdgeInsets.only(bottom: 15),
+                child: SizedBox(
+                  height: 100,
                 ),
               );
             },
           ),
-           Visibility(
-            child: GridView.builder(
-              shrinkWrap: true,
-             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-               crossAxisCount: 2,
-             ),
-             itemCount: 2,
-             physics: const NeverScrollableScrollPhysics(),
-             itemBuilder: (BuildContext context, int index) {
-               return Card(
-                child: InkWell(
-                  child: Column(
-                    children: [
-                     const Text("Collection Name.....",
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      ),
-                     const Image(image: AssetImage("lib/assets/default_profile.webp")),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            padding:const EdgeInsets.all(3),
-                            child:const Row(
-                              children: [
-                                Icon(Icons.person),
-                                Icon(Icons.person),
-                                Icon(Icons.person),
-                                Icon(Icons.person),
-                              ],
-                            ),
-
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.all(3.0),
-                            child: Row(
-                              children: [
-                                Icon(Icons.download),
-                                Text("20"),
-                              ],
-                            ),
-                          )
-                        ],
-                        )
-                    ],
-                  ),
-                ),
-               );
-             },
-           ),)
           ],
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 20.0),
-        child: StatefulBuilder(
-          builder: (context,stateadd) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Visibility(
-                  visible: addopen,
-                  child: Column(
-                  children: [
-                    Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: CircleAvatar(child: IconButton(onPressed: ()async{
-                    showDialog(context: context, builder: (context){
-                      return Dialog(
-                        child: Container(
-                          height: 130,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20)
-                          ),
-                          child: Column(
-                            children: [
-                              const Text("Upload Image",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16)),
-                             const Padding(
-                                padding:  EdgeInsets.all(8.0),
-                                child:  Text("Once you have uploaded the image you can share it via link "),
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                children: [
-                                  TextButton(onPressed: ()async{
-                                    String imagePath = await getContent(context,FileType.image);
-                                    Navigator.pop(context);
-                                    Navigator.push(context, (MaterialPageRoute(builder: (context)=>Preview(assetPath: imagePath, isImage: true))));
-                                  }, child:const Text("Upload")),
-                                  TextButton(onPressed: (){
-                                    Navigator.pop(context);
-                                  }, child: const Text("cancel")),
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                      );
-                    });
-                  }, icon:const Icon(Icons.image))),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: CircleAvatar(child: IconButton(onPressed: (){
-                    showDialog(context: context, builder: (context){
-                      return Dialog(
-                        child: Container(
-                          height: 130,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20)
-                          ),
-                          child: Column(
-                            children: [
-                               const Text("Upload audio",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),),
-                             const Padding(
-                                padding:  EdgeInsets.all(8.0),
-                                child:  Text("Once you have uploaded the sound you can share it via link "),
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                children: [
-                                  TextButton(onPressed: ()async{
-                                    String contentPath = await getContent(context, FileType.audio);
-                                    Navigator.pop(context);
-                                     Navigator.push(context, (MaterialPageRoute(builder: (context)=>Preview(assetPath: contentPath, isImage: false))));
-                                  }, child:const Text("Upload")),
-                                  TextButton(onPressed: (){
-                                    Navigator.pop(context);
-                                  }, child: const Text("cancel")),
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                      );
-                    });
-                  }, icon:const Icon(Icons.music_note_rounded))),
-                ),
-                  ],
-                )),
+      // floatingActionButton: Padding(
+      //   padding: const EdgeInsets.only(bottom: 20.0),
+      //   child: StatefulBuilder(
+      //     builder: (context,stateadd) {
+      //       return Column(
+      //         mainAxisAlignment: MainAxisAlignment.end,
+      //         children: [
+      //           Visibility(
+      //             visible: addopen,
+      //             child: Column(
+      //             children: [
+      //               Padding(
+      //             padding: const EdgeInsets.all(4.0),
+      //             child: CircleAvatar(child: IconButton(onPressed: ()async{
+      //               showDialog(context: context, builder: (context){
+      //                 return Dialog(
+      //                   child: Container(
+      //                     height: 130,
+      //                     decoration: BoxDecoration(
+      //                       borderRadius: BorderRadius.circular(20)
+      //                     ),
+      //                     child: Column(
+      //                       children: [
+      //                         const Text("Upload Image",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16)),
+      //                        const Padding(
+      //                           padding:  EdgeInsets.all(8.0),
+      //                           child:  Text("Once you have uploaded the image you can share it via link "),
+      //                         ),
+      //                         Row(
+      //                           mainAxisAlignment: MainAxisAlignment.spaceAround,
+      //                           children: [
+      //                             TextButton(onPressed: ()async{
+      //                               String imagePath = await getContent(context,FileType.image);
+      //                               Navigator.pop(context);
+      //                               Navigator.push(context, (MaterialPageRoute(builder: (context)=>Preview(assetPath: imagePath, isImage: true))));
+      //                             }, child:const Text("Upload")),
+      //                             TextButton(onPressed: (){
+      //                               Navigator.pop(context);
+      //                             }, child: const Text("cancel")),
+      //                           ],
+      //                         )
+      //                       ],
+      //                     ),
+      //                   ),
+      //                 );
+      //               });
+      //             }, icon:const Icon(Icons.image))),
+      //           ),
+      //           Padding(
+      //             padding: const EdgeInsets.all(4.0),
+      //             child: CircleAvatar(child: IconButton(onPressed: (){
+      //               showDialog(context: context, builder: (context){
+      //                 return Dialog(
+      //                   child: Container(
+      //                     height: 130,
+      //                     decoration: BoxDecoration(
+      //                       borderRadius: BorderRadius.circular(20)
+      //                     ),
+      //                     child: Column(
+      //                       children: [
+      //                          const Text("Upload audio",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),),
+      //                        const Padding(
+      //                           padding:  EdgeInsets.all(8.0),
+      //                           child:  Text("Once you have uploaded the sound you can share it via link "),
+      //                         ),
+      //                         Row(
+      //                           mainAxisAlignment: MainAxisAlignment.spaceAround,
+      //                           children: [
+      //                             TextButton(onPressed: ()async{
+      //                               String contentPath = await getContent(context, FileType.audio);
+      //                               Navigator.pop(context);
+      //                                Navigator.push(context, (MaterialPageRoute(builder: (context)=>Preview(assetPath: contentPath, isImage: false))));
+      //                             }, child:const Text("Upload")),
+      //                             TextButton(onPressed: (){
+      //                               Navigator.pop(context);
+      //                             }, child: const Text("cancel")),
+      //                           ],
+      //                         )
+      //                       ],
+      //                     ),
+      //                   ),
+      //                 );
+      //               });
+      //             }, icon:const Icon(Icons.music_note_rounded))),
+      //           ),
+      //             ],
+      //           )),
                 
-                Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: CircleAvatar(
-                    child:IconButton(onPressed: (){
-                    stateadd((){
-                      addopen = !addopen;
-                    });
-                  }, icon:addopen? const Icon(Icons.cancel):const Icon(Icons.add))),
-                )
-              ],
-            );
-          }
-        ),
-      ),
+      //           Padding(
+      //             padding: const EdgeInsets.all(4.0),
+      //             child: CircleAvatar(
+      //               child:IconButton(onPressed: (){
+      //               stateadd((){
+      //                 addopen = !addopen;
+      //               });
+      //             }, icon:addopen? const Icon(Icons.cancel):const Icon(Icons.add))),
+      //           )
+      //         ],
+      //       );
+      //     }
+      //   ),
+      // ),
     );
       }
     );

@@ -68,3 +68,26 @@ class messageModel{
     "sender":user!.uid,
   };
 }
+
+class collectionModel {
+  final String uid;
+  final List data;
+  final String type;
+  final String owner;
+  final int pulls;
+  collectionModel({
+    required this.data,
+    required this.owner,
+    required this.type,
+    required this.uid,
+    required this.pulls,
+  });
+
+  Map<String,dynamic> toJson()=>{
+    "uid":uid,
+    "data":data,
+    "type":type,
+    "owner":owner,
+    "pulls":pulls,
+  };
+}
