@@ -56,8 +56,9 @@ class AuthMethods {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
 
       res = "Success";
-    } catch (e) {
-      res = e.toString();
+    }on FirebaseAuthException catch (e) {
+      print("ppppppppppppppppppppppppp${e.code.toString()}");
+      res = e.code.toString();
     }
     return res;
   }

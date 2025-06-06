@@ -328,7 +328,9 @@ Widget screen0(){
                       state = await AuthMethods().signIn(email: loginEmail.text, password: loginPassword.text);
                     }
                     Navigator.pop(context);
-                    if (state == "wrong-password") {
+                    print("lllllllllllllllllllllllllllllllllll $state");
+                    print(state);
+                    if (state == "[firebase_auth/invalid-credential] The supplied auth credential is incorrect, malformed or has expired.") {
                       showsnackbar(context, "Wrong password, try again");
                     }
                     if (state == "user-not-found") {

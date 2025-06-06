@@ -8,6 +8,7 @@ import 'package:car_hub/wallpapers.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -34,12 +35,16 @@ void main()async {
 }
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
-
+  
   @override
   State<MyApp> createState() => _MyAppState();
     static _MyAppState? of(BuildContext context) => context.findAncestorStateOfType<_MyAppState>();
 }
 class _MyAppState extends State<MyApp> {
+   Future<InitializationStatus> _initGoogleMobileAds() {
+    // TODO: Initialize Google Mobile Ads SDK
+    return MobileAds.instance.initialize();
+  }
   // This widget is the root of your application.
     ThemeMode _themeMode = Hive.box("theme").isEmpty
       ? ThemeMode.light
