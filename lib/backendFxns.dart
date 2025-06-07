@@ -15,6 +15,7 @@ import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
 import 'package:firebase_ai/firebase_ai.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:http/http.dart' as http;
 final firestore = FirebaseFirestore.instance;
 final storage = FirebaseStorage.instance.ref();
 final model =
@@ -691,3 +692,26 @@ return gameMap;
 
 //   return state;
 // }
+
+Future<List<Vehicle>> fetchVehicles(String make) async {
+  final encodedMake = Uri.encodeComponent("'%$make%'"); // ensures quotes are encoded
+  final url =
+      'https://data.opendatasoft.com/api/explore/v2.1/catalog/datasets/all-vehicles-model@public/records?where=make like $encodedMake OR $encodedMake&limit=10';
+try {
+  final response = await http.get(Uri.parse(url));
+  if (response.statusCode == 200) {
+    print(response.body);
+    final data = json.decode(response.body);
+    final List results = data['results'];
+    return results.map((json) => Vehicle.fromJson(json)).toList();
+  } else {
+    // throw Exception('Failed to load vehicles');
+    print(response.body);
+  }
+} catch (e) {
+  print(e.toString());
+}
+  
+return List.empty(growable: true);
+  
+}

@@ -91,3 +91,58 @@ class collectionModel {
     "pulls":pulls,
   };
 }
+
+//vehicle Model
+class Vehicle {
+  final String make;
+  final String model;
+  final double? barrels08;
+  final int? city08;
+  final int? comb08;
+  final int? highway08;
+  final int? fuelCost08;
+  final String? fuelType;
+  final String? trany;
+  final String? year;
+  final double? disp;
+  final int? cylinders;
+  final String? drive;
+  final List? eng_dscr;
+  Vehicle({
+    required this.make,
+    required this.model,
+    required this.barrels08,
+    required this.city08,
+    required this.comb08,
+    required this.highway08,
+    required this.fuelCost08,
+    required this.fuelType,
+    required this.trany,
+    required this.year,
+    required this.cylinders,
+    required this.disp,
+    required this.drive,
+    required this.eng_dscr,
+  });
+
+  factory Vehicle.fromJson(Map<String, dynamic> json) {
+    return Vehicle(
+      eng_dscr: json["eng_dscr"],
+      drive: json["drive"],
+      disp: json["disp"],
+      cylinders: json["cylinders"],
+      make: json['make'],
+      model: json['model'],
+      barrels08: json['barrels08']?.toDouble() ?? 0.0,
+      city08: json['city08'] ?? 0,
+      comb08: json['comb08'] ?? 0,
+      highway08: json['highway08'] ?? 0,
+      fuelCost08: json['fuelcost08'] ?? 0,
+      fuelType: json['fueltype1'] ?? '',
+      trany: json['trany'] ?? '',
+      year: json['year'] ?? '',
+    );
+  }
+}
+
+

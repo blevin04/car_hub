@@ -92,8 +92,8 @@ void changeTheme(ThemeMode themeMode) {
         "profile":(context)=>const ProfilePage(),
       },
       home: SplashMaster.video(
-        backGroundColor:const Color.fromARGB(255,229,228,222),
-        source: AssetSource("lib/assets/CARHUB.mp4"),
+        backGroundColor: Colors.black,
+        source: AssetSource("lib/assets/SplashScreen.mp4"),
         nextScreen: const MobileLayout(),
         videoConfig:const VideoConfig(
           videoVisibilityEnum: VisibilityEnum.useAspectRatio

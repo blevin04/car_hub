@@ -1,5 +1,6 @@
 import 'package:car_hub/homepage.dart';
 import 'package:car_hub/profile_Page.dart';
+import 'package:car_hub/research.dart';
 import 'package:car_hub/tunes.dart';
 import 'package:car_hub/wallpapers.dart';
 import 'package:flutter/material.dart';
@@ -109,6 +110,33 @@ class _MobileLayoutState extends State<MobileLayout> {
             splashColor: Colors.transparent,
             highlightColor: Colors.transparent,
             onTap: () {
+              scale[2] = 1.3;
+              currentPage = 2;
+              setState(() {
+                
+              });
+            },
+            child: AnimatedScale(
+              scale: scale[2],
+              duration:const Duration(milliseconds: 200),
+              child: Column(
+                children: [
+                  Icon(Icons.search,color: currentPage==2?const Color.fromARGB(255, 248, 74, 0):null,),
+                  Text("Research",style: TextStyle(fontSize: 14,color: currentPage==2?const Color.fromARGB(255, 248, 74, 0):null),),
+                ]
+                ),
+              onEnd: (){
+                scale[2] = 1.0;
+                setState(() {
+                  
+                });
+              },
+              ),
+          ),
+          InkWell(
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            onTap: () {
               currentPage = 3;
               scale[3] = 1.3;
               setState(() {
@@ -138,7 +166,7 @@ class _MobileLayoutState extends State<MobileLayout> {
       body: currentPage == 0?
      const Homepage():currentPage == 1?
      const Wallpapers():currentPage == 2?
-     const Tunes():const ProfilePage()
+     const Research():const ProfilePage()
     );
   }
 }
