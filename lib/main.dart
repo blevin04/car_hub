@@ -96,7 +96,7 @@ void changeTheme(ThemeMode themeMode) {
         source: AssetSource("lib/assets/SplashScreen.mp4"),
         nextScreen: const MobileLayout(),
         videoConfig:const VideoConfig(
-          videoVisibilityEnum: VisibilityEnum.useAspectRatio
+          videoVisibilityEnum: VisibilityEnum.useFullScreen
         ),
         ),
     );
