@@ -1,7 +1,9 @@
 import 'package:car_hub/authPage.dart';
 import 'package:car_hub/backendFxns.dart';
+import 'package:car_hub/gamePages/logoLegend.dart';
 import 'package:car_hub/gamePages/revMatch.dart';
 import 'package:car_hub/gamePages/triviaPage.dart';
+import 'package:car_hub/gamePages/vehicleMatch.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gif_view/gif_view.dart';
@@ -408,6 +410,30 @@ class _HomepageState extends State<Homepage> {
                      ) )
                   ],
                 ),
+              ),
+              // masked Maddness
+              Card(
+                child:ListTile(
+                  onTap: (){
+                    Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Vehiclematch())));
+                  },
+                  leading:const Icon(Icons.question_mark_outlined),
+                  title:const Text("Masked Maddness"),
+                  subtitle:const Text("How well do you know your cars bodies"),
+                  trailing: Text("score:00",style: TextStyle(fontSize: 18),),
+                )
+              ),
+              //logo legend
+              Card(
+                child:ListTile(
+                  onTap: (){
+                    Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Logolegend())));
+                  },
+                  leading:const Icon(Icons.question_mark_outlined),
+                  title:const Text("Play Lego Legend"),
+                  subtitle:const Text("How well do you know your cars brand logos"),
+                  trailing: Text("score:00",style: TextStyle(fontSize: 18),),
+                )
               )
                 // TextButton(onPressed: (){
                 //   openShit();

@@ -715,3 +715,58 @@ try {
 return List.empty(growable: true);
   
 }
+
+Future<Map<String,dynamic>>pre_Maksed()async{
+  Map<String,dynamic> gamedata = {};
+  List masked = List.empty(growable: true);
+  List raw = List.empty(growable: true);
+  List arrangement = List.empty(growable: true);
+  await storage.child("/masked-madness/week1-15-21-june-2025").list().then((onValue)async{
+    // print(".............................${onValue.items.length}");
+    List<Reference> items = onValue.items;
+    for(var item in items){
+      if (item.name.contains("masked")) {
+        masked.add(await item.getData());
+        
+      }else{
+        raw.add(await item.getData());
+        arrangement.add(item.name.split(".").first);
+      }
+    }
+  });
+  await firestore.collection("masked_madness").doc("week1-15-21-june-2025").get().then((onValue){
+    Map choiceInfo = {};
+    Map rawInfo = onValue.data()!["choices"];
+    arrangement.forEach((name){
+      choiceInfo.addAll({name:rawInfo[name]});
+    });
+    gamedata.addAll({"choices":choiceInfo});
+  });
+  gamedata.addAll({"arrangement":arrangement});
+  gamedata.addAll({"masked":masked,"raw":raw});
+  // print(gamedata);
+  return gamedata;
+}
+
+Future<Uint8List> fetchLogo(String key)async{
+  Uint8List? logoData =Uint8List(0);
+  await storage.child("/logos").list().then((onValue)async{
+    print(onValue.items.length);
+    List<Reference> items = onValue.items;
+    print(key.split(" ").first);
+    var inp = items.indexWhere((test)=>test.name.contains(key.split(" ").first.toLowerCase()));
+    if (inp != -1) {
+      logoData =  await items[inp].getData();
+    }
+    for(var item in items){
+      if (item.name.contains(key.split(" ").first.toLowerCase())) {
+        print("//////////////////////////////////////////");
+        var data = await item.getData();
+        // print(data);
+        return data;
+      }
+    }
+  });
+  
+  return logoData!;
+}

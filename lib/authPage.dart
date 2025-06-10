@@ -245,7 +245,7 @@ Widget screen0(){
                           borderRadius: BorderRadius.circular(15),
                           color: Colors.black
                         ),
-                        child: const Text("Sign in",style: TextStyle(color: Colors.white),),
+                        child: const Text("Sign up",style: TextStyle(color: Colors.white),),
                       )
                     ),
                     const SizedBox(
