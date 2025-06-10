@@ -2,7 +2,6 @@ import 'dart:ui';
 import 'package:car_hub/authPage.dart';
 import 'package:car_hub/backendFxns.dart';
 import 'package:car_hub/main.dart';
-import 'package:car_hub/preview.dart';
 import 'package:car_hub/utils.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
