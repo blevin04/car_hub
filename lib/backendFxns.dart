@@ -151,7 +151,8 @@ Future<double> getScore(int gameNum )async{
 }
 Future<String>UpdateHighScore(double score,int gameNum)async{
   String state = "";
-  String game = gameNum == 0? "RevWaveScore": gameNum == 1? "TriviaScore":"default";
+  String game = gameNum == 0? "RevWaveScore": gameNum == 1? "TriviaScore": gameNum==2? "MaskedMadness":
+  "default";
 await Hive.openBox("Score");
 if (Hive.box("Score").containsKey(game)) {
   print("00000");
@@ -168,15 +169,15 @@ if (Hive.box("Score").containsKey(game)) {
 }
 }else{
   try {
-    print("2222222222");
+    // print("2222222222");
      await firestore.collection("users").doc(user!.uid).get().then((onValue)async{
       if (onValue.data()!.containsKey(game)) {
-        print("wwwwwwwwwww");
+        // print("wwwwwwwwwww");
         if (onValue.data()![game]>score) {
-          print("rrrrrrrrrrrr");
+          // print("rrrrrrrrrrrr");
           Hive.box("Score").put(game, onValue.data()![game]);
         }else{
-          print("llllllllllllll");
+          // print("llllllllllllll");
           await firestore.collection("users").doc(user!.uid).update({game:score});
           Hive.box("Score").put(game, score);
         }
@@ -740,6 +741,7 @@ Future<Map<String,dynamic>>pre_Maksed()async{
     arrangement.forEach((name){
       choiceInfo.addAll({name:rawInfo[name]});
     });
+    gamedata.addAll({"soln":onValue.data()!["soln"]});
     gamedata.addAll({"choices":choiceInfo});
   });
   gamedata.addAll({"arrangement":arrangement});
