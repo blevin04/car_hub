@@ -4,16 +4,12 @@ import 'package:car_hub/mobile_layout.dart';
 import 'package:car_hub/profile_Page.dart';
 import 'package:car_hub/tunes.dart';
 import 'package:car_hub/wallpapers.dart';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:splash_master/core/source.dart';
-import 'package:splash_master/core/splash_master.dart';
 import 'package:splash_master/splash_master.dart';
 void main()async {
     WidgetsFlutterBinding.ensureInitialized();

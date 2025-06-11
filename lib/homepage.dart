@@ -1,6 +1,5 @@
 import 'package:car_hub/authPage.dart';
 import 'package:car_hub/backendFxns.dart';
-import 'package:car_hub/gamePages/logoLegend.dart';
 import 'package:car_hub/gamePages/revMatch.dart';
 import 'package:car_hub/gamePages/triviaPage.dart';
 import 'package:car_hub/gamePages/vehicleMatch.dart';
