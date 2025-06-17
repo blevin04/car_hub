@@ -19,6 +19,8 @@ class _ResearchState extends State<Research> {
       body: Column(
         children: [
           SearchBar(
+            leading:const Icon(Icons.search),
+            hintText: "Search any vehicle eg.toyota corolla",
             onChanged: (value) async{
               print("object");
               vehicleResults.value = await fetchVehicles(value);

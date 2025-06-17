@@ -334,7 +334,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
              ListTile(
               onTap: ()async{
-                final Uri _url = Uri.parse('coff.ee/karanja.dev');
+                final Uri _url = Uri.parse('https://buymeacoffee.com/karanja.dev');
                 if (!await launchUrl(_url)) {
                   showsnackbar(context, "could not launch buy me a coffee");
                 }
