@@ -1,8 +1,10 @@
+import 'package:car_hub/addloader.dart';
 import 'package:car_hub/authPage.dart';
 import 'package:car_hub/backendFxns.dart';
 import 'package:car_hub/gamePages/revMatch.dart';
 import 'package:car_hub/gamePages/triviaPage.dart';
 import 'package:car_hub/gamePages/vehicleMatch.dart';
+import 'package:car_hub/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gif_view/gif_view.dart';
@@ -44,6 +46,7 @@ class _HomepageState extends State<Homepage> {
   }
   @override
   Widget build(BuildContext context) {
+    ValueNotifier<bool> showAd = ValueNotifier(true);
     return Scaffold(
       appBar: AppBar(toolbarHeight: 20,),
       body: Stack(
@@ -213,74 +216,84 @@ class _HomepageState extends State<Homepage> {
                   ),
                 ),
                 Card(
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width-20,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                     Column(
                       children: [
-                       Column(
-                        children: [
-                         const Text("High Score",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
-                          FutureBuilder(
-                            future:getScore(0),
-                            builder: (BuildContext context, AsyncSnapshot snapshot) {
-                              if (snapshot.connectionState == ConnectionState.waiting) {
-                                return const Center(child: CircularProgressIndicator(),);
-                              }
-                              
-                              return ListenableBuilder(
-                                listenable: Hive.box("Score").listenable(),
-                                 builder: (context,child){
-                                  return Text(snapshot.data.roundToDouble().toString(),style:const TextStyle(fontWeight: FontWeight.bold,fontSize: 20));
-                                 });
-                            },
-                          ),
-                        ],
-                      ),
-                        TextButton(onPressed: (){
-                          if (FirebaseAuth.instance.currentUser == null) {
-                            showDialog(context: context, builder: (context){
-                              return Dialog(
-                                child: Card(
-                                  
-                                  child: SizedBox(
-                                    height: 150,
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        const Text("You need to Log in First to play a game"),
-                                        TextButton(onPressed: (){
-                                          Navigator.pop(context);
-                                          Navigator.push(context, MaterialPageRoute(builder: (context)=>const Authpage()));
-                                        }, child:const Text("LogIn / SignUp"))
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              );
-                            });
-                          }else{
-                            Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Revmatch())));
-                          }
-                          
-                        }, 
-                        child: Container(
-                          width: 100,
-                          height: 40,
-                          //padding:const EdgeInsets.all(10),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.circular(15),
+                       const Text("High Score",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+                        FutureBuilder(
+                          future:getScore(0),
+                          builder: (BuildContext context, AsyncSnapshot snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return const Center(child: CircularProgressIndicator(),);
+                            }
                             
-                          ),
-                          child:const Text("Start",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 17),),
-                        ))
+                            return ListenableBuilder(
+                              listenable: Hive.box("Score").listenable(),
+                               builder: (context,child){
+                                return Text(snapshot.data.roundToDouble().toString(),style:const TextStyle(fontWeight: FontWeight.bold,fontSize: 20));
+                               });
+                          },
+                        ),
                       ],
                     ),
+                      TextButton(onPressed: ()async{
+                        if (FirebaseAuth.instance.currentUser == null) {
+                          showDialog(context: context, builder: (context){
+                            return Dialog(
+                              child: Card(
+                                
+                                child: SizedBox(
+                                  height: 150,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Text("You need to Log in First to play a game"),
+                                      TextButton(onPressed: (){
+                                        Navigator.pop(context);
+                                        Navigator.push(context, MaterialPageRoute(builder: (context)=>const Authpage()));
+                                      }, child:const Text("LogIn / SignUp"))
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          });
+                        }else{
+                          showcircularProgressIndicator(context);
+                          InterstitialAd _interstitualAd = await loadAd(context, Revmatch());
+                          if (interstitialAd ==null) {
+                            // print("pppppppppppppppp");
+                            Navigator.pop(context);
+                            Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Revmatch())));
+                          }else{
+                            // print("jjjjjjjjjjjjjjjjjj");
+                            Navigator.pop(context);
+                             Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Revmatch())));
+                            
+                            _interstitualAd.show();
+                          }
+                          
+                        }
+                        
+                      }, 
+                      child: Container(
+                        width: 100,
+                        height: 40,
+                        //padding:const EdgeInsets.all(10),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.circular(15),
+                          
+                        ),
+                        child:const Text("Start",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 17),),
+                      ))
+                    ],
                   ),
                 ),
               ),
@@ -369,21 +382,71 @@ class _HomepageState extends State<Homepage> {
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [
                                   const Text("Select difficulty"),
-                                  TextButton(onPressed: (){
+                                  TextButton(onPressed: ()async{
                                     Navigator.pop(context);
-                                    Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Triviapage(duration:80 ,))));
+                                    showcircularProgressIndicator(context);
+                                      InterstitialAd _interstitualAd = await loadAd(context, Revmatch());
+                                      if (interstitialAd ==null) {
+                                        // print("pppppppppppppppp");
+                                        Navigator.pop(context);
+                                        Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Triviapage(duration:80 ,))));
+                                      }else{
+                                        // print("jjjjjjjjjjjjjjjjjj");
+                                        Navigator.pop(context);
+                                         Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Triviapage(duration:80 ,))));
+                                        
+                                        _interstitualAd.show();
+                                      }
+                                    
                                   }, child:const Text("Easy")),
-                                  TextButton(onPressed: (){
+                                  TextButton(onPressed: ()async{
                                     Navigator.pop(context);
-                                    Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Triviapage(duration: 70,))));
+                                    showcircularProgressIndicator(context);
+                                      InterstitialAd _interstitualAd = await loadAd(context, Revmatch());
+                                      if (interstitialAd ==null) {
+                                        // print("pppppppppppppppp");
+                                        Navigator.pop(context);
+                                        Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Triviapage(duration:70 ,))));
+                                      }else{
+                                        // print("jjjjjjjjjjjjjjjjjj");
+                                        Navigator.pop(context);
+                                         Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Triviapage(duration:70 ,))));
+                                        
+                                        _interstitualAd.show();
+                                      }
+                                    
                                   }, child:const Text("Mediaum")),
-                                  TextButton(onPressed: (){
+                                  TextButton(onPressed: ()async{
                                     Navigator.pop(context);
-                                    Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Triviapage(duration: 60,))));
+                                   showcircularProgressIndicator(context);
+                                      InterstitialAd _interstitualAd = await loadAd(context, Revmatch());
+                                      if (interstitialAd ==null) {
+                                        // print("pppppppppppppppp");
+                                        Navigator.pop(context);
+                                        Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Triviapage(duration:60 ,))));
+                                      }else{
+                                        // print("jjjjjjjjjjjjjjjjjj");
+                                        Navigator.pop(context);
+                                         Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Triviapage(duration:60 ,))));
+                                        
+                                        _interstitualAd.show();
+                                      }
                                   }, child:const Text("Hard")),
-                                  TextButton(onPressed: (){
+                                  TextButton(onPressed: ()async{
                                     Navigator.pop(context);
-                                    Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Triviapage(duration: 50,))));
+                                    showcircularProgressIndicator(context);
+                                      InterstitialAd _interstitualAd = await loadAd(context, Revmatch());
+                                      if (interstitialAd ==null) {
+                                        // print("pppppppppppppppp");
+                                        Navigator.pop(context);
+                                        Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Triviapage(duration:50 ,))));
+                                      }else{
+                                        // print("jjjjjjjjjjjjjjjjjj");
+                                        Navigator.pop(context);
+                                         Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Triviapage(duration:50 ,))));
+                                        
+                                        _interstitualAd.show();
+                                      }
                                   }, child: const Text("Petrol addict")),
                                 ],
                               ),
@@ -410,8 +473,21 @@ class _HomepageState extends State<Homepage> {
               // masked Maddness
               Card(
                 child:ListTile(
-                  onTap: (){
-                    Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Vehiclematch())));
+                  onTap: ()async{
+                    showcircularProgressIndicator(context);
+                      InterstitialAd _interstitualAd = await loadAd(context, Revmatch());
+                      if (interstitialAd ==null) {
+                        // print("pppppppppppppppp");
+                        Navigator.pop(context);
+                        Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Vehiclematch())));
+                      }else{
+                        // print("jjjjjjjjjjjjjjjjjj");
+                        Navigator.pop(context);
+                        Navigator.push(context, (MaterialPageRoute(builder: (context)=>const Vehiclematch())));
+                        
+                        _interstitualAd.show();
+                      }
+                    
                   },
                   leading:const Icon(Icons.car_crash,color: Colors.black,size: 25,),
                   title:const Text("Masked Maddness"),
@@ -445,13 +521,21 @@ class _HomepageState extends State<Homepage> {
             ),
           ),
           if (_bannerAd != null)
-            Align(
-              alignment: Alignment.topCenter,
-              child: Container(
-                width: _bannerAd!.size.width.toDouble(),
-                height: _bannerAd!.size.height.toDouble(),
-                child: AdWidget(ad: _bannerAd!),
-              ),
+            ListenableBuilder(
+              listenable: showAd,
+              builder: (context,child) {
+                return Visibility(
+                  visible:showAd.value ,
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      width: _bannerAd!.size.width.toDouble(),
+                      height: _bannerAd!.size.height.toDouble(),
+                      child: AdWidget(ad: _bannerAd!),
+                    ),
+                  ),
+                );
+              }
             ),
         ],
       ),
