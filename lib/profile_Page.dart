@@ -7,6 +7,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:url_launcher/url_launcher.dart';
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
@@ -331,7 +332,16 @@ class _ProfilePageState extends State<ProfilePage> {
               leading: Icon(Icons.circle),
               title: Text("About App"),
             ),
-            
+             ListTile(
+              onTap: ()async{
+                final Uri _url = Uri.parse('coff.ee/karanja.dev');
+                if (!await launchUrl(_url)) {
+                  showsnackbar(context, "could not launch buy me a coffee");
+                }
+              },
+              leading:const Icon(Icons.circle),
+              title:const Text("Buy me a coffee"),
+            ),
             ListTile(
               onTap: ()async{
                 showDialog(context: context, 
