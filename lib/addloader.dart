@@ -4,7 +4,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 InterstitialAd? interstitialAd;
 /// Loads an interstitial ad.
-  Future<InterstitialAd> loadAd(BuildContext context,var page)async {
+  Future<InterstitialAd> loadAd(BuildContext context)async {
     await InterstitialAd.load(
         adUnitId: AdHelper.interstitialAdUnitId,
         request: const AdRequest(),

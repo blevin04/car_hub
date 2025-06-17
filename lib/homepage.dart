@@ -47,6 +47,7 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     ValueNotifier<bool> showAd = ValueNotifier(true);
+    loadAd(context);
     return Scaffold(
       appBar: AppBar(toolbarHeight: 20,),
       body: Stack(
@@ -265,7 +266,7 @@ class _HomepageState extends State<Homepage> {
                           });
                         }else{
                           showcircularProgressIndicator(context);
-                          InterstitialAd _interstitualAd = await loadAd(context, Revmatch());
+                          InterstitialAd _interstitualAd = await loadAd(context);
                           if (interstitialAd ==null) {
                             // print("pppppppppppppppp");
                             Navigator.pop(context);
@@ -385,7 +386,7 @@ class _HomepageState extends State<Homepage> {
                                   TextButton(onPressed: ()async{
                                     Navigator.pop(context);
                                     showcircularProgressIndicator(context);
-                                      InterstitialAd _interstitualAd = await loadAd(context, Revmatch());
+                                      InterstitialAd _interstitualAd = await loadAd(context);
                                       if (interstitialAd ==null) {
                                         // print("pppppppppppppppp");
                                         Navigator.pop(context);
@@ -402,7 +403,7 @@ class _HomepageState extends State<Homepage> {
                                   TextButton(onPressed: ()async{
                                     Navigator.pop(context);
                                     showcircularProgressIndicator(context);
-                                      InterstitialAd _interstitualAd = await loadAd(context, Revmatch());
+                                      InterstitialAd _interstitualAd = await loadAd(context);
                                       if (interstitialAd ==null) {
                                         // print("pppppppppppppppp");
                                         Navigator.pop(context);
@@ -419,7 +420,7 @@ class _HomepageState extends State<Homepage> {
                                   TextButton(onPressed: ()async{
                                     Navigator.pop(context);
                                    showcircularProgressIndicator(context);
-                                      InterstitialAd _interstitualAd = await loadAd(context, Revmatch());
+                                      InterstitialAd _interstitualAd = await loadAd(context);
                                       if (interstitialAd ==null) {
                                         // print("pppppppppppppppp");
                                         Navigator.pop(context);
@@ -435,7 +436,7 @@ class _HomepageState extends State<Homepage> {
                                   TextButton(onPressed: ()async{
                                     Navigator.pop(context);
                                     showcircularProgressIndicator(context);
-                                      InterstitialAd _interstitualAd = await loadAd(context, Revmatch());
+                                      InterstitialAd _interstitualAd = await loadAd(context);
                                       if (interstitialAd ==null) {
                                         // print("pppppppppppppppp");
                                         Navigator.pop(context);
@@ -475,7 +476,7 @@ class _HomepageState extends State<Homepage> {
                 child:ListTile(
                   onTap: ()async{
                     showcircularProgressIndicator(context);
-                      InterstitialAd _interstitualAd = await loadAd(context, Revmatch());
+                      InterstitialAd _interstitualAd = await loadAd(context);
                       if (interstitialAd ==null) {
                         // print("pppppppppppppppp");
                         Navigator.pop(context);
@@ -528,10 +529,17 @@ class _HomepageState extends State<Homepage> {
                   visible:showAd.value ,
                   child: Align(
                     alignment: Alignment.bottomCenter,
-                    child: Container(
-                      width: _bannerAd!.size.width.toDouble(),
-                      height: _bannerAd!.size.height.toDouble(),
-                      child: AdWidget(ad: _bannerAd!),
+                    child: Stack(
+                      children: [
+                        Container(
+                          width: _bannerAd!.size.width.toDouble(),
+                          height: _bannerAd!.size.height.toDouble(),
+                          child: AdWidget(ad: _bannerAd!),
+                        ),
+                        IconButton(onPressed: (){
+                          showAd.value = false;
+                        }, icon: Icon(Icons.cancel_outlined))
+                      ],
                     ),
                   ),
                 );
