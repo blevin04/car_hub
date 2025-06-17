@@ -14,9 +14,6 @@ class Homepage extends StatefulWidget {
   @override
   State<Homepage> createState() => _HomepageState();
 }
-
-
-
 class _HomepageState extends State<Homepage> {
   BannerAd? _bannerAd;
   @override
